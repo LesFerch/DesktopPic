@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<!--
+DesktopPic (Display picture or slideshow on desktop and/or stamp picture to wallpaper)
+Les Ferch, lesferch@gmail.com, GitHub repository created 2022-03-20
+DesktopPic.hta (Main program to display and stamp images)
+WallP.exe (command line tool to set wallpaper per monitor)
+-->
+<html>
+<head>
+<title>DesktopPic</title>
+<meta charset="UTF-8" http-equiv="X-UA-Compatible" content="IE=9">
+<hta:application
+  id=oHTA
+  icon="C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
+  maximizebutton=no
+  minimizebutton=no
+  showintaskbar=no
+  contextmenu=no
+  border=none
+  caption=no
+  scroll=no
+>
+<script language="VBScript">
+
+'Begin Main
+
+Window.ResizeTo 1,1
+Window.MoveTo -2000,-2000
+
+Const MyVerNum = "1.0.0"
+Const WallPVerNum = "1.0.0.0"
+Const ForReading = 1
+Const ForWriting = 2
+Const wiaFormatPNG = "{B96B3CAF-0728-11D3-9D7B-0000F81EF32E}"
+Const DevMode = True
+
+Set oWSH = CreateObject("Wscript.Shell")
+Set oFSO = CreateObject("Scripting.FileSystemObject")
+Set oImg = CreateObject("WIA.ImageFile")
+Set oSettings = CreateObject("Scripting.Dictionary")
+Set DigitsOnly = New RegExp: DigitsOnly.Pattern = "[^0-9]"
+Set DigitsComma = New RegExp: DigitsComma.Pattern = "[^0-9,]"
+
+Dim PicTimer,UpdatePos,w,h,iw,ih,x,y,CenterCoordinates,hTpp,wTpp,Msg,L(6),aImage,MyAppData
+ReDim ArrPic(-1)
+Z = VBCRLF
+Q = Chr(34)
+
+'Copy of HTA for interface, WallP.exe, and processed image, go in MyAppData 
+'Note: INI file is stored with app for portability and to allow multiple instances
+
+MyAppData  = oWSH.ExpandEnvironmentStrings("%LocalAppData%") & "\DesktopPic\"
+If Not oFSO.FolderExists(MyAppData) Then oFSO.CreateFolder(MyAppData)
+WallPExe = MyAppData & "WallP.exe"
+
+L(0)="Run on startup|Bring to front on start|Stretch smaller pictures|Pic delay in seconds|Max percent of screen area|Centered|Custom|Window position|Stamp|Restore|Continue|Place at least one image file in the folder shown below|No image files found|This option can only be used on the primary monitor.|Press ⊞-P to temporarily change the primary monitor.|Wallpaper style must be set to Fill to use this option|Change wallpaper style to Fill?|Wallpaper file missing:"
+L(1)="Beim Start ausführen|Beim Start nach vorne bringen|Strecken Sie kleinere Bilder|Bildverzögerung in Sekunden|Maximaler Prozentsatz der Bildschirmfläche|Zentriert|Brauch|Fensterposition|Briefmarke|Wiederherstellen|Fortsetzen|Legen Sie mindestens eine Bilddatei in dem unten angezeigten Ordner ab|Keine Bilddateien gefunden|Diese Option kann nur auf dem primären Monitor verwendet werden|Drücken Sie ⊞-P, um den primären Monitor vorübergehend zu ändern.|Hintergrundstil muss auf Ausfüllen eingestellt sein, um diese Option zu verwenden|Hintergrundstil in Ausfüllen ändern?|Wallpaper-Datei fehlt:"
+L(2)="Corre al empezar|Traer al frente al inicio|Estirar imágenes más pequeñas|Retardo de imagen en segundos|Porcentaje máximo del área de la pantalla|Centrado|Personalizado|Posición de la ventana|Sello|Restaurar|Continuar|Coloque al menos un archivo de imagen en la carpeta que se muestra a continuación|No se encontraron archivos de imagen|Esta opción solo se puede usar en el monitor principal|Presione ⊞-P para cambiar temporalmente el monitor principal.|El estilo de fondo de pantalla debe establecerse en Rellenar para usar esta opción|¿Cambiar el estilo de fondo de pantalla a Rellenar?|Falta el archivo del fondo de pantalla:"
+L(3)="Exécuter au démarrage|Amenez à l'avant au démarrage|Étirez des images plus petites|Délai d'image en secondes|Pourcentage maximum de la zone d'écran|Centré|Personnalisé|Position de la fenêtre|Timbre|Restaurer|Continuez|Placez au moins un fichier image dans le dossier indiqué ci-dessous|Aucun fichier image trouvé|Cette option ne peut être utilisée que sur le moniteur principal|Appuyez sur ⊞-P pour changer temporairement le moniteur principal.|Le style de papier peint doit être défini sur Remplir pour utiliser cette option|Changer le style de fond d'écran en Remplir ?|Fichier de fond d'écran manquant :"
+L(4)="起動時に実行する|スタート時に前面に出す|小さい画像を伸ばす|秒単位の画像の遅延|画面領域の最大パーセント|中央揃え|カスタム|ウィンドウの位置|切手|戻す|継続する|以下に示すフォルダに少なくとも1つの画像ファイルを配置します|画像ファイルが見つかりません|このオプションは、プライマリモニターでのみ使用できます|⊞-Pを押して、プライマリモニターを一時的に変更します。|このオプションを使用するには、壁紙のスタイルを塗りつぶしに設定する必要があります|壁紙のスタイルを塗りつぶしに変更しますか？|壁紙ファイルがありません:"
+L(5)="在启动时运行|开始时放在前面|拉伸较小的图片|图片延迟以秒为单位|最大屏幕面积百分比|居中|风俗|窗口位置|邮票|恢复|继续|将至少一个图像文件放入如下所示的文件夹中|未找到图像文件|此选项只能在主显示器上使用|按 ⊞-P 临时更改主监视器。|墙纸样式必须设置为填充才能使用此选项|将壁纸样式更改为填充？|壁纸文件丢失："
+L(6)="在啟動時運行|開始時放在前面|拉伸較小的圖片|圖片延遲以秒為單位|最大屏幕面積百分比|居中|風俗|窗口位置|郵票|恢復|繼續|在如下所示的文件夾中至少放置一個圖像文件|未找到圖像文件|此選項只能在主顯示器上使用|按 ⊞-P 臨時更改主監視器。|牆紙樣式必須設置為填充才能使用此選項|將壁紙樣式更改為填充？|壁紙文件丟失："
+
+RunOnStartup = False
+BringToFront = True
+Stretch = False
+PicDelay = 5
+MaxScrPct = 25
+Coordinates = ""
+Forward = True
+DoingInput = False
+i = -1
+LangIdx=0
+On Error Resume Next
+Language = oWSH.RegRead("HKCU\Control Panel\International\LocaleName")
+Language = oWSH.RegRead("HKCU\Control Panel\Desktop\PreferredUILanguages")(0)
+If Left(Language,2)="de" Then LangIdx=1
+If Left(Language,2)="es" Then LangIdx=2
+If Left(Language,2)="fr" Then LangIdx=3
+If Left(Language,2)="ja" Then LangIdx=4
+If Language="zh-CN" Then LangIdx=5
+If Language="zh-TW" Then LangIdx=6
+On Error Goto 0
+
+OptionMode = oHTA.caption="yes"
+BorderSize = 0: If OptionMode Then BorderSize = 8
+CaptionHeight = 30
+
+CmdLine = Replace(oHTA.commandLine,Q & "  " & Q,"|")
+CmdLine = Replace(CmdLine,Q & " " & Q,"|")
+CmdLine = Replace(CmdLine,Q,"")
+aParam = Split(CmdLine,"|")
+
+MyPath  = Mid(document.URL,8)
+MyFolder = oFSO.GetParentFolderName(MyPath)
+MyName = oFSO.GetFileName(MyPath)
+OptionModeHTA = MyAppData & MyName
+
+If UBound(aParam)>0 Then
+  If IsNumeric(aParam(1)) Then i = aParam(1) - 1
+End If
+
+If OptionMode Then
+  PicPath = aParam(2) & "\"
+  HTAName = aParam(3)
+  MyTitle = Split(HTAName,".")(0)
+  oWSH.CurrentDirectory = PicPath
+Else
+  MyTitle = Split(MyName,".")(0)
+  oWSH.CurrentDirectory = MyFolder
+  PicPath = oWSH.CurrentDirectory & "\"
+End If
+
+INIFile = PicPath & MyTitle & ".ini"
+
+If Not(Instr(MyFolder,"C:\Program Files\")>0 Or Instr(MyFolder,"C:\Program Files (x86)\")>0) Then
+  TestFile = ".\" & Replace(Replace(Replace(Now(),"/",""),":","")," ","") & ".txt"
+  On Error Resume Next
+  Set oFile = oFSO.OpenTextFile(TestFile,ForWriting,True,Ansi)
+  oFile.Write ""
+  oFile.Close
+  On Error Goto 0
+  If oFSO.FileExists(TestFile) Then
+    oFSO.DeleteFile(TestFile)
+  Else
+    INIFile = MyAppData & MyTitle & ".ini"
+  End If
+End If
+
+If oFSO.FileExists(WallPExe) Then
+  Set oFile = oFSO.OpenTextFile(WallPExe,ForReading)
+  FileContents = oFile.ReadAll
+  oFile.Close
+  If Instr(FileContents,WallPVerNum)=0 Then oFSO.DeleteFile(WallPExe)
+End If  
+
+If Not oFSO.FileExists(WallPExe) Then
+  oWSH.Run "certutil -decode " & Q & MyPath & Q & " " & Q & WallPExe & Q,0,False
+End If
+
+Ini2Dict
+
+If oSettings.Exists("[Options]LangIdx") Then LangIdx = oSettings.Item("[Options]LangIdx")
+If oSettings.Exists("[Options]RunOnStartup") Then RunOnStartup = (LCase(oSettings.Item("[Options]RunOnStartup"))="true")
+If oSettings.Exists("[Options]BringToFront") Then BringToFront = (LCase(oSettings.Item("[Options]BringToFront"))="true")
+If oSettings.Exists("[Options]Stretch") Then Stretch = (LCase(oSettings.Item("[Options]Stretch"))="true")
+If oSettings.Exists("[Options]PicDelay") Then PicDelay = oSettings.Item("[Options]PicDelay")
+If oSettings.Exists("[Options]MaxScrPct") Then MaxScrPct = oSettings.Item("[Options]MaxScrPct")
+If oSettings.Exists("[Options]Coordinates") Then Coordinates = oSettings.Item("[Options]Coordinates")
+If Stretch="" Then Stretch = False
+If PicDelay="" Then PicDelay = 5
+If MaxScrPct="" Then MaxScrPct = 25
+
+Msg = Split(L(LangIdx),"|")
+
+Set oFolder = oFSO.GetFolder(PicPath)
+Set oFiles = oFolder.Files
+For Each oFile In oFiles
+  On Error Resume Next
+  oImg.LoadFile oFile.Name
+  If Err.Number=0 Then IsImage=True Else IsImage=False
+  On Error Goto 0
+  If IsImage Then
+    iw = oImg.Width: ih = oImg.Height
+    ReDim Preserve ArrPic(UBound(ArrPic)+1)
+    ArrPic(UBound(ArrPic)) = oFile.Name & "|" & iw & "|" & ih
+  End If
+Next
+
+If UBound(ArrPic)=-1 Then
+  MsgBox Msg(11) & Z & Z & MyFolder,vbOKonly,Msg(12)
+  self.close
+End If
+
+'End Main
+
+
+Sub Ini2Dict
+  If oFSO.FileExists(INIFile) Then 
+    Set oFile = oFSO.OpenTextFile(INIFile,ForReading)
+    Do Until oFile.AtEndOfStream
+      Line = Trim(oFile.ReadLine)
+      If Line<>"" And Left(Line,1)<>";" Then
+        If Left(Line,1)="[" Then
+          Section = Line
+        Else
+          ArrLine = Split(Line,"=")
+          If UBound(Arrline)=1 Then oSettings.Add Section & ArrLine(0),ArrLine(1)
+        End If
+      End If
+    Loop
+    oFile.Close
+  End If
+End Sub
+
+Sub window_onLoad
+
+  If OptionMode Then
+    document.body.style.backgroundPosition="0px -" & CaptionHeight & "px"
+    ShowOptions
+    If LangIdx<>0 Then UpdateLang
+  Else
+    HideOptions
+  End If
+  
+  Document.Title = MyTitle
+  If Not BringToFront Then Window.blur
+
+  LoadPic
+
+  If Coordinates<>"" Then RepositionWindow
+
+  ToggleShortcut
+
+  wTpp = Window.outerWidth: hTpp = Window.outerHeight
+
+  If OptionMode Then
+    UpdatePos = Window.SetInterval("UpdatePosition()", 100)
+  Else
+    If UBound(ArrPic)>0 Then PicTimer = Window.SetInterval("LoadPic()", PicDelay*1000)
+  End If
+
+End Sub
+
+Sub UpdateLang
+  Msg = Split(L(LangIdx),"|")
+  M0.innerHTML = Msg(0)
+  M1.innerHTML = Msg(1)
+  M2.innerHTML = Msg(2)
+  M3.innerHTML = Msg(3)
+  M4.innerHTML = Msg(4)
+  M5.innerHTML = Msg(5)
+  M6.innerHTML = Msg(6)
+  M7.innerHTML = Msg(7)
+  Bsw.Value = Msg(8)
+  Brw.Value = Msg(9)
+  Bcn.Value = Msg(10)
+End Sub
+
+Sub UpdateXY
+  aCoords = Split(Coordinates,",")
+  x = CInt(aCoords(0))
+  y = CInt(aCoords(1))
+End Sub
+
+Sub RepositionWindow
+  UpdateXY
+  Window.MoveTo x - BorderSize, y
+End Sub
+
+Sub ToggleShortcut
+  Crs.blur
+  RunOnstartup = Crs.Checked
+  ShortCutFolder = oWSH.SpecialFolders("Startup")
+  ShortcutExists = False
+  Set oFolder = oFSO.GetFolder(ShortCutFolder)
+  Set oFiles = oFolder.Files
+  For Each oFile In oFiles
+    If LCase(oFSO.GetExtensionName(oFile.Name)) = "lnk" Then
+      Set link = oWSH.CreateShortcut(ShortCutFolder & "\" & oFile.Name)
+      If link.TargetPath=PicPath & HTAName Then
+        ShortcutExists = True
+        If Not RunOnstartup Then oFSO.DeleteFile ShortCutFolder & "\" & oFile.Name
+      End If
+    End If
+  Next
+  If RunOnstartup And Not ShortcutExists Then
+    ShortCutPath = ShortCutFolder & "\" & MyTitle & Replace(Replace(Replace(Now(),"/",""),":","")," ","") & ".lnk"
+    Set link = oWSH.CreateShortcut(ShortCutPath)
+    link.TargetPath = PicPath & HTAName
+    link.Save
+  End If
+End Sub
+
+Sub UpdatePosition
+  sw = screen.availWidth
+  sh = screen.availHeight
+  w = Window.outerWidth
+  h = Window.outerHeight
+  UpdateTpp = Not(w=wTpp And h=hTpp)
+  w = w - (BorderSize * 2)
+  h = h - BorderSize
+  If UpdateTpp Then
+    NewSize = Cint((w * h) / (sw * sh) * 100)
+    If NewSize>100 Then NewSize = 100
+    If NewSize<=0 Then NewSize = 1
+    Tpp.Value = NewSize
+    MaxScrPct = Tpp.Value
+  Else
+    Tpp.Value = MaxScrPct
+  End If
+  Tsp.Value = window.screenX + BorderSize & "," & window.screenY
+  Coordinates = Tsp.Value
+  UpdateXY
+  If Mpp.SelectedIndex=0 And Tsp.Value<>CenterCoordinates Then
+    Mpp.SelectedIndex=1
+    Tsp.style.visibility = "visible"
+  End If
+End Sub
+
+Sub LoadPic
+  If Forward Then i = i + 1 Else i = i - 1
+  If i=UBound(ArrPic)+1 Then i = 0
+  If i<0 Then i = UBound(ArrPic)
+  aImage = Split(ArrPic(i),"|")
+  iw = aImage(1): ih = aImage(2)
+  ResizePic
+  window.document.body.background = PicPath & aImage(0)
+  ResizeWindow
+  If Coordinates="" Then CenterWindow
+End Sub
+
+Sub ResizePic
+  sw = screen.availWidth
+  sh = screen.availHeight
+  MaxArea = sw * sh * (MaxScrPct/100)
+  ImgArea = iw * ih
+  w = iw: h = ih
+  If ImgArea>MaxArea Or Stretch Or OptionMode Then
+    ResizeFactor = Sqr(MaxArea/ImgArea)
+    w = iw * ResizeFactor
+    h = ih * ResizeFactor
+    If w>sw Then h = sw/w * h : w = sw
+    If h>sh Then w = sh/h * w : h = sh
+    w = CInt(w): h = CInt(h)
+    h = h + BorderSize: w = w + (BorderSize * 2)
+  End If
+End Sub
+
+Sub ResizeWindow
+	Window.ResizeTo w, h
+End Sub
+
+Sub CenterWindow
+  sw = screen.availWidth
+  sh = screen.availHeight
+	Window.MoveTo (sw - w)/2, (sh - h)/2
+  CenterCoordinates = window.screenX + BorderSize & "," & window.screenY
+End Sub
+
+Sub ShowOptions
+  document.body.style.visibility = "visible"
+  Crs.Style.Zoom = 1.2
+  Cbf.Style.Zoom = 1.2
+  Csp.Style.Zoom = 1.2
+  Crs.Checked = RunOnStartup
+  Cbf.Checked = BringToFront
+  Csp.Checked = Stretch
+  Tpd.Value = PicDelay
+  Tpp.Value = MaxScrPct
+  Tsp.Value = Coordinates
+  If Coordinates="" Then
+    Tsp.style.visibility = "hidden"
+  Else
+    mpp.SelectedIndex = 1
+    Tsp.style.visibility = "visible"
+  End If
+  Mln.SelectedIndex = LangIdx
+End Sub
+
+Sub HideOptions
+  document.body.style.visibility = "hidden"
+  Tsp.style.visibility = "hidden"
+End Sub
+
+Sub document_onclick
+  If OptionMode And Not DoingInput Then
+    ResizePic
+    ResizeWindow
+    Var2Ini
+  End If
+End Sub
+
+Sub document_onKeyDown
+    Select Case window.event.keyCode
+      Case 32, 39
+        If Not DoingInput Then
+          window.event.keyCode = 0
+          Forward = True
+          clearInterval(PicTimer)
+          LoadPic
+        End If
+      Case 8, 37
+        If Not DoingInput Then
+          window.event.keyCode = 0
+          Forward = False
+          clearInterval(PicTimer)
+          LoadPic
+        End If
+      Case 13
+        ContinueShow
+      Case 27
+        If Not OptionMode Then LaunchOptionModeHTA
+      Case 116
+        window.event.keyCode = 0
+    End Select
+End Sub
+
+Sub ContinueShow
+  If OptionMode Then
+    oWSH.Run Q & PicPath & HTAName & Q & " " & Q & i & Q,1,False
+    self.close
+  Else
+    HideOptions
+    Forward = True
+    clearInterval(PicTimer)
+    PicTimer = Window.SetInterval("LoadPic()", PicDelay*1000)
+  End If
+End Sub
+
+Sub LaunchOptionModeHTA
+  clearInterval(PicTimer)
+  If oFSO.FileExists(OptionModeHTA) Then
+    If DevMode Then
+      oFSO.DeleteFile(OptionModeHTA)
+    Else
+      Set oFile = oFSO.OpenTextFile(OptionModeHTA,ForReading)
+      FileContents = oFile.ReadAll
+      oFile.Close
+      If Instr(FileContents,Q & MyVerNum & Q)=0 Then oFSO.DeleteFile(OptionModeHTA)
+    End If
+  End If  
+  If Not oFSO.FileExists(OptionModeHTA) Then
+    Set oFile = oFSO.OpenTextFile(MyPath,ForReading)
+    MyCode = oFile.ReadAll
+    oFile.Close
+    MyCode = Replace(MyCode,LCase("CAPTION=NO"),"caption=yes")
+    MyCode = Replace(MyCode,LCase("BORDER=NONE"),"border=thick")
+    MyCode = Replace(MyCode,LCase("SCROLL=NO"),"scroll=auto")
+    Set oFile = oFSO.OpenTextFile(OptionModeHTA,ForWriting,True)
+    oFile.Write MyCode
+    oFile.Close
+  End If
+  oWSH.Run Q & OptionModeHTA & Q & " " & Q & i & Q & " " & Q & MyFolder & Q & " " & Q & MyName & Q,1,False
+  self.close
+End Sub
+
+Sub OnFocusInput
+  DoingInput = True
+  ClearInterval(UpdatePos)
+End Sub
+
+Sub OnBlurInput
+  DoingInput = False
+  UpdatePos = Window.SetInterval("UpdatePosition()", 500)
+End Sub
+
+Sub OnInputDigits(id)
+  document.getElementByID(id).Value = DigitsOnly.Replace(document.getElementByID(id).Value,"")
+End Sub
+
+Sub OnInputDigitsComma(id)
+  document.getElementByID(id).Value = DigitsComma.Replace(document.getElementByID(id).Value,"")
+End Sub
+
+Sub OnChangeTpd
+  If Tpd.Value<1 Then Tpd.Value = 1
+End Sub
+
+Sub OnChangeTpp
+  If Tpp.Value<1 Or Tpp.Value>100 Then
+    Tpp.Value = MaxScrPct
+  Else
+    MaxScrPct = Tpp.Value
+  End If
+  ResizePic
+  ResizeWindow
+  wTpp = Window.outerWidth: hTpp = Window.outerHeight
+End Sub
+
+Sub OnChangeMPP
+  Mpp.blur
+  If Mpp.SelectedIndex=1 Then
+    Tsp.style.visibility = "visible"
+  Else
+    CenterWindow
+    Tsp.style.visibility = "hidden"
+  End If
+End Sub
+
+Sub OnChangeMln
+  LangIdx = Mln.SelectedIndex
+  UpdateLang
+End Sub
+
+Sub OnChangeTsp
+  If tsp.Value<>"" Then 
+    Coordinates = Tsp.Value
+    If Left(Coordinates,1)="," Then Coordinates = "0" & Coordinates
+    If Instr(Coordinates,",")=0 Then Coordinates = Coordinates & ",0"
+    RepositionWindow
+  End If
+End Sub
+
+Sub window_onUnload
+  If OptionMode Then Var2Ini
+End Sub
+
+Sub Var2Ini
+  Set oFile = oFSO.OpenTextFile(INIFile,ForWriting,True)
+  oFile.Write "[Options]" & Z
+  oFile.Write "LangIdx=" & LangIdx & Z
+  oFile.Write "RunOnStartup=" & Crs.Checked & Z
+  oFile.Write "BringToFront=" & Cbf.Checked & Z
+  oFile.Write "Stretch=" & Csp.Checked & Z
+  oFile.Write "PicDelay=" & Tpd.Value & Z
+  oFile.Write "MaxScrPct=" & Tpp.Value & Z
+  If Mpp.SelectedIndex=0 Then Tsp.Value=""
+  oFile.Write "Coordinates=" & Tsp.Value & Z
+  oFile.Close
+End Sub
+
+Sub CheckPrimary
+End Sub
+
+Sub RestoreWallpaper
+  Brw.blur
+
+  If (x<0 Or y<0 Or x>screen.Width Or y>screen.Height) Then
+    MsgBox Msg(13) & Z & Z & Msg(14),vbOKonly,Msg(9)
+    Exit Sub
+  End If
+
+  oWSH.Run Q & WallPExe & Q & " 0",0,True
+  Monitor = oWSH.RegRead("HKCU\Software\WallP\Monitor")
+  On Error Resume Next
+  WPbackup = oWSH.RegRead("HKCU\Software\WallP\" & Monitor & "\WPbackup")
+  On Error Goto 0
+  If oFSO.FileExists(WPbackup) Then
+    oWSH.Run Q & WallPExe & Q & " 0 " & Q & WPbackup & Q,0,True
+  End If
+End Sub
+
+Sub StampWallpaper
+  Bsw.blur
+
+  If (x<0 Or y<0 Or x>screen.Width Or y>screen.Height) Then
+    MsgBox Msg(13) & Z & Z & Msg(14),vbOKonly,Msg(8)
+    Exit Sub
+  End If
+
+  WallpaperStyle = oWSH.RegRead("HKCU\Control Panel\Desktop\WallpaperStyle")
+  If WallpaperStyle<>"10" Then
+    Answer = MsgBox(Msg(15) & Z & Z & Msg(16),vbYesNo,Msg(8))
+    If Answer = vbNo Then Exit Sub
+  End If
+
+  sw = screen.availWidth
+  sh = screen.availHeight
+  Fsw = screen.Width
+  Fsh = screen.Height
+
+  oWSH.Run Q & WallPExe & Q & " 0",0,True
+  Monitor = oWSH.RegRead("HKCU\Software\WallP\Monitor")
+  WPpath = oWSH.RegRead("HKCU\Software\WallP\WPpath")
+  StampImg = PicPath & aImage(0)
+  StampedFile = MyAppData & "DesktopPic" & Monitor & ".png"
+   
+  If oFSO.FileExists(WPpath) Then
+    If LCase(WPpath)<>LCase(StampedFile) Then oWSH.RegWrite "HKCU\Software\WallP\" & Monitor & "\WPbackup",WPpath
+  Else
+    MsgBox Msg(17) & Z & Z & WPpath
+    Exit Sub
+  End If
+
+  'Scale image to be stamped
+  Set Img = CreateObject("WIA.ImageFile")
+  Img.LoadFile StampImg
+  Set Pim = CreateObject("WIA.ImageProcess")
+  Pim.Filters.Add Pim.FilterInfos("Scale").FilterID
+  Pim.Filters(1).Properties("MaximumWidth") = w
+  Pim.Filters(1).Properties("MaximumHeight") = h
+  Set Img = Pim.Apply(Img)
+  Set Pim=Nothing
+
+  'Load current wallpaper
+  Set Wall = CreateObject("WIA.ImageFile")
+  Wall.LoadFile WPpath
+
+  'Adjust current wallpaper to fill screen
+  If Not(Wall.Width=Fsw And Wall.Height=Fsh) Then
+  
+    wFactor = sw / Wall.Width
+    hFactor = sh / Wall.Height
+    If wFactor>hFactor Then NewWidth = sw : NewHeight = Int(wFactor * Wall.Height)
+    If hFactor>wFactor Then NewHeight = sh : NewWidth = Int(hFactor * Wall.Width)
+    Set Pim = CreateObject("WIA.ImageProcess")
+    Pim.Filters.Add Pim.FilterInfos("Scale").FilterID
+    Pim.Filters(1).Properties("MaximumWidth") = NewWidth
+    Pim.Filters(1).Properties("MaximumHeight") = NewHeight
+    Pim.Filters(1).Properties("PreserveAspectRatio") = KeepAspect
+    Set Wall = Pim.Apply(Wall)
+    Set Pim=Nothing
+    NewWidth = Wall.Width
+    NewHeight = Wall.Height
+
+    'Crop excess width or height
+    If NewWidth>Fsw Or NewHeight>Fsh Then
+      LeftCrop = 0
+      RightCrop = 0
+      TopCrop = 0
+      BotCrop = 0
+      If NewWidth>Fsw Then
+        LeftCrop = Int((NewWidth - Fsw) / 2)
+        RightCrop = NewWidth - Fsw - LeftCrop
+      End If
+      If NewHeight>Fsh Then
+        TopCrop = Int((NewHeight - Fsh) / 2)
+        TopCrop = Int(TopCrop * 2 / 3)
+        BotCrop = NewHeight - Fsh - TopCrop
+      End If
+
+      Set Pim = CreateObject("WIA.ImageProcess")
+      Pim.Filters.Add Pim.FilterInfos("Crop").FilterID
+      Pim.Filters(1).Properties("Left") = LeftCrop
+      Pim.Filters(1).Properties("Right") = RightCrop
+      Pim.Filters(1).Properties("Top") = TopCrop
+      Pim.Filters(1).Properties("Bottom") = BotCrop
+      Set Wall = Pim.Apply(Wall)
+      Set Pim=Nothing
+
+    End If
+    
+  End If
+
+  'Stamp image
+  Set Pim = CreateObject("WIA.ImageProcess")
+  Pim.Filters.Add Pim.FilterInfos("Stamp").FilterID
+  Set Pim.Filters(1).Properties("ImageFile") = Img
+  Pim.Filters(1).Properties("Left") = window.screenX + BorderSize
+  Pim.Filters(1).Properties("Top") = window.screenY
+  Pim.Filters.Add Pim.FilterInfos("Convert").FilterID
+  Pim.Filters(2).Properties("FormatID").Value = wiaFormatPNG
+  Set Wall = Pim.Apply(Wall)
+  If oFSO.FileExists(StampedFile) Then oFSO.DeleteFile StampedFile
+  Wall.SaveFile StampedFile
+  Set Wall=Nothing
+  Set Img=Nothing
+  Set Pim=Nothing
+
+  oWSH.Run Q & WallPExe & Q & " 0 Fill " & Q & StampedFile & Q,0,True
+  
+End Sub
+
+</script>
+<style>
+body {background-size:cover; background-attachment:fixed; background-repeat:no-repeat}
+br {font-size: 16pt} 
+.cc {
+font-family: sans-serif;
+font-weight: normal;
+font-size: 11pt;
+color: white;
+background: rgba(0,0,0,.4);
+padding: 1pt;
+border-radius: 2pt;
+}
+</style>
+</head>
+<body>
+<input type=button id=Bsw Value=Stamp onclick=StampWallpaper()>
+<input type=button id=Brw Value=Restore onclick=RestoreWallpaper()>
+<input type=button id=Bcn Value=Continue onclick=ContinueShow()>
+<br>
+<select id=Mln  OnChange=OnChangeMln()>
+<option>English</option>
+<option>Deutsch</option>
+<option>Español</option>
+<option>Français</option>
+<option>日本語</option>
+<option>中文 (简体)</option>
+<option>中文 (繁體)</option>
+</select><br>
+<input type=checkbox id=Crs OnClick=ToggleShortcut()>
+<span id=M0 class=cc>Run on startup</span><br>
+<input type=checkbox id=Cbf OnClick=Cbf.blur()>
+<span id=M1 class=cc>Bring to front on start</span><br>
+<input type=checkbox id=Csp OnClick=Csp.blur()>
+<span id=M2 class=cc>Stretch smaller pictures</span><br>
+<input type=text size=5 id=Tpd MaxLength=5 OnFocus=OnFocusInput() OnBlur=OnBlurInput() OnInput=OnInputDigits("Tpd") OnChange=OnChangeTpd()>
+<span id=M3 class=cc>Pic delay in seconds</span><br>
+<input type=text size=5 id=Tpp MaxLength=3 OnFocus=OnFocusInput() OnBlur=OnBlurInput() OnInput=OnInputDigits("Tpp") OnChange=OnChangeTpp()>
+<span id=M4 class=cc>Max percent of screen area</span><br>
+
+<select id=Mpp  OnChange=OnChangeMpp()>
+<option id=M5>Centered</option>
+<option id=M6>Custom</option>
+</select>
+<span id=M7 class=cc>Window position</span>
+<input type=text size=11 id=Tsp MaxLength=11 OnFocus=OnFocusInput() OnBlur=OnBlurInput() OnInput=OnInputDigitsComma("Tsp") OnChange=OnChangeTsp()>
+</body>
+</html>
+<!--
+This is a base64 encoding of WallP.exe
+-----BEGIN CERTIFICATE-----
+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
+jQKSAFAgAAAAAJEAlAKVAAEAUCMAAAAAhhhYAwYAAgAAAAAAAADGBQsDmwACAAAA
+AAAAAMYF/gKhAAQAAAAAAAAAxgXnA6YABgAAAAAAAADGBRUEqwAIAAAAAAAAAMYF
+RACvAAkAAAAAAAAAxgU/A7UACwAAAAAAAADGBSwDqwAMAAAAAAAAAMYF0wIBAA0A
+AAAAAAAAxgXHAkIADgAAAAAAAADGBUQEugAPAAAAAAAAAMYFNwS/ABAAAAAAAAAA
+xgVcAMMAEAAAAAAAAxCGGFgDBgAQAAAAAQC/AwAgAQAjAAAgAgB/AgAgAAAAAAAg
+AQAjAAAgAAAAAAAAAQBRBAAgAAAAAAAgAAAAAAAgAQAjAAAgAQBSAwAgAAAAAAAg
+AQDfAgAgAAAAAAAAAQDEAwkAWAMBABEAWAMGABkAWAMKACkAWAMQADEAWAMQADkA
+WAMQAEEAWAMQAEkAWAMQAFEAWAMQAFkAWAMQAGEAWAMVAGkAWAMQAHEAWAMQAHkA
+WAMQAKEAWAMaAKkAfAA9ALEAJANCALEAkgRGALkA4ANMAMEAEQBRALEAngRGAMkA
+owJWAMkAdwRCANEAhgBbANEAcwJhALEAQAJmALEAaQJrANkAGANxAIkAXgR1AIkA
+LQJ7AOEAqQAGAIEAWAMGAC4ACwDHAC4AEwDQAC4AGwDvAC4AIwD4AC4AKwADAS4A
+MwADAS4AOwADAS4AQwD4AC4ASwAJAS4AUwADAS4AWwADAS4AYwAhAS4AawBLAS4A
+cwBYAYMAYwCmAYMAewDQAaMAYwDZAQUAigAHAIoACQCKAAsAigANAIoAEQCMABMA
+jgAVAIoAFwCMABkAjAAbAJAAHQCQACAABIAAAAEAAAAAAAAAAAAAAAAAPgAAAAQA
+AAAAAAAAAAAAAIEAUwAAAAAAAwACAAQAAgAFAAIAAAAATWljcm9zb2Z0LldpbjMy
+AFRvVUludDMyADxNb2R1bGU+AG1vbml0b3JJRABXaW5BUEkAU3lzdGVtLklPAFdh
+bGxQAEdldE1vbml0b3JSRUNUAG1zY29ybGliAEVuYWJsZQBJRGlzcG9zYWJsZQBG
+aWxlAENvbnNvbGUAV3JpdGVMaW5lAENvbWJpbmUAQ29tSW50ZXJmYWNlVHlwZQBW
+YWx1ZVR5cGUARGlzcG9zZQBHdWlkQXR0cmlidXRlAERlYnVnZ2FibGVBdHRyaWJ1
+dGUAQ29tVmlzaWJsZUF0dHJpYnV0ZQBBc3NlbWJseVRpdGxlQXR0cmlidXRlAElu
+dGVyZmFjZVR5cGVBdHRyaWJ1dGUAQXNzZW1ibHlUcmFkZW1hcmtBdHRyaWJ1dGUA
+VGFyZ2V0RnJhbWV3b3JrQXR0cmlidXRlAEFzc2VtYmx5RmlsZVZlcnNpb25BdHRy
+aWJ1dGUAQXNzZW1ibHlDb25maWd1cmF0aW9uQXR0cmlidXRlAEFzc2VtYmx5RGVz
+Y3JpcHRpb25BdHRyaWJ1dGUAQ29tcGlsYXRpb25SZWxheGF0aW9uc0F0dHJpYnV0
+ZQBBc3NlbWJseVByb2R1Y3RBdHRyaWJ1dGUAQXNzZW1ibHlDb3B5cmlnaHRBdHRy
+aWJ1dGUAQXNzZW1ibHlDb21wYW55QXR0cmlidXRlAFJ1bnRpbWVDb21wYXRpYmls
+aXR5QXR0cmlidXRlAFNldFZhbHVlAFdhbGxQLmV4ZQBJbmRleE9mAFN5c3RlbS5S
+dW50aW1lLlZlcnNpb25pbmcAU3RyaW5nAFN1YnN0cmluZwBHZXRGdWxsUGF0aABX
+UHBhdGgAU3lzdGVtAEJvdHRvbQBNYWluAEFwcERvbWFpbgBnZXRfQ3VycmVudERv
+bWFpbgBTeXN0ZW0uUmVmbGVjdGlvbgBHZXRQb3NpdGlvbgBTZXRQb3NpdGlvbgBw
+b3NpdGlvbgBUb3AASURlc2t0b3BXYWxscGFwZXIAR2V0V2FsbHBhcGVyAFNldFdh
+bGxwYXBlcgBDdXJyZW50VXNlcgBUb0xvd2VyAEdldEJhY2tncm91bmRDb2xvcgBT
+ZXRCYWNrZ3JvdW5kQ29sb3IAY29sb3IALmN0b3IAU3lzdGVtLkRpYWdub3N0aWNz
+AFN5c3RlbS5SdW50aW1lLkludGVyb3BTZXJ2aWNlcwBTeXN0ZW0uUnVudGltZS5D
+b21waWxlclNlcnZpY2VzAERlYnVnZ2luZ01vZGVzAGFyZ3MAaXRlbXMARGVza3Rv
+cFdhbGxwYXBlckNsYXNzAEV4aXN0cwBHZXRNb25pdG9yRGV2aWNlUGF0aEF0AFJl
+Y3QAT2JqZWN0AExlZnQAUmlnaHQAR2V0TW9uaXRvckRldmljZVBhdGhDb3VudABD
+b252ZXJ0AEdldFNsaWRlc2hvdwBTZXRTbGlkZXNob3cAbW9uaXRvckluZGV4AENy
+ZWF0ZVN1YktleQBSZWdpc3RyeUtleQBnZXRfQmFzZURpcmVjdG9yeQBSZWdpc3Ry
+eQBvcF9FcXVhbGl0eQBvcF9JbmVxdWFsaXR5AAABAE1TAGUAdAAgAHcAYQBsAGwA
+cABhAHAAZQByACAAZgBvAHIAIABvAG4AZQAgAG8AcgAgAG0AbwByAGUAIABtAG8A
+bgBpAHQAbwByAHMAAHVVAHMAYQBnAGUAOgAgAFcAYQBsAGwAUAAuAGUAeABlACAA
+WwBNAG8AbgBpAHQAbwByAEkAbgBkAGUAeABdACAAWwBJAG0AYQBnAGUARgBpAGwA
+ZQBQAGEAdABoAF0AIABbAFAAbwBzAGkAdABpAG8AbgBdAABRUABhAHIAYQBtAGUA
+dABlAHIAcwAgAGMAYQBuACAAYgBlACAAcwBwAGUAYwBpAGYAaQBlAGQAIABpAG4A
+IABhAG4AeQAgAG8AcgBkAGUAcgAASU0AbwBuAGkAdABvAHIASQBuAGQAZQB4ACAA
+aQBzACAAYQAgAHoAZQByAG8ALQBiAGEAcwBlAGQAIABpAG4AdABlAGcAZQByAAFj
+SQBtAGEAZwBlAEYAaQBsAGUAUABhAHQAaAAgAGMAYQBuACAAYgBlACAAYQBuACAA
+YQBiAHMAbwBsAHUAdABlACAAbwByACAAcgBlAGwAYQB0AGkAdgBlACAAcABhAHQA
+aAAAgIVJAGYAIABNAG8AbgBpAHQAbwByAEkAbgBkAGUAeAAgAGkAcwAgAG8AbQBp
+AHQAdABlAGQALAAgAHcAYQBsAGwAcABhAHAAZQByACAAdwBpAGwAbAAgAGIAZQAg
+AHMAZQB0ACAAZgBvAHIAIABhAGwAbAAgAG0AbwBuAGkAdABvAHIAcwAAgJNJAGYA
+IABJAG0AYQBnAGUARgBpAGwAZQBQAGEAdABoACAAaQBzACAAbwBtAGkAdAB0AGUA
+ZAAsACAATQBvAG4AaQB0AG8AcgBJAG4AZABlAHgAIAB3AGEAbABsAHAAYQBwAGUA
+cgAgAHAAYQB0AGgAIAB3AGkAbABsACAAYgBlACAAcgBlAHQAdQByAG4AZQBkAABz
+UABvAHMAaQB0AGkAbwBuACAAYwBhAG4AIABiAGUAIABvAG4AZQAgAG8AZgA6ACAA
+QwBlAG4AdABlAHIAIABUAGkAbABlACAAUwB0AHIAZQB0AGMAaAAgAEYAaQB0ACAA
+RgBpAGwAbAAgAFMAcABhAG4AAICTSQBmACAAUABvAHMAaQB0AGkAbwBuACAAaQBz
+ACAAbwBtAGkAdAB0AGUAZAAsACAAcABvAHMAaQB0AGkAbwBuACAAaQBzACAAdQBu
+AGMAaABhAG4AZwBlAGQAIABmAG8AcgAgAEMAZQBuAHQAZQByACAAUwB0AHIAZQB0
+AGMAaAAgAEYAaQB0ACAARgBpAGwAbAAAaUkAZgAgAFAAbwBzAGkAdABpAG8AbgAg
+AGkAcwAgAG8AbQBpAHQAdABlAGQALAAgAFMAcABhAG4AIABhAG4AZAAgAFQAaQBs
+AGUAIAByAGUAdgBlAHIAdAAgAHQAbwAgAEYAaQBsAGwAAA1jAGUAbgB0AGUAcgAA
+CXQAaQBsAGUAAA9zAHQAcgBlAHQAYwBoAAAHZgBpAHQAAAlmAGkAbABsAAAJcwBw
+AGEAbgAAB1UASQBEAAARUwBvAGYAdAB3AGEAcgBlAAALVwBhAGwAbABQAAAPTQBv
+AG4AaQB0AG8AcgAADVcAUABwAGEAdABoAAAAAINJNh2jibJLq/c5VnZm8zIABCAB
+AQgDIAABBSABARERBCABAQ4EIAEBAgUgAQERTRwHFg4JDggCEhAOCAICAgICAgIC
+AgICEkUSRRJFBAABAQ4DIAAOBQACAg4OBAABAg4EAAEJDgQAABJlBQACDg4OBAAB
+Dg4EIAEIDgUgAg4ICAMGEkUFIAESRQ4FIAIBDhwIt3pcVhk04IkBFQEIARsBBwIG
+CAUAAQEdDgUgAgEODgQgAQ4OBCABDgkDIAAJBSABEQwOBCABAQkEIAEBGAMgABgD
+IAACCAEACAAAAAAAHgEAAQBUAhZXcmFwTm9uRXhjZXB0aW9uVGhyb3dzAQgBAAcB
+AAAAAAoBAAVXYWxsUAAABQEAAAAAFwEAEkNvcHlyaWdodCDCqSAgMjAyMgAAKQEA
+JDA1MjRkOWU5LTYxYWUtNDVlMS1hOTg3LTQyOWU5ZmYwYTEyNAAADAEABzEuMC4w
+LjAAAE0BABwuTkVURnJhbWV3b3JrLFZlcnNpb249djQuNi4xAQBUDhRGcmFtZXdv
+cmtEaXNwbGF5TmFtZRQuTkVUIEZyYW1ld29yayA0LjYuMSkBACRCOTJCNTZBOS04
+QjU1LTRFMTQtOUE4OS0wMTk5QkJCNkY5M0IAAAgBAAEAAAAAACkBACRDMkNGMzEx
+MC00NjBFLTRmYzEtQjlEMC04QTFDMEM5Q0M0QkQAAAAAAAAAJzJl9wAAAAACAAAA
+WAAAALgzAAC4FQAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAFJTRFP2WByX
+Ah1gS4hhPqWsslIGAQAAAEM6XFVzZXJzXExlcyBGZXJjaFxzb3VyY2VccmVwb3Nc
+V2FsbFBcV2FsbFBcb2JqXERlYnVnXFdhbGxQLnBkYgA4NAAAAAAAAAAAAABSNAAA
+ACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARDQAAAAAAAAAAAAAAABfQ29yRXhlTWFp
+bgBtc2NvcmVlLmRsbAAAAAAA/yUAIEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAACABAAAAAgAACAGAAAAFAAAIAAAAAAAAAAAAAAAAAAAAEA
+AQAAADgAAIAAAAAAAAAAAAAAAAAAAAEAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAEA
+AQAAAGgAAIAAAAAAAAAAAAAAAAAAAAEAAAAAAIwDAACQQAAA/AIAAAAAAAAAAAAA
+/AI0AAAAVgBTAF8AVgBFAFIAUwBJAE8ATgBfAEkATgBGAE8AAAAAAL0E7/4AAAEA
+AAABAAAAAAAAAAEAAAAAAD8AAAAAAAAABAAAAAEAAAAAAAAAAAAAAAAAAABEAAAA
+AQBWAGEAcgBGAGkAbABlAEkAbgBmAG8AAAAAACQABAAAAFQAcgBhAG4AcwBsAGEA
+dABpAG8AbgAAAAAAAACwBFwCAAABAFMAdAByAGkAbgBnAEYAaQBsAGUASQBuAGYA
+bwAAADgCAAABADAAMAAwADAAMAA0AGIAMAAAABoAAQABAEMAbwBtAG0AZQBuAHQA
+cwAAAAAAAAAiAAEAAQBDAG8AbQBwAGEAbgB5AE4AYQBtAGUAAAAAAAAAAAA0AAYA
+AQBGAGkAbABlAEQAZQBzAGMAcgBpAHAAdABpAG8AbgAAAAAAVwBhAGwAbABQAAAA
+MAAIAAEARgBpAGwAZQBWAGUAcgBzAGkAbwBuAAAAAAAxAC4AMAAuADAALgAwAAAA
+NAAKAAEASQBuAHQAZQByAG4AYQBsAE4AYQBtAGUAAABXAGEAbABsAFAALgBlAHgA
+ZQAAAEgAEgABAEwAZQBnAGEAbABDAG8AcAB5AHIAaQBnAGgAdAAAAEMAbwBwAHkA
+cgBpAGcAaAB0ACAAqQAgACAAMgAwADIAMgAAACoAAQABAEwAZQBnAGEAbABUAHIA
+YQBkAGUAbQBhAHIAawBzAAAAAAAAAAAAPAAKAAEATwByAGkAZwBpAG4AYQBsAEYA
+aQBsAGUAbgBhAG0AZQAAAFcAYQBsAGwAUAAuAGUAeABlAAAALAAGAAEAUAByAG8A
+ZAB1AGMAdABOAGEAbQBlAAAAAABXAGEAbABsAFAAAAA0AAgAAQBQAHIAbwBkAHUA
+YwB0AFYAZQByAHMAaQBvAG4AAAAxAC4AMAAuADAALgAwAAAAOAAIAAEAQQBzAHMA
+ZQBtAGIAbAB5ACAAVgBlAHIAcwBpAG8AbgAAADEALgAwAC4AMAAuADAAAACcQwAA
+6gEAAAAAAAAAAAAA77u/PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRG
+LTgiIHN0YW5kYWxvbmU9InllcyI/Pg0KDQo8YXNzZW1ibHkgeG1sbnM9InVybjpz
+Y2hlbWFzLW1pY3Jvc29mdC1jb206YXNtLnYxIiBtYW5pZmVzdFZlcnNpb249IjEu
+MCI+DQogIDxhc3NlbWJseUlkZW50aXR5IHZlcnNpb249IjEuMC4wLjAiIG5hbWU9
+Ik15QXBwbGljYXRpb24uYXBwIi8+DQogIDx0cnVzdEluZm8geG1sbnM9InVybjpz
+Y2hlbWFzLW1pY3Jvc29mdC1jb206YXNtLnYyIj4NCiAgICA8c2VjdXJpdHk+DQog
+ICAgICA8cmVxdWVzdGVkUHJpdmlsZWdlcyB4bWxucz0idXJuOnNjaGVtYXMtbWlj
+cm9zb2Z0LWNvbTphc20udjMiPg0KICAgICAgICA8cmVxdWVzdGVkRXhlY3V0aW9u
+TGV2ZWwgbGV2ZWw9ImFzSW52b2tlciIgdWlBY2Nlc3M9ImZhbHNlIi8+DQogICAg
+ICA8L3JlcXVlc3RlZFByaXZpbGVnZXM+DQogICAgPC9zZWN1cml0eT4NCiAgPC90
+cnVzdEluZm8+DQo8L2Fzc2VtYmx5PgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+ADAAAAwAAABkNAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+-----END CERTIFICATE-----
+-->
