@@ -53,13 +53,13 @@ MyAppData  = oWSH.ExpandEnvironmentStrings("%LocalAppData%") & "\DesktopPic\"
 If Not oFSO.FolderExists(MyAppData) Then oFSO.CreateFolder(MyAppData)
 WallPExe = MyAppData & "WallP.exe"
 
-L(0)="Run on startup|Bring to front on start|Stretch smaller pictures|Pic delay in seconds|Max percent of screen area|Centered|Custom|Window position|Stamp|Restore|Continue|Place at least one image file in the folder shown below|No image files found|This option can only be used on the primary monitor.|Press ⊞-P to temporarily change the primary monitor.|Wallpaper style must be set to Fill to use this option|Change wallpaper style to Fill?|Wallpaper file missing:"
-L(1)="Beim Start ausführen|Beim Start nach vorne bringen|Strecken Sie kleinere Bilder|Bildverzögerung in Sekunden|Maximaler Prozentsatz der Bildschirmfläche|Zentriert|Brauch|Fensterposition|Briefmarke|Wiederherstellen|Fortsetzen|Legen Sie mindestens eine Bilddatei in dem unten angezeigten Ordner ab|Keine Bilddateien gefunden|Diese Option kann nur auf dem primären Monitor verwendet werden|Drücken Sie ⊞-P, um den primären Monitor vorübergehend zu ändern.|Hintergrundstil muss auf Ausfüllen eingestellt sein, um diese Option zu verwenden|Hintergrundstil in Ausfüllen ändern?|Wallpaper-Datei fehlt:"
-L(2)="Corre al empezar|Traer al frente al inicio|Estirar imágenes más pequeñas|Retardo de imagen en segundos|Porcentaje máximo del área de la pantalla|Centrado|Personalizado|Posición de la ventana|Sello|Restaurar|Continuar|Coloque al menos un archivo de imagen en la carpeta que se muestra a continuación|No se encontraron archivos de imagen|Esta opción solo se puede usar en el monitor principal|Presione ⊞-P para cambiar temporalmente el monitor principal.|El estilo de fondo de pantalla debe establecerse en Rellenar para usar esta opción|¿Cambiar el estilo de fondo de pantalla a Rellenar?|Falta el archivo del fondo de pantalla:"
-L(3)="Exécuter au démarrage|Amenez à l'avant au démarrage|Étirez des images plus petites|Délai d'image en secondes|Pourcentage maximum de la zone d'écran|Centré|Personnalisé|Position de la fenêtre|Timbre|Restaurer|Continuez|Placez au moins un fichier image dans le dossier indiqué ci-dessous|Aucun fichier image trouvé|Cette option ne peut être utilisée que sur le moniteur principal|Appuyez sur ⊞-P pour changer temporairement le moniteur principal.|Le style de papier peint doit être défini sur Remplir pour utiliser cette option|Changer le style de fond d'écran en Remplir ?|Fichier de fond d'écran manquant :"
-L(4)="起動時に実行する|スタート時に前面に出す|小さい画像を伸ばす|秒単位の画像の遅延|画面領域の最大パーセント|中央揃え|カスタム|ウィンドウの位置|切手|戻す|継続する|以下に示すフォルダに少なくとも1つの画像ファイルを配置します|画像ファイルが見つかりません|このオプションは、プライマリモニターでのみ使用できます|⊞-Pを押して、プライマリモニターを一時的に変更します。|このオプションを使用するには、壁紙のスタイルを塗りつぶしに設定する必要があります|壁紙のスタイルを塗りつぶしに変更しますか？|壁紙ファイルがありません:"
-L(5)="在启动时运行|开始时放在前面|拉伸较小的图片|图片延迟以秒为单位|最大屏幕面积百分比|居中|风俗|窗口位置|邮票|恢复|继续|将至少一个图像文件放入如下所示的文件夹中|未找到图像文件|此选项只能在主显示器上使用|按 ⊞-P 临时更改主监视器。|墙纸样式必须设置为填充才能使用此选项|将壁纸样式更改为填充？|壁纸文件丢失："
-L(6)="在啟動時運行|開始時放在前面|拉伸較小的圖片|圖片延遲以秒為單位|最大屏幕面積百分比|居中|風俗|窗口位置|郵票|恢復|繼續|在如下所示的文件夾中至少放置一個圖像文件|未找到圖像文件|此選項只能在主顯示器上使用|按 ⊞-P 臨時更改主監視器。|牆紙樣式必須設置為填充才能使用此選項|將壁紙樣式更改為填充？|壁紙文件丟失："
+L(0)="Run on startup|Bring to front on start|Stretch smaller pictures|Pic delay in seconds|Max percent of screen area|Centered|Custom|Window position|Stamp|Restore|Continue|Help|Place at least one image file in the folder shown below|No image files found|This option can only be used on the primary monitor.|Press ⊞-P to temporarily change the primary monitor.|Wallpaper style must be set to Fill to use this option|Change wallpaper style to Fill?|Wallpaper file missing:"
+L(1)="Beim Start ausführen|Beim Start nach vorne bringen|Strecken Sie kleinere Bilder|Bildverzögerung in Sekunden|Maximaler Prozentsatz der Bildschirmfläche|Zentriert|Brauch|Fensterposition|Briefmarke|Wiederherstellen|Fortsetzen|Hilfe|Legen Sie mindestens eine Bilddatei in dem unten angezeigten Ordner ab|Keine Bilddateien gefunden|Diese Option kann nur auf dem primären Monitor verwendet werden|Drücken Sie ⊞-P, um den primären Monitor vorübergehend zu ändern.|Hintergrundstil muss auf Ausfüllen eingestellt sein, um diese Option zu verwenden|Hintergrundstil in Ausfüllen ändern?|Wallpaper-Datei fehlt:"
+L(2)="Corre al empezar|Traer al frente al inicio|Estirar imágenes más pequeñas|Retardo de imagen en segundos|Porcentaje máximo del área de la pantalla|Centrado|Personalizado|Posición de la ventana|Sello|Restaurar|Continuar|Ayuda|Coloque al menos un archivo de imagen en la carpeta que se muestra a continuación|No se encontraron archivos de imagen|Esta opción solo se puede usar en el monitor principal|Presione ⊞-P para cambiar temporalmente el monitor principal.|El estilo de fondo de pantalla debe establecerse en Rellenar para usar esta opción|¿Cambiar el estilo de fondo de pantalla a Rellenar?|Falta el archivo del fondo de pantalla:"
+L(3)="Exécuter au démarrage|Amenez à l'avant au démarrage|Étirez des images plus petites|Délai d'image en secondes|Pourcentage maximum de la zone d'écran|Centré|Personnalisé|Position de la fenêtre|Timbre|Restaurer|Continuez|Aide|Placez au moins un fichier image dans le dossier indiqué ci-dessous|Aucun fichier image trouvé|Cette option ne peut être utilisée que sur le moniteur principal|Appuyez sur ⊞-P pour changer temporairement le moniteur principal.|Le style de papier peint doit être défini sur Remplir pour utiliser cette option|Changer le style de fond d'écran en Remplir ?|Fichier de fond d'écran manquant :"
+L(4)="起動時に実行する|スタート時に前面に出す|小さい画像を伸ばす|秒単位の画像の遅延|画面領域の最大パーセント|中央揃え|カスタム|ウィンドウの位置|切手|戻す|継続する|ヘルプ|以下に示すフォルダに少なくとも1つの画像ファイルを配置します|画像ファイルが見つかりません|このオプションは、プライマリモニターでのみ使用できます|⊞-Pを押して、プライマリモニターを一時的に変更します。|このオプションを使用するには、壁紙のスタイルを塗りつぶしに設定する必要があります|壁紙のスタイルを塗りつぶしに変更しますか？|壁紙ファイルがありません:"
+L(5)="在启动时运行|开始时放在前面|拉伸较小的图片|图片延迟以秒为单位|最大屏幕面积百分比|居中|风俗|窗口位置|邮票|恢复|继续|帮助|将至少一个图像文件放入如下所示的文件夹中|未找到图像文件|此选项只能在主显示器上使用|按 ⊞-P 临时更改主监视器。|墙纸样式必须设置为填充才能使用此选项|将壁纸样式更改为填充？|壁纸文件丢失："
+L(6)="在啟動時運行|開始時放在前面|拉伸較小的圖片|圖片延遲以秒為單位|最大屏幕面積百分比|居中|風俗|窗口位置|郵票|恢復|繼續|幫助|在如下所示的文件夾中至少放置一個圖像文件|未找到圖像文件|此選項只能在主顯示器上使用|按 ⊞-P 臨時更改主監視器。|牆紙樣式必須設置為填充才能使用此選項|將壁紙樣式更改為填充？|壁紙文件丟失："
 
 RunOnStartup = False
 BringToFront = True
@@ -168,7 +168,7 @@ For Each oFile In oFiles
 Next
 
 If UBound(ArrPic)=-1 Then
-  MsgBox Msg(11) & Z & Z & MyFolder,vbOKonly,Msg(12)
+  MsgBox Msg(12) & Z & Z & MyFolder,vbOKonly,Msg(13)
   self.close
 End If
 
@@ -235,6 +235,7 @@ Sub UpdateLang
   Bsw.Value = Msg(8)
   Brw.Value = Msg(9)
   Bcn.Value = Msg(10)
+  Bhp.Value = Msg(11)
 End Sub
 
 Sub UpdateXY
@@ -371,27 +372,27 @@ Sub document_onclick
   End If
 End Sub
 
+Sub ManualAdvance(Flag)
+  If Not DoingInput Then
+    window.event.keyCode = 0
+    clearInterval(PicTimer)
+    Forward = Flag
+    If PicTimer=0 Then LoadPic
+    PicTimer = 0
+  End If
+End Sub
+
 Sub document_onKeyDown
     Select Case window.event.keyCode
-      Case 32, 39
-        If Not DoingInput Then
-          window.event.keyCode = 0
-          Forward = True
-          clearInterval(PicTimer)
-          LoadPic
-        End If
-      Case 8, 37
-        If Not DoingInput Then
-          window.event.keyCode = 0
-          Forward = False
-          clearInterval(PicTimer)
-          LoadPic
-        End If
-      Case 13
+      Case 32, 39 'Spacebar, Right arrow
+        ManualAdvance(True)
+      Case 8, 37 'Backspace, Left arrow
+        ManualAdvance(False)
+      Case 13 'Enter
         ContinueShow
-      Case 27
+      Case 27 'Esc
         If Not OptionMode Then LaunchOptionModeHTA
-      Case 116
+      Case 116 'F5
         window.event.keyCode = 0
     End Select
 End Sub
@@ -406,6 +407,10 @@ Sub ContinueShow
     clearInterval(PicTimer)
     PicTimer = Window.SetInterval("LoadPic()", PicDelay*1000)
   End If
+End Sub
+
+Sub Help
+  oWSH.Run "https://lesferch.github.io/DesktopPic"
 End Sub
 
 Sub LaunchOptionModeHTA
@@ -517,31 +522,39 @@ Sub RestoreWallpaper
   Brw.blur
 
   If (x<0 Or y<0 Or x>screen.Width Or y>screen.Height) Then
-    MsgBox Msg(13) & Z & Z & Msg(14),vbOKonly,Msg(9)
+    MsgBox Msg(14) & Z & Z & Msg(15),vbOKonly,Msg(9)
     Exit Sub
   End If
 
   oWSH.Run Q & WallPExe & Q & " 0",0,True
   Monitor = oWSH.RegRead("HKCU\Software\WallP\Monitor")
+  WPpath = oWSH.RegRead("HKCU\Software\WallP\WPpath")
+
   On Error Resume Next
   WPbackup = oWSH.RegRead("HKCU\Software\WallP\" & Monitor & "\WPbackup")
   On Error Goto 0
   If oFSO.FileExists(WPbackup) Then
     oWSH.Run Q & WallPExe & Q & " 0 " & Q & WPbackup & Q,0,True
   End If
+
+  StampedFile = MyAppData & "DesktopPic" & Monitor & ".png"
+  If oFSO.FileExists(WPpath) Then
+    If LCase(WPpath)<>LCase(StampedFile) Then oWSH.RegWrite "HKCU\Software\WallP\" & Monitor & "\WPbackup",WPpath
+  End If
+
 End Sub
 
 Sub StampWallpaper
   Bsw.blur
 
   If (x<0 Or y<0 Or x>screen.Width Or y>screen.Height) Then
-    MsgBox Msg(13) & Z & Z & Msg(14),vbOKonly,Msg(8)
+    MsgBox Msg(14) & Z & Z & Msg(15),vbOKonly,Msg(8)
     Exit Sub
   End If
 
   WallpaperStyle = oWSH.RegRead("HKCU\Control Panel\Desktop\WallpaperStyle")
   If WallpaperStyle<>"10" Then
-    Answer = MsgBox(Msg(15) & Z & Z & Msg(16),vbYesNo,Msg(8))
+    Answer = MsgBox(Msg(16) & Z & Z & Msg(17),vbYesNo,Msg(8))
     If Answer = vbNo Then Exit Sub
   End If
 
@@ -550,16 +563,16 @@ Sub StampWallpaper
   Fsw = screen.Width
   Fsh = screen.Height
 
+  StampImg = PicPath & aImage(0)
   oWSH.Run Q & WallPExe & Q & " 0",0,True
   Monitor = oWSH.RegRead("HKCU\Software\WallP\Monitor")
   WPpath = oWSH.RegRead("HKCU\Software\WallP\WPpath")
-  StampImg = PicPath & aImage(0)
   StampedFile = MyAppData & "DesktopPic" & Monitor & ".png"
    
   If oFSO.FileExists(WPpath) Then
     If LCase(WPpath)<>LCase(StampedFile) Then oWSH.RegWrite "HKCU\Software\WallP\" & Monitor & "\WPbackup",WPpath
   Else
-    MsgBox Msg(17) & Z & Z & WPpath
+    MsgBox Msg(18) & Z & Z & WPpath
     Exit Sub
   End If
 
@@ -661,6 +674,7 @@ border-radius: 2pt;
 <input type=button id=Bsw Value=Stamp onclick=StampWallpaper()>
 <input type=button id=Brw Value=Restore onclick=RestoreWallpaper()>
 <input type=button id=Bcn Value=Continue onclick=ContinueShow()>
+<input type=button id=Bhp Value=Help onclick=Help()>
 <br>
 <select id=Mln  OnChange=OnChangeMln()>
 <option>English</option>
