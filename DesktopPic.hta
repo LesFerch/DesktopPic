@@ -52,6 +52,7 @@ Q = Chr(34)
 MyAppData  = oWSH.ExpandEnvironmentStrings("%LocalAppData%") & "\DesktopPic\"
 If Not oFSO.FolderExists(MyAppData) Then oFSO.CreateFolder(MyAppData)
 WallPExe = MyAppData & "WallP.exe"
+NTVer = oWSH.RegRead("HKLM\Software\Microsoft\Windows NT\CurrentVersion\CurrentVersion")
 
 L(0)="Run on startup|Bring to front on start|Stretch smaller pictures|Pic delay in seconds|Max percent of screen area|Centered|Custom|Window position|Stamp|Restore|Continue|Help|Place at least one image file in the folder shown below|No image files found|This option can only be used on the primary monitor.|Press ⊞-P to temporarily change the primary monitor.|Wallpaper style must be set to Fill to use this option|Change wallpaper style to Fill?|Wallpaper file missing:|Background type must be set to Picture to use this option|Change background type to picture?"
 L(1)="Beim Start ausführen|Beim Start nach vorne bringen|Strecken Sie kleinere Bilder|Bildverzögerung in Sekunden|Maximaler Prozentsatz der Bildschirmfläche|Zentriert|Brauch|Fensterposition|Briefmarke|Wiederherstellen|Fortsetzen|Hilfe|Legen Sie mindestens eine Bilddatei in dem unten angezeigten Ordner ab|Keine Bilddateien gefunden|Diese Option kann nur auf dem primären Monitor verwendet werden|Drücken Sie ⊞-P, um den primären Monitor vorübergehend zu ändern.|Hintergrundstil muss auf Ausfüllen eingestellt sein, um diese Option zu verwenden|Hintergrundstil in Ausfüllen ändern?|Wallpaper-Datei fehlt:"
@@ -127,15 +128,17 @@ If Not(Instr(MyFolder,"C:\Program Files\")>0 Or Instr(MyFolder,"C:\Program Files
   End If
 End If
 
-If oFSO.FileExists(WallPExe) Then
-  Set oFile = oFSO.OpenTextFile(WallPExe,ForReading)
-  FileContents = oFile.ReadAll
-  oFile.Close
-  If Instr(FileContents,WallPVerNum)=0 Then oFSO.DeleteFile(WallPExe)
-End If  
+If NTVer>"6.1" Then
+  If oFSO.FileExists(WallPExe) Then
+    Set oFile = oFSO.OpenTextFile(WallPExe,ForReading)
+    FileContents = oFile.ReadAll
+    oFile.Close
+    If Instr(FileContents,WallPVerNum)=0 Then oFSO.DeleteFile(WallPExe)
+  End If  
 
-If Not oFSO.FileExists(WallPExe) Then
-  oWSH.Run "certutil -decode " & Q & MyPath & Q & " " & Q & WallPExe & Q,0,False
+  If Not oFSO.FileExists(WallPExe) Then
+    oWSH.Run "certutil -decode " & Q & MyPath & Q & " " & Q & WallPExe & Q,0,False
+  End If
 End If
 
 Ini2Dict
@@ -201,6 +204,11 @@ Sub window_onLoad
     If LangIdx<>0 Then UpdateLang
   Else
     HideOptions
+  End If
+  
+  If NTVer<"6.2" Then
+    Bsw.Disabled = True
+    Brw.Disabled = True
   End If
   
   Document.Title = MyTitle
@@ -383,18 +391,18 @@ Sub ManualAdvance(Flag)
 End Sub
 
 Sub document_onKeyDown
-    Select Case window.event.keyCode
-      Case 32, 39 'Spacebar, Right arrow
-        ManualAdvance(True)
-      Case 8, 37 'Backspace, Left arrow
-        ManualAdvance(False)
-      Case 13 'Enter
-        ContinueShow
-      Case 27 'Esc
-        If Not OptionMode Then LaunchOptionModeHTA
-      Case 116 'F5
-        window.event.keyCode = 0
-    End Select
+  Select Case window.event.keyCode
+    Case 32, 39 'Spacebar, Right arrow
+      ManualAdvance(True)
+    Case 8, 37 'Backspace, Left arrow
+      ManualAdvance(False)
+    Case 13 'Enter
+      ContinueShow
+    Case 27 'Esc
+      If Not OptionMode Then LaunchOptionModeHTA
+    Case 116 'F5
+      window.event.keyCode = 0
+  End Select
 End Sub
 
 Sub ContinueShow
@@ -560,7 +568,10 @@ Sub StampWallpaper
   End If
 
   'Detect if slideshow is enabled
+  BackgroundType = 0
+  On Error Resume Next
   BackgroundType = oWSH.RegRead("HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Wallpapers\BackgroundType")
+  On Error Goto 0
   If BackgroundType=2 Then
     Answer = MsgBox(Msg(19) & Z & Z & Msg(20),vbYesNo,Msg(8))
     If Answer = vbNo Then Exit Sub
