@@ -127,6 +127,7 @@ If desired, repeat steps 2-4 to stamp more images.
 
 **Notes**:
 - Click the **Restore** button to restore the *unstamped* wallpaper.
+- If you click **Restore** by accident, just **right-click** your desktop wallpaper, select **Personalize**, and reselect your stamped wallpaper.
 - To stamp an image on the wallpaper for another monitor, press ⊞-P to change the primary monitor, stamp as desired, and then use ⊞-P again to switch back to an extended desktop.
 
 ## Step 5: Exit DesktopPic
