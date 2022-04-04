@@ -1,4 +1,5 @@
 LICENSE export-ignore
 *.md    export-ignore
 *.cs    export-ignore
+*.exe   export-ignore
 .git*   export-ignore
