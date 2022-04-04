@@ -105,11 +105,13 @@ These instructions assume you have reviewed the **Slideshow** instructions above
 
 If the interface isn't currently displayed, press **Esc**.
 
+![image](https://user-images.githubusercontent.com/79026235/161545840-ee00cd84-605f-41bd-ad00-0d1305b15c36.png)
+
 **Note**: While the interface is displayed, **F3** will open File Explorer to the current DesktopPic folder (location of slideshow images) and **F4** will open File Explorer to the DesktopPic local AppData folder (location of stamped wallpaper images).
 
 ## Step 2: Select the Desired Picture to Stamp
 
-Use yor keyboard **left** and **right** arrows (or **spacebar** and **backspace**) to select a picture to stamp.
+Use your keyboard **left** and **right** arrows (or **spacebar** and **backspace**) to select a picture to stamp.
 
 ## Step 3: Move and Resize
 
