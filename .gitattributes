@@ -3,3 +3,4 @@ LICENSE export-ignore
 *.cs    export-ignore
 *.exe   export-ignore
 .git*   export-ignore
+WallP   export-ignore
