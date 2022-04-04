@@ -73,7 +73,7 @@ You can also select **Centered** from the **Window Position** dropdown menu to h
 
 Coordinates may also be entered in the **Window Position** input box to position the window. For example, **0,0** will position the DesktopPic window at the upper-left corner of the primary display. These numbers change automatically when you drag move the window.
 
-The Desktop window size can also be changed by directly entering a value for **Max percent of screen area**. This number represents the maximum amount of your screen area that will be used by the DesktopPic window. This number changes automatically when you drag resize the window.
+The DesktopPic window size can also be changed by directly entering a value for **Max percent of screen area**. This number represents the maximum amount of your screen area that will be used by the DesktopPic window. This number changes automatically when you drag resize the window.
 
 **Notes**:
 - Any entered values take effect when you **Tab** to another field, any time you click on the currently displayed image, and when you click the **Continue** button (or press **Enter**).
