@@ -33,7 +33,7 @@ Const ForReading = 1
 Const ForWriting = 2
 Const wiaFormatPNG = "{B96B3CAF-0728-11D3-9D7B-0000F81EF32E}"
 Const wiaFormatBMP = "{B96B3CAB-0728-11D3-9D7B-0000F81EF32E}"
-Const DevMode = True
+Const DevMode = False
 
 Set oWSH = CreateObject("Wscript.Shell")
 Set oFSO = CreateObject("Scripting.FileSystemObject")
@@ -42,8 +42,7 @@ Set oSettings = CreateObject("Scripting.Dictionary")
 Set DigitsOnly = New RegExp: DigitsOnly.Pattern = "[^0-9]"
 Set DigitsComma = New RegExp: DigitsComma.Pattern = "[^0-9,]"
 
-Dim PicTimer,UpdatePos,w,h,iw,ih,x,y,CenterCoordinates,hTpp,wTpp,Msg,L(6),aImage,MyAppData
-ReDim ArrPic(-1)
+Dim PicTimer,UpdatePos,w,h,iw,ih,x,y,CenterCoordinates,hTpp,wTpp,Msg,L(6),aImage,MyAppData,ArrPic
 Z = VBCRLF
 Q = Chr(34)
 
@@ -53,6 +52,7 @@ Q = Chr(34)
 MyAppData  = oWSH.ExpandEnvironmentStrings("%LocalAppData%") & "\DesktopPic\"
 If Not oFSO.FolderExists(MyAppData) Then oFSO.CreateFolder(MyAppData)
 WallPExe = MyAppData & "WallP.exe"
+PicListFile = MyAppData & "PicList.txt"
 NTVer = oWSH.RegRead("HKLM\Software\Microsoft\Windows NT\CurrentVersion\CurrentVersion")
 
 L(0)="Run on startup|Bring to front on start|Stretch smaller pictures|Pic delay in seconds|Max percent of screen area|Centered|Custom|Window position|Stamp|Restore|Continue|Help|Place at least one image file in the folder shown below|No image files found|This option can only be used on the primary monitor.|Press ⊞-P to temporarily change the primary monitor.|Wallpaper style must be set to Fill to use this option|Change wallpaper style to Fill?|Wallpaper file missing:|Background type must be set to Picture to use this option|Change background type to picture?"
@@ -164,23 +164,19 @@ If MaxScrPct="" Then MaxScrPct = 25
 
 Msg = Split(L(LangIdx),"|")
 
-Set oFolder = oFSO.GetFolder(PicPath)
-Set oFiles = oFolder.Files
-For Each oFile In oFiles
-  On Error Resume Next
-  oImg.LoadFile oFile.Name
-  If Err.Number=0 Then IsImage=True Else IsImage=False
-  On Error Goto 0
-  If IsImage Then
-    iw = oImg.Width: ih = oImg.Height
-    ReDim Preserve ArrPic(UBound(ArrPic)+1)
-    ArrPic(UBound(ArrPic)) = oFile.Name & "|" & iw & "|" & ih
-  End If
-Next
+oWSH.Run "Cmd /c dir /b *.png *.jpg *.bmp *.gif>" & Q & PicListFile & Q,0,True
+FileContents = ""
+On Error Resume Next
+Set oFile = oFSO.OpenTextFile(PicListFile,ForReading)
+FileContents = oFile.ReadAll
+oFile.Close
+On Error Goto 0
 
-If UBound(ArrPic)=-1 Then
+If FileContents="" Then
   MsgBox Msg(12) & Z & Z & MyFolder,vbOKonly,Msg(13)
   self.close
+Else
+  ArrPic = Split(FileContents,Z)
 End If
 
 'End Main
@@ -233,7 +229,7 @@ Sub window_onLoad
   If OptionMode Then
     UpdatePos = Window.SetInterval("UpdatePosition()", 100)
   Else
-    If UBound(ArrPic)>0 Then PicTimer = Window.SetInterval("LoadPic()", PicDelay*1000)
+    If UBound(ArrPic)>1 Then PicTimer = Window.SetInterval("LoadPic()", PicDelay*1000)
   End If
 
 End Sub
@@ -271,8 +267,7 @@ Sub ToggleShortcut
   ShortCutFolder = oWSH.SpecialFolders("Startup")
   ShortcutExists = False
   Set oFolder = oFSO.GetFolder(ShortCutFolder)
-  Set oFiles = oFolder.Files
-  For Each oFile In oFiles
+  For Each oFile In oFolder.Files
     If LCase(oFSO.GetExtensionName(oFile.Name)) = "lnk" Then
       Set link = oWSH.CreateShortcut(ShortCutFolder & "\" & oFile.Name)
       If link.TargetPath=PicPath & HTAName Then
@@ -317,14 +312,29 @@ End Sub
 
 Sub LoadPic
   If Forward Then PicIndex = PicIndex + 1 Else PicIndex = PicIndex - 1
-  If PicIndex=UBound(ArrPic)+1 Then PicIndex = 0
-  If PicIndex<0 Then PicIndex = UBound(ArrPic)
+  If PicIndex=UBound(ArrPic) Then PicIndex = 0
+  If PicIndex<0 Then PicIndex = UBound(ArrPic)-1
   aImage = Split(ArrPic(PicIndex),"|")
+  If UBound(aImage)=0 Then
+    On Error Resume Next
+    oImg.LoadFile aImage(0)
+    If Err.Number=0 Then IsImage=True Else IsImage=False
+    On Error Goto 0
+    If IsImage Then
+      iw = oImg.Width: ih = oImg.Height
+      ArrPic(PicIndex) = aImage(0) & "|" & iw & "|" & ih
+    Else
+      ArrPic(PicIndex) = aImage(0) & "|0|0"
+    End If
+    aImage = Split(ArrPic(PicIndex),"|")
+  End If
   iw = aImage(1): ih = aImage(2)
-  ResizePic
-  window.document.body.background = PicPath & aImage(0)
-  ResizeWindow
-  If Coordinates="" Then CenterWindow
+  If iw>0 And ih>0 Then
+    ResizePic
+    window.document.body.background = PicPath & aImage(0)
+    ResizeWindow
+    If Coordinates="" Then CenterWindow
+  End If
 End Sub
 
 Sub ResizePic
