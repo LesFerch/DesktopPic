@@ -28,13 +28,13 @@ Window.ResizeTo 0,0
 Const HideMe = 999999999
 Window.MoveTo HideMe,HideMe
 
-Const MyVerNum = "1.0.3"
+Const MyVerNum = "1.1.0"
 Const WallPVerNum = "1.0.0.0"
 Const ForReading = 1
 Const ForWriting = 2
 Const wiaFormatPNG = "{B96B3CAF-0728-11D3-9D7B-0000F81EF32E}"
 Const wiaFormatBMP = "{B96B3CAB-0728-11D3-9D7B-0000F81EF32E}"
-Const DevMode = False
+Const DevMode = True
 
 Set oWSH = CreateObject("Wscript.Shell")
 Set oFSO = CreateObject("Scripting.FileSystemObject")
@@ -64,6 +64,7 @@ L(4)="起動時に実行する|スタート時に前面に出す|小さい画像
 L(5)="在启动时运行|开始时放在前面|拉伸较小的图片|图片延迟以秒为单位|最大屏幕面积百分比|居中|风俗|窗口位置|邮票|恢复|继续|帮助|将至少一个图像文件放入如下所示的文件夹中|未找到图像文件|此选项只能在主显示器上使用|按 ⊞-P 临时更改主监视器。|墙纸样式必须设置为填充才能使用此选项|将壁纸样式更改为填充？|壁纸文件丢失："
 L(6)="在啟動時運行|開始時放在前面|拉伸較小的圖片|圖片延遲以秒為單位|最大屏幕面積百分比|居中|風俗|窗口位置|郵票|恢復|繼續|幫助|在如下所示的文件夾中至少放置一個圖像文件|未找到圖像文件|此選項只能在主顯示器上使用|按 ⊞-P 臨時更改主監視器。|牆紙樣式必須設置為填充才能使用此選項|將壁紙樣式更改為填充？|壁紙文件丟失："
 
+ShowFileName = False
 RunOnStartup = False
 BringToFront = True
 Stretch = False
@@ -72,6 +73,7 @@ MaxScrPct = 25
 Coordinates = ""
 Forward = True
 DoingInput = False
+BadImage = False
 PicIndex = -1
 LangIdx=0
 On Error Resume Next
@@ -156,6 +158,7 @@ If oSettings.Exists("[Options]LangIdx") Then LangIdx = oSettings.Item("[Options]
 If oSettings.Exists("[Options]RunOnStartup") Then RunOnStartup = (LCase(oSettings.Item("[Options]RunOnStartup"))="true")
 If oSettings.Exists("[Options]BringToFront") Then BringToFront = (LCase(oSettings.Item("[Options]BringToFront"))="true")
 If oSettings.Exists("[Options]Stretch") Then Stretch = (LCase(oSettings.Item("[Options]Stretch"))="true")
+If oSettings.Exists("[Options]ShowFileName") Then ShowFileName = (LCase(oSettings.Item("[Options]ShowFileName"))="true")
 If oSettings.Exists("[Options]PicDelay") Then PicDelay = oSettings.Item("[Options]PicDelay")
 If oSettings.Exists("[Options]MaxScrPct") Then MaxScrPct = oSettings.Item("[Options]MaxScrPct")
 If oSettings.Exists("[Options]Coordinates") Then Coordinates = oSettings.Item("[Options]Coordinates")
@@ -307,7 +310,7 @@ Sub UpdatePosition
   UpdateXY
   If Mpp.SelectedIndex=0 And Tsp.Value<>CenterCoordinates Then
     Mpp.SelectedIndex=1
-    Tsp.style.visibility = "visible"
+    Tsp.style.display = ""
   End If
 End Sub
 
@@ -330,11 +333,26 @@ Sub LoadPic
     aImage = Split(ArrPic(PicIndex),"|")
   End If
   iw = aImage(1): ih = aImage(2)
+  Nam.innerHTML = aImage(0)
   If iw>0 And ih>0 Then
+    BadImage = False
+    If ShowFileName Then
+      Nam.style.display = ""
+    Else
+      Nam.style.display = "none"
+    End If
     ResizePic
-    window.document.body.background = PicPath & aImage(0)
     ResizeWindow
     If Coordinates="" Then CenterWindow
+    window.document.body.background = PicPath & aImage(0)
+  Else
+    BadImage = True
+    Nam.style.display = ""
+    iw = 9: ih = 6
+    ResizePic
+    ResizeWindow
+    If Coordinates="" Then CenterWindow
+    window.document.body.background = ""
   End If
 End Sub
 
@@ -344,7 +362,7 @@ Sub ResizePic
   MaxArea = sw * sh * (MaxScrPct/100)
   ImgArea = iw * ih
   w = iw: h = ih
-  If ImgArea>MaxArea Or Stretch Or OptionMode Then
+  If ImgArea>MaxArea Or Stretch Or OptionMode Or BadImage Then
     ResizeFactor = Sqr(MaxArea/ImgArea)
     w = iw * ResizeFactor
     h = ih * ResizeFactor
@@ -367,28 +385,30 @@ Sub CenterWindow
 End Sub
 
 Sub ShowOptions
-  document.body.style.visibility = "visible"
+  Opt.style.display = ""
   Crs.Style.Zoom = 1.2
   Cbf.Style.Zoom = 1.2
   Csp.Style.Zoom = 1.2
+  Cfn.Style.Zoom = 1.2
   Crs.Checked = RunOnStartup
   Cbf.Checked = BringToFront
   Csp.Checked = Stretch
+  Cfn.Checked = ShowFileName
   Tpd.Value = PicDelay
   Tpp.Value = MaxScrPct
   Tsp.Value = Coordinates
   If Coordinates="" Then
-    Tsp.style.visibility = "hidden"
+    Tsp.style.display = "none"
   Else
     mpp.SelectedIndex = 1
-    Tsp.style.visibility = "visible"
+    Tsp.style.display = ""
   End If
   Mln.SelectedIndex = LangIdx
 End Sub
 
 Sub HideOptions
-  document.body.style.visibility = "hidden"
-  Tsp.style.visibility = "hidden"
+  Opt.style.display = "none"
+  Tsp.style.display = "none"
 End Sub
 
 Sub document_onclick
@@ -410,6 +430,11 @@ Sub ManualAdvance(Flag)
 End Sub
 
 Sub document_onKeyDown
+  If window.event.ctrlKey And window.event.keyCode=116 Then
+    window.event.keyCode = 0
+    Exit Sub
+  End If
+  If window.event.ctrlKey Or window.event.altKey Or window.event.shiftKey Then Exit Sub
   Select Case window.event.keyCode
     Case 32, 39 'Spacebar, Right arrow
       ManualAdvance(True)
@@ -513,10 +538,10 @@ End Sub
 Sub OnChangeMPP
   Mpp.blur
   If Mpp.SelectedIndex=1 Then
-    Tsp.style.visibility = "visible"
+    Tsp.style.display = ""
   Else
     CenterWindow
-    Tsp.style.visibility = "hidden"
+    Tsp.style.display = "none"
   End If
 End Sub
 
@@ -534,6 +559,17 @@ Sub OnChangeTsp
   End If
 End Sub
 
+Sub OnClickCfn
+  Cfn.blur
+  If Cfn.checked Then
+    Nam.style.display = ""
+    ShowFileName = True
+  Else
+    Nam.style.display = "none"
+    ShowFileName = False
+  End If
+End Sub
+
 Sub window_onUnload
   If OptionMode Then Var2Ini
 End Sub
@@ -545,6 +581,7 @@ Sub Var2Ini
   oFile.Write "RunOnStartup=" & Crs.Checked & Z
   oFile.Write "BringToFront=" & Cbf.Checked & Z
   oFile.Write "Stretch=" & Csp.Checked & Z
+  oFile.Write "ShowFileName=" & Cfn.Checked & Z
   oFile.Write "PicDelay=" & Tpd.Value & Z
   oFile.Write "MaxScrPct=" & Tpp.Value & Z
   If Mpp.SelectedIndex=0 Then Tsp.Value=""
@@ -777,6 +814,8 @@ border-radius: 2pt;
 </style>
 </head>
 <body>
+<span id=Nam class=cc></span>
+<div id=Opt>
 <input type=button id=Bsw Value=Stamp onclick=StampWallpaper()>
 <input type=button id=Brw Value=Restore onclick=RestoreWallpaper()>
 <input type=button id=Bcn Value=Continue onclick=ContinueShow()>
@@ -797,6 +836,8 @@ border-radius: 2pt;
 <span id=M1 class=cc>Bring to front on start</span><br>
 <input type=checkbox id=Csp OnClick=Csp.blur()>
 <span id=M2 class=cc>Stretch smaller pictures</span><br>
+<input type=checkbox id=Cfn OnClick=OnClickCfn()>
+<span id=M8 class=cc>Display file names</span><br>
 <input type=text size=5 id=Tpd MaxLength=5 OnFocus=OnFocusInput() OnBlur=OnBlurInput() OnInput=OnInputDigits("Tpd") OnChange=OnChangeTpd()>
 <span id=M3 class=cc>Pic delay in seconds</span><br>
 <input type=text size=5 id=Tpp MaxLength=3 OnFocus=OnFocusInput() OnBlur=OnBlurInput() OnInput=OnInputDigits("Tpp") OnChange=OnChangeTpp()>
@@ -808,6 +849,7 @@ border-radius: 2pt;
 </select>
 <span id=M7 class=cc>Window position</span>
 <input type=text size=11 id=Tsp MaxLength=11 OnFocus=OnFocusInput() OnBlur=OnBlurInput() OnInput=OnInputDigitsComma("Tsp") OnChange=OnChangeTsp()>
+</div>
 </body>
 </html>
 <!--
