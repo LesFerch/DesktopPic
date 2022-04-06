@@ -57,7 +57,7 @@ One or more images can be stamped to the wallpaper in any size or position. This
 
 Press **Esc** to show the DesktopPic interface.
 
-![image](https://user-images.githubusercontent.com/79026235/161467727-a6fdadee-5a2b-41a3-94c1-7040b8fc1fe8.png)
+![image](https://user-images.githubusercontent.com/79026235/161907996-1c84f991-72c2-4f93-b3df-5d5fac4de8fb.png)
 
 **Note**: If **Esc** doesn't activate the interface, DesktoPic probably doesn't have focus. Just click once on the current slideshow image and then press **Esc**.
 
@@ -91,6 +91,8 @@ Change the value for **Pic delay in seconds** to the number of seconds you want 
 
 - Check **Stretch smaller pictures** if you want images, that are smaller than the current DesktopPic window, to be stretched to the size of DesktopPic window.
 
+- Check **Display file names** if you want the image file name displayed.
+
 ## Step 5: Continue the Slideshow
 
 Press the **Continue** button or press **Enter** to hide the interface and continue the slideshow. All setting changes are automatically saved to a **DesktopPic.ini** file.
@@ -105,7 +107,7 @@ These instructions assume you have reviewed the **Slideshow** instructions above
 
 If the interface isn't currently displayed, press **Esc**.
 
-![image](https://user-images.githubusercontent.com/79026235/161545840-ee00cd84-605f-41bd-ad00-0d1305b15c36.png)
+![image](https://user-images.githubusercontent.com/79026235/161905954-70699c42-f50b-47a7-bef8-12ac11c50e90.png)
 
 **Note**: While the interface is displayed, **F3** will open File Explorer to the current DesktopPic folder (location of slideshow images) and **F4** will open File Explorer to the DesktopPic local AppData folder (location of stamped wallpaper images).
 
