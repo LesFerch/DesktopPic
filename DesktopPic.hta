@@ -25,8 +25,10 @@ WallP.exe (command line tool to set wallpaper per monitor)
 'Begin Main
 
 Window.ResizeTo 0,0
+Const HideMe = 999999999
+Window.MoveTo HideMe,HideMe
 
-Const MyVerNum = "1.0.2"
+Const MyVerNum = "1.0.3"
 Const WallPVerNum = "1.0.0.0"
 Const ForReading = 1
 Const ForWriting = 2
@@ -546,6 +548,7 @@ Sub Var2Ini
   oFile.Write "PicDelay=" & Tpd.Value & Z
   oFile.Write "MaxScrPct=" & Tpp.Value & Z
   If Mpp.SelectedIndex=0 Then Tsp.Value=""
+  If InStr(Tsp.Value,HideMe) Then Tsp.Value = ""
   oFile.Write "Coordinates=" & Tsp.Value & Z
   oFile.Close
 End Sub
