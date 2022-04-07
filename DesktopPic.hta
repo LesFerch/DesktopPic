@@ -28,13 +28,12 @@ Window.ResizeTo 0,0
 Const HideMe = 999999999
 Window.MoveTo HideMe,HideMe
 
-Const MyVerNum = "1.1.1"
+Const MyVerNum = "1.1.2"
 Const WallPVerNum = "1.0.0.0"
 Const ForReading = 1
 Const ForWriting = 2
 Const wiaFormatPNG = "{B96B3CAF-0728-11D3-9D7B-0000F81EF32E}"
 Const wiaFormatBMP = "{B96B3CAB-0728-11D3-9D7B-0000F81EF32E}"
-Const DevMode = False
 
 Set oWSH = CreateObject("Wscript.Shell")
 Set oFSO = CreateObject("Scripting.FileSystemObject")
@@ -100,6 +99,7 @@ MyPath  = Mid(document.URL,8)
 MyFolder = oFSO.GetParentFolderName(MyPath)
 MyName = oFSO.GetFileName(MyPath)
 OptionModeHTA = MyAppData & MyName
+If oFSO.FileExists(MyFolder & "\README.md") Then DevMode = True 
 
 If UBound(aParam)>0 Then
   If IsNumeric(aParam(1)) Then PicIndex = aParam(1) - 1
@@ -255,9 +255,13 @@ Sub UpdateLang
 End Sub
 
 Sub UpdateXY
+  x = 0: y = 0
   aCoords = Split(Coordinates,",")
+  On Error Resume Next
   x = CInt(aCoords(0))
   y = CInt(aCoords(1))
+  On Error Goto 0
+  Coordinates = x & "," & y
 End Sub
 
 Sub RepositionWindow
@@ -518,6 +522,7 @@ End Sub
 
 Sub OnInputDigitsComma(id)
   document.getElementByID(id).Value = DigitsComma.Replace(document.getElementByID(id).Value,"")
+  document.getElementByID(id).Value = Replace(document.getElementByID(id).Value,",,",",")
 End Sub
 
 Sub OnChangeTpd
@@ -553,8 +558,6 @@ End Sub
 Sub OnChangeTsp
   If tsp.Value<>"" Then 
     Coordinates = Tsp.Value
-    If Left(Coordinates,1)="," Then Coordinates = "0" & Coordinates
-    If Instr(Coordinates,",")=0 Then Coordinates = Coordinates & ",0"
     RepositionWindow
   End If
 End Sub
