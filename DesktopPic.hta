@@ -28,7 +28,7 @@ Window.ResizeTo 0,0
 Const HideMe = 999999999
 Window.MoveTo HideMe,HideMe
 
-Const MyVerNum = "1.1.2"
+Const MyVerNum = "1.1.3"
 Const WallPVerNum = "1.0.0.0"
 Const ForReading = 1
 Const ForWriting = 2
@@ -740,10 +740,10 @@ Sub StampWallpaper
   'Adjust current wallpaper to fill screen
   If Not(Wall.Width=Fsw And Wall.Height=Fsh) Then
   
-    wFactor = sw / Wall.Width
-    hFactor = sh / Wall.Height
-    If wFactor>hFactor Then NewWidth = sw : NewHeight = Int(wFactor * Wall.Height)
-    If hFactor>wFactor Then NewHeight = sh : NewWidth = Int(hFactor * Wall.Width)
+    wFactor = Fsw / Wall.Width
+    hFactor = Fsh / Wall.Height
+    If wFactor>hFactor Then NewWidth = Fsw : NewHeight = Int(wFactor * Wall.Height)
+    If hFactor>wFactor Then NewHeight = Fsh : NewWidth = Int(hFactor * Wall.Width)
     Set IP = CreateObject("WIA.ImageProcess")
     IP.Filters.Add IP.FilterInfos("Scale").FilterID
     IP.Filters(1).Properties("MaximumWidth") = NewWidth
