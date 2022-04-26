@@ -28,7 +28,7 @@ Window.ResizeTo 0,0
 Const HideMe = 999999999
 Window.MoveTo HideMe,HideMe
 
-Const MyVerNum = "1.1.3"
+Const MyVerNum = "1.1.4"
 Const WallPVerNum = "1.0.0.0"
 Const ForReading = 1
 Const ForWriting = 2
@@ -805,7 +805,7 @@ End Sub
 </script>
 <style>
 body {background-size:cover; background-attachment:fixed; background-repeat:no-repeat}
-br {font-size: 16pt} 
+br {font-size: 16pt}
 .cc {
 font-family: sans-serif;
 font-weight: normal;
@@ -846,13 +846,13 @@ border-radius: 2pt;
 <span id=M3 class=cc>Pic delay in seconds</span><br>
 <input type=text size=5 id=Tpp MaxLength=3 OnFocus=OnFocusInput() OnBlur=OnBlurInput() OnInput=OnInputDigits("Tpp") OnChange=OnChangeTpp()>
 <span id=M4 class=cc>Max percent of screen area</span><br>
-
 <select id=Mpp  OnChange=OnChangeMpp()>
 <option id=M5>Centered</option>
 <option id=M6>Custom</option>
 </select>
 <span id=M7 class=cc>Window position</span>
 <input type=text size=11 id=Tsp MaxLength=11 OnFocus=OnFocusInput() OnBlur=OnBlurInput() OnInput=OnInputDigitsComma("Tsp") OnChange=OnChangeTsp()>
+<br>
 </div>
 </body>
 </html>
