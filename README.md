@@ -57,7 +57,7 @@ One or more images can be stamped to the wallpaper in any size or position. This
 
 Press **Esc** to show the DesktopPic interface.
 
-![image](https://user-images.githubusercontent.com/79026235/161907996-1c84f991-72c2-4f93-b3df-5d5fac4de8fb.png)
+![image](https://user-images.githubusercontent.com/79026235/165211902-10156f45-22e3-4e7c-a8dc-76834e6dbf7e.png)
 
 **Note**: If **Esc** doesn't activate the interface, DesktoPic probably doesn't have focus. Just click once on the current slideshow image and then press **Esc**.
 
@@ -107,7 +107,7 @@ These instructions assume you have reviewed the **Slideshow** instructions above
 
 If the interface isn't currently displayed, press **Esc**.
 
-![image](https://user-images.githubusercontent.com/79026235/161905954-70699c42-f50b-47a7-bef8-12ac11c50e90.png)
+![image](https://user-images.githubusercontent.com/79026235/165212129-0421228f-6112-4111-bdfd-92f77943385a.png)
 
 **Note**: While the interface is displayed, **F3** will open File Explorer to the current DesktopPic folder (location of slideshow images) and **F4** will open File Explorer to the DesktopPic local AppData folder (location of stamped wallpaper images).
 
