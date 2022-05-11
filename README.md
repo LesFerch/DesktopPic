@@ -55,11 +55,11 @@ One or more images can be stamped to the wallpaper in any size or position. This
 
 ## Step 1: Show the Interface
 
-Press **Esc** to show the DesktopPic interface.
+**Double-click** anywhere on the displayed image or press **Esc** to show the DesktopPic interface.
 
 ![image](https://user-images.githubusercontent.com/79026235/165211902-10156f45-22e3-4e7c-a8dc-76834e6dbf7e.png)
 
-**Note**: If **Esc** doesn't activate the interface, DesktoPic probably doesn't have focus. Just click once on the current slideshow image and then press **Esc**.
+**Note**: If **Esc** doesn't activate the interface, DesktoPic probably doesn't have focus. In wich case, you can click once on the displayed image and then press **Esc** or just **double-click** on the displayed image.
 
 ## Step 2: Select Interface Language
 

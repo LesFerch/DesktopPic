@@ -28,7 +28,7 @@ Window.ResizeTo 0,0
 Const HideMe = 999999999
 Window.MoveTo HideMe,HideMe
 
-Const MyVerNum = "1.1.5"
+Const MyVerNum = "1.1.6"
 Const WallPVerNum = "1.0.0.0"
 Const ForReading = 1
 Const ForWriting = 2
@@ -42,7 +42,7 @@ Set oSettings = CreateObject("Scripting.Dictionary")
 Set DigitsOnly = New RegExp: DigitsOnly.Pattern = "[^0-9]"
 Set DigitsComma = New RegExp: DigitsComma.Pattern = "[^0-9,]"
 
-Dim PicTimer,UpdatePos,w,h,iw,ih,x,y,CenterCoordinates,hTpp,wTpp,Msg,L(8),aImage,MyAppData,ArrPic
+Dim PicTimer,UpdatePos,w,h,iw,ih,x,y,CenterCoordinates,hTpp,wTpp,Msg,L(10),aImage,MyAppData,ArrPic
 Z = VBCRLF
 Q = Chr(34)
 
@@ -64,6 +64,8 @@ L(5)="在启动时运行|开始时放在前面|拉伸较小的图片|图片延�
 L(6)="在啟動時運行|開始時放在前面|拉伸較小的圖片|圖片延遲以秒為單位|最大屏幕面積百分比|居中|風俗|窗口位置|郵票|恢復|繼續|幫助|在如下所示的文件夾中至少放置一個圖像文件|未找到圖像文件|此選項只能在主顯示器上使用|按 ⊞-P 臨時更改主監視器。|牆紙樣式必須設置為填充才能使用此選項|將壁紙樣式更改為填充？|壁紙文件丟失：|背景類型必須設置為圖片才能使用此選項|將背景類型更改為圖片？|顯示文件名"
 L(7)="시작 시 실행|시작 시 맨 앞으로 가져오기|작은 사진 늘리기|초 단위의 사진 지연|화면 영역의 최대 백분율|중앙|관습|창 위치|우표|복원하다|계속하다|돕다|아래 표시된 폴더에 하나 이상의 이미지 파일을 넣으십시오.|이미지 파일을 찾을 수 없습니다|이 옵션은 기본 모니터에서만 사용할 수 있습니다.|기본 모니터를 일시적으로 변경하려면 ⊞-P를 누르세요.|이 옵션을 사용하려면 배경 화면 스타일을 채우기로 설정해야 합니다.|배경화면 스타일을 채우기로 변경하시겠습니까?|배경화면 파일 누락:|이 옵션을 사용하려면 배경 유형을 그림으로 설정해야 합니다.|배경 유형을 그림으로 변경하시겠습니까?|파일 이름 표시"
 L(8)="Chạy khi khởi động|Đưa lên trước khi bắt đầu|Kéo dài hình ảnh nhỏ hơn|Pic trễ trong vài giây|Phần trăm diện tích màn hình tối đa|Căn giữa|Tập quán|Vị trí cửa sổ|Con tem|Khôi phục|Còn nữa|Giúp đỡ|Đặt ít nhất một tệp hình ảnh trong thư mục được hiển thị bên dưới|Không tìm thấy tệp hình ảnh nào|Tùy chọn này chỉ có thể được sử dụng trên màn hình chính.|Nhấn ⊞-P để tạm thời thay đổi điều khiển chính.|Kiểu hình nền phải được đặt thành Tô để sử dụng tùy chọn này|Thay đổi kiểu hình nền thành Điền?|Tệp hình nền bị thiếu:|Loại nền phải được đặt thành Ảnh để sử dụng tùy chọn này|Thay đổi loại nền thành hình ảnh?|Hiển thị tên tệp"
+L(9)="Выполняться при запуске|Привести к началу на старте|Растягивать маленькие картинки|Задержка изображения в секундах|Максимальный процент площади экрана|по центру|Обычай|Положение окна|Печать|Восстановить|Продолжать|Помощь|Поместите хотя бы один файл изображения в папку, показанную ниже.|Файлы изображений не найдены|Этот параметр можно использовать только на основном мониторе.|Нажмите ⊞-P, чтобы временно изменить основной монитор.|Чтобы использовать эту опцию, для стиля обоев должно быть установлено значение «Заливка».|Изменить стиль обоев на Заливка?|Отсутствует файл обоев:|Тип фона должен быть установлен на Изображение, чтобы использовать эту опцию.|Изменить тип фона на картинку?|Показать имена файлов"
+L(10)="Executar ao iniciar|Traga para a frente no início|Esticar fotos menores|Atraso da foto em segundos|Porcentagem máxima da área da tela|Centralizado|Personalizado|Posição da janela|Carimbo|Restaurar|Continuar|Ajuda|Coloque pelo menos um arquivo de imagem na pasta mostrada abaixo|Nenhum arquivo de imagem encontrado|Esta opção só pode ser usada no monitor primário.|Pressione ⊞-P para alterar temporariamente o monitor primário.|O estilo do papel de parede deve ser definido como Preencher para usar esta opção|Alterar o estilo do papel de parede para Preencher?|Arquivo de papel de parede ausente:|O tipo de plano de fundo deve ser definido como Imagem para usar esta opção|Alterar o tipo de plano de fundo para imagem?|Exibir nomes de arquivos"
 
 ShowFileName = False
 RunOnStartup = False
@@ -88,6 +90,8 @@ If Language="zh-CN" Then LangIdx=5
 If Language="zh-TW" Then LangIdx=6
 If Left(Language,2)="ko" Then LangIdx=7
 If Left(Language,2)="vi" Then LangIdx=8
+If Left(Language,2)="ru" Then LangIdx=9
+If Left(Language,2)="pt" Then LangIdx=10
 On Error Goto 0
 
 OptionMode = oHTA.caption="yes"
@@ -420,6 +424,10 @@ Sub HideOptions
   Tsp.style.display = "none"
 End Sub
 
+Sub document_ondblclick
+  If Not OptionMode Then LaunchOptionModeHTA
+End Sub
+
 Sub document_onclick
   If OptionMode And Not DoingInput Then
     ResizePic
@@ -428,11 +436,12 @@ Sub document_onclick
   End If
 End Sub
 
-Sub ManualAdvance(Flag)
+Sub ManualAdvance(Flag,KeyCode)
   If Not DoingInput Then
     window.event.keyCode = 0
     clearInterval(PicTimer)
     Forward = Flag
+    If Not(KeyCode=32) Then PicTimer = 0
     If PicTimer=0 Then LoadPic
     PicTimer = 0
   End If
@@ -446,9 +455,9 @@ Sub document_onKeyDown
   If window.event.ctrlKey Or window.event.altKey Or window.event.shiftKey Then Exit Sub
   Select Case window.event.keyCode
     Case 32, 39 'Spacebar, Right arrow
-      ManualAdvance(True)
+      ManualAdvance True,window.event.keyCode
     Case 8, 37 'Backspace, Left arrow
-      ManualAdvance(False)
+      ManualAdvance False,window.event.keyCode
     Case 13 'Enter
       ContinueShow
     Case 27 'Esc
@@ -840,6 +849,8 @@ border-radius: 2pt;
 <option>中文 (繁體)</option>
 <option>한국어</option>
 <option>Tiếng Việt</option>
+<option>Русский</option>
+<option>Português</option>
 </select><br>
 <input type=checkbox id=Crs OnClick=ToggleShortcut()>
 <span id=M0 class=cc>Run on startup</span><br>
