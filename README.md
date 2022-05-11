@@ -105,7 +105,7 @@ These instructions assume you have reviewed the **Slideshow** instructions above
 
 ## Step 1: Show the Interface
 
-If the interface isn't currently displayed, press **Esc**.
+If the interface isn't currently displayed, **double-click** the image or press **Esc**.
 
 ![image](https://user-images.githubusercontent.com/79026235/165212129-0421228f-6112-4111-bdfd-92f77943385a.png)
 
