@@ -38,7 +38,7 @@ One or more images can be stamped to the wallpaper in any size or position. This
 - You can run multiple copies of DesktopPic to have more than one slideshow on your desktop (on any monitor).
 - DesktopPic always maintains the original picture's aspect ratio.
 - DesktopPic does not do a full screen slideshow (that capability is already built into Windows 7 and above).
-- The Stamp feature provides the same result as if you edited your wallpaper using an image editing program. It just makes the process easier and more fun.
+- The Stamp feature provides the same result as if you edited your wallpaper using an image editing program. It just makes the process easier and more fun (and easy to undo).
 - The Stamp feature is multi-monitor aware on Windows 8 and above.
 
 # How to Use (Slideshow)
