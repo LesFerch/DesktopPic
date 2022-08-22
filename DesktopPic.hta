@@ -28,15 +28,17 @@ Window.ResizeTo 0,0
 Const HideMe = 999999999
 Window.MoveTo HideMe,HideMe
 
-Const MyVerNum = "1.1.6"
+Const MyVerNum = "1.1.7"
 Const WallPVerNum = "1.0.0.0"
 Const ForReading = 1
 Const ForWriting = 2
 Const wiaFormatPNG = "{B96B3CAF-0728-11D3-9D7B-0000F81EF32E}"
 Const wiaFormatBMP = "{B96B3CAB-0728-11D3-9D7B-0000F81EF32E}"
+Const HKCU = &H80000001
 
 Set oWSH = CreateObject("Wscript.Shell")
 Set oFSO = CreateObject("Scripting.FileSystemObject")
+Set oReg = GetObject("winmgmts:\\.\root\default:StdRegProv")
 Set oImg = CreateObject("WIA.ImageFile")
 Set oSettings = CreateObject("Scripting.Dictionary")
 Set DigitsOnly = New RegExp: DigitsOnly.Pattern = "[^0-9]"
@@ -193,6 +195,26 @@ End If
 
 'End Main
 
+Function GetScale()
+  GetScale = 1.0
+  Value = oWSH.RegRead("HKCU\Control Panel\Desktop\WindowMetrics\AppliedDPI")
+  If Value > 96 Then
+    'Custom scaling is set
+    GetScale = Value/96
+  Else
+    'See if standard scaling is set
+    Key = "Control Panel\Desktop\PerMonitorSettings"
+    Result = oReg.EnumKey(HKCU, Key, ArrKeys)
+    If Result=0 Then
+      'Assume first monitor in list is the one we want
+      For Each SubKey In ArrKeys
+        Exit For
+      Next
+      Value = oWSH.RegRead("HKCU\" & Key & "\" & SubKey & "\DPIValue")
+      If Value>0 Then GetScale = 1 + (Value * 0.25)
+    End If
+  End If
+End Function
 
 Sub Ini2Dict
   If oFSO.FileExists(INIFile) Then 
@@ -227,7 +249,7 @@ Sub window_onLoad
     Brw.Disabled = True
   End If
   
-  Document.Title = MyTitle
+  document.Title = MyTitle
   If Not BringToFront Then Window.blur
 
   LoadPic
@@ -399,10 +421,11 @@ End Sub
 
 Sub ShowOptions
   Opt.style.display = ""
-  Crs.Style.Zoom = 1.2
-  Cbf.Style.Zoom = 1.2
-  Csp.Style.Zoom = 1.2
-  Cfn.Style.Zoom = 1.2
+  Scale = GetScale()
+  Crs.Style.Zoom = 1.2 * Scale
+  Cbf.Style.Zoom = 1.2 * Scale
+  Csp.Style.Zoom = 1.2 * Scale
+  Cfn.Style.Zoom = 1.2 * Scale
   Crs.Checked = RunOnStartup
   Cbf.Checked = BringToFront
   Csp.Checked = Stretch
@@ -829,6 +852,7 @@ background: rgba(0,0,0,.4);
 padding: 1pt;
 border-radius: 2pt;
 }
+.scaled {vertical-align:bottom}
 </style>
 </head>
 <body>
@@ -852,13 +876,13 @@ border-radius: 2pt;
 <option>Русский</option>
 <option>Português</option>
 </select><br>
-<input type=checkbox id=Crs OnClick=ToggleShortcut()>
+<input type=checkbox class=scaled id=Crs OnClick=ToggleShortcut()>
 <span id=M0 class=cc>Run on startup</span><br>
-<input type=checkbox id=Cbf OnClick=Cbf.blur()>
+<input type=checkbox class=scaled id=Cbf OnClick=Cbf.blur()>
 <span id=M1 class=cc>Bring to front on start</span><br>
-<input type=checkbox id=Csp OnClick=Csp.blur()>
+<input type=checkbox class=scaled id=Csp OnClick=Csp.blur()>
 <span id=M2 class=cc>Stretch smaller pictures</span><br>
-<input type=checkbox id=Cfn OnClick=OnClickCfn()>
+<input type=checkbox class=scaled id=Cfn OnClick=OnClickCfn()>
 <span id=M8 class=cc>Display file names</span><br>
 <input type=text size=5 id=Tpd MaxLength=5 OnFocus=OnFocusInput() OnBlur=OnBlurInput() OnInput=OnInputDigits("Tpd") OnChange=OnChangeTpd()>
 <span id=M3 class=cc>Pic delay in seconds</span><br>
