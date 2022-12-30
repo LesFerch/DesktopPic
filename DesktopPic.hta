@@ -28,7 +28,7 @@ Window.ResizeTo 0,0
 Const HideMe = 999999999
 Window.MoveTo HideMe,HideMe
 
-Const MyVerNum = "1.1.7"
+Const MyVerNum = "1.1.8"
 Const WallPVerNum = "1.0.0.0"
 Const ForReading = 1
 Const ForWriting = 2
@@ -197,9 +197,13 @@ End If
 
 Function GetScale()
   GetScale = 1.0
-  Value = oWSH.RegRead("HKCU\Control Panel\Desktop\WindowMetrics\AppliedDPI")
-  If Value > 96 Then
+  Value = 0
+  On Error Resume Next
+  Value = oWSH.RegRead("HKCU\Control Panel\Desktop\Win8DpiScaling")
+  If Value=1 Then
     'Custom scaling is set
+    Value = 96
+    Value = oWSH.RegRead("HKCU\Control Panel\Desktop\WindowMetrics\AppliedDPI")
     GetScale = Value/96
   Else
     'See if standard scaling is set
@@ -214,6 +218,7 @@ Function GetScale()
       If Value>0 Then GetScale = 1 + (Value * 0.25)
     End If
   End If
+  On Error Goto 0
 End Function
 
 Sub Ini2Dict
