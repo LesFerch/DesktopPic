@@ -28,7 +28,7 @@ Window.ResizeTo 0,0
 Const HideMe = 999999999
 Window.MoveTo HideMe,HideMe
 
-Const MyVerNum = "1.1.8"
+Const MyVerNum = "1.1.9"
 Const WallPVerNum = "1.0.0.0"
 Const ForReading = 1
 Const ForWriting = 2
@@ -197,27 +197,9 @@ End If
 
 Function GetScale()
   GetScale = 1.0
-  Value = 0
   On Error Resume Next
-  Value = oWSH.RegRead("HKCU\Control Panel\Desktop\Win8DpiScaling")
-  If Value=1 Then
-    'Custom scaling is set
-    Value = 96
-    Value = oWSH.RegRead("HKCU\Control Panel\Desktop\WindowMetrics\AppliedDPI")
-    GetScale = Value/96
-  Else
-    'See if standard scaling is set
-    Key = "Control Panel\Desktop\PerMonitorSettings"
-    Result = oReg.EnumKey(HKCU, Key, ArrKeys)
-    If Result=0 Then
-      'Assume first monitor in list is the one we want
-      For Each SubKey In ArrKeys
-        Exit For
-      Next
-      Value = oWSH.RegRead("HKCU\" & Key & "\" & SubKey & "\DPIValue")
-      If Value>0 Then GetScale = 1 + (Value * 0.25)
-    End If
-  End If
+  'If user changes scale, they must logout/login for this registry value to change
+  GetScale = oWSH.RegRead("HKCU\Control Panel\Desktop\WindowMetrics\AppliedDPI") / 96
   On Error Goto 0
 End Function
 
