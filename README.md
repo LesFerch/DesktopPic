@@ -10,7 +10,7 @@ You can also manually navigate your browser to: https://lesferch.github.io/Deskt
 
 Compatible with Windows 7, 8, 10, and 11 and multiple monitors.
 
-# How to Download and Run
+## How to Download and Run
 
 1. Download the zip file using the link above.
 2. Extract **DesktopPic.hta**.
@@ -18,7 +18,7 @@ Compatible with Windows 7, 8, 10, and 11 and multiple monitors.
 4. Run (double-click) **DesktopPic.hta**.
 5. At the UAC prompt, *uncheck* **Always ask before opening this file** and then click **Run**.
 
-# Summary
+## Summary
 
 DesktopPic provides two convenient methods to display one or more pictures on your Windows desktop...
 
@@ -38,10 +38,10 @@ One or more images can be stamped to the wallpaper in any size or position. This
 - You can run multiple copies of DesktopPic to have more than one slideshow on your desktop (on any monitor).
 - DesktopPic always maintains the original picture's aspect ratio.
 - DesktopPic does not do a full screen slideshow (that capability is already built into Windows 7 and above).
-- The Stamp feature provides the same result as if you edited your wallpaper using an image editing program. It just makes the process easier and more fun (and easy to undo).
+- The Stamp feature provides the same result as if you edited your wallpaper using an image editing program. It just makes the process easier and more fun.
 - The Stamp feature is multi-monitor aware on Windows 8 and above.
 
-# How to Use (Slideshow)
+## How to Use (Slideshow)
 
 **Notes**:
 
@@ -53,7 +53,7 @@ One or more images can be stamped to the wallpaper in any size or position. This
 
 - Pressing **Enter** resumes the slideshow.
 
-## Step 1: Show the Interface
+### Step 1: Show the Interface
 
 **Double-click** anywhere on the displayed image or press **Esc** to show the DesktopPic interface.
 
@@ -61,11 +61,11 @@ One or more images can be stamped to the wallpaper in any size or position. This
 
 **Note**: If **Esc** doesn't activate the interface, DesktoPic probably doesn't have focus. In which case, you can click once on the displayed image and then press **Esc** or just **double-click** on the displayed image.
 
-## Step 2: Select Interface Language
+### Step 2: Select Interface Language
 
 If Windows is set to a language that DesktopPic supports, that language should get selected automatically. The desired language can also be selected from the language dropdown menu.
 
-## Step 3: Move and Resize
+### Step 3: Move and Resize
 
 Once the interface is displayed, you can drag and resize the DesktopPic window like any other window.
 
@@ -79,11 +79,11 @@ The DesktopPic window size can also be changed by directly entering a value for 
 - Any entered values take effect when you **Tab** to another field, any time you click on the currently displayed image, and when you click the **Continue** button (or press **Enter**).
 - Clicking on the currently displayed image also automatically readjusts the DesktopPic window size to match the aspect ratio of the currently displayed picture. 
 
-## Step 3: Adjust the Slideshow Delay
+### Step 4: Adjust the Slideshow Delay
 
 Change the value for **Pic delay in seconds** to the number of seconds you want each picture to be dislpayed.
 
-## Step 4: Adjust Remaining Preferences
+### Step 5: Adjust Remaining Preferences
 
 - Check **Run on startup** if you want DesktopPic to run when you login. This feature is supported for multiple copies of DesktopPic *without* any need to rename the **DesktopPic.hta** file.
 
@@ -93,17 +93,17 @@ Change the value for **Pic delay in seconds** to the number of seconds you want 
 
 - Check **Display file names** if you want the image file name displayed.
 
-## Step 5: Continue the Slideshow
+### Step 6: Continue the Slideshow
 
 Press the **Continue** button or press **Enter** to hide the interface and continue the slideshow. All setting changes are automatically saved to a **DesktopPic.ini** file.
 
 **Note**: All setting changes are also saved whenever you click on the currently displayed image while the DesktopPic interface is displayed.
 
-# How to Use (Stamp Image)
+## How to Use (Stamp Image)
 
 These instructions assume you have reviewed the **Slideshow** instructions above and already have an understanding of the interface.
 
-## Step 1: Show the Interface
+### Step 1: Show the Interface
 
 If the interface isn't currently displayed, **double-click** the image or press **Esc**.
 
@@ -111,17 +111,17 @@ If the interface isn't currently displayed, **double-click** the image or press 
 
 **Note**: While the interface is displayed, **F3** will open File Explorer to the current DesktopPic folder (location of slideshow images) and **F4** will open File Explorer to the DesktopPic local AppData folder (location of stamped wallpaper images).
 
-## Step 2: Select the Desired Picture to Stamp
+### Step 2: Select the Desired Picture to Stamp
 
 Use your keyboard **left** and **right** arrows (or **spacebar** and **backspace**) to select a picture to stamp.
 
-## Step 3: Move and Resize
+### Step 3: Move and Resize
 
 - Drag the DesktopPic window to where you want to stamp the image.
 - Resize the DesktopPic window to the image size you wish to stamp.
 - Click once on the image to correct the DesktopPic window size to the image's aspect ratio.
 
-## Step 4: Stamp the Image
+### Step 4: Stamp the Image
 
 Click the **Stamp** button to stamp the image to the current desktop wallpaper.
 
@@ -132,7 +132,7 @@ If desired, repeat steps 2-4 to stamp more images.
 - If you click **Restore** by accident, just **right-click** your desktop wallpaper, select **Personalize**, and reselect your stamped wallpaper.
 - To stamp an image on the wallpaper for another monitor, press ⊞-P to change the primary monitor, stamp as desired, and then use ⊞-P again to switch back to an extended desktop.
 
-## Step 5: Exit DesktopPic
+### Step 5: Exit DesktopPic
 
 Click **X** to close DesktopPic. 
 
