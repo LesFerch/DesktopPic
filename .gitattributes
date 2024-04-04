@@ -4,3 +4,4 @@ LICENSE export-ignore
 *.exe   export-ignore
 .git*   export-ignore
 WallP   export-ignore
+assets  export-ignore
