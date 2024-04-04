@@ -5,3 +5,4 @@ LICENSE export-ignore
 .git*   export-ignore
 WallP   export-ignore
 assets  export-ignore
+*.scss linguist-vendored
