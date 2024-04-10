@@ -4,7 +4,7 @@ To view this document formatted (instead of as raw text) just click the Help but
 You can also manually navigate your browser to: https://lesferch.github.io/DesktopPic.
 -->
 
-[![image](https://user-images.githubusercontent.com/79026235/152910441-59ba653c-5607-4f59-90c0-bc2851bf2688.png)Download the zip file](https://github.com/LesFerch/DesktopPic/archive/refs/heads/main.zip)
+[![image](https://github.com/LesFerch/WinSetView/assets/79026235/0188480f-ca53-45d5-b9ff-daafff32869e)Download the zip file](https://github.com/LesFerch/DesktopPic/archive/refs/heads/main.zip)
 
 ## Display or stamp images on your Windows desktop wallpaper.
 
@@ -17,6 +17,8 @@ Compatible with Windows 7, 8, 10, and 11 and multiple monitors.
 3. Place **DesktopPic.hta** in a folder containing one or more pictures (files with extension png, bmp, jpg, or gif).
 4. Run (double-click) **DesktopPic.hta**.
 5. At the UAC prompt, *uncheck* **Always ask before opening this file** and then click **Run**.
+
+**Note**: Some antivirus software may falsely detect the download as a virus. This can happen any time you download a new executable and may require extra steps to whitelist the file.
 
 ## Summary
 
@@ -138,4 +140,4 @@ Click **X** to close DesktopPic.
 
 \
 \
-[![image](https://user-images.githubusercontent.com/79026235/153264696-8ec747dd-37ec-4fc1-89a1-3d6ea3259a95.png)](https://github.com/LesFerch/DesktopPic)
+[![image](https://github.com/LesFerch/WinSetView/assets/79026235/63b7acbc-36ef-4578-b96a-d0b7ea0cba3a)](https://github.com/LesFerch/DesktopPic)
