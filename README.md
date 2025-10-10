@@ -38,7 +38,7 @@ One or more images can be stamped to the wallpaper in any size or position. This
 
 **Notes**:
 - You can run multiple copies of DesktopPic to have more than one slideshow on your desktop (on any monitor).
-- DesktopPic always maintains the original picture's aspect ratio.
+- DesktopPic always maintains the original picture's raw pixel aspect ratio. It does not read rotation metadata. If an image displays with incorrect rotation, simply load it into an image editor, such as MSPaint, and resave it.
 - DesktopPic does not do a full screen slideshow (that capability is already built into Windows 7 and above).
 - The Stamp feature provides the same result as if you edited your wallpaper using an image editing program. It just makes the process easier and more fun.
 - The Stamp feature is multi-monitor aware on Windows 8 and above.
@@ -141,3 +141,4 @@ Click **X** to close DesktopPic.
 \
 \
 [![image](https://github.com/LesFerch/WinSetView/assets/79026235/63b7acbc-36ef-4578-b96a-d0b7ea0cba3a)](https://github.com/LesFerch/DesktopPic)
+
