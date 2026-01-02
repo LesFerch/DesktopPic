@@ -1,24 +1,40 @@
 # DesktopPic
-<!--
-To view this document formatted (instead of as raw text) just click the Help button in DesktopPic.hta.
-You can also manually navigate your browser to: https://lesferch.github.io/DesktopPic.
--->
 
-[![image](https://github.com/LesFerch/WinSetView/assets/79026235/0188480f-ca53-45d5-b9ff-daafff32869e)Download the zip file](https://github.com/LesFerch/DesktopPic/archive/refs/heads/main.zip)
+Display or stamp images on your Windows desktop wallpaper.
 
-## Display or stamp images on your Windows desktop wallpaper.
+Current version: 2.0.0
 
-Compatible with Windows 7, 8, 10, and 11 and multiple monitors.
+Compatible with Windows 10 and 11 and multiple monitors.
 
-## How to Download and Run
+## How to Download and Install
 
-1. Download the zip file using the link above.
-2. Extract **DesktopPic.hta**.
-3. Place **DesktopPic.hta** in a folder containing one or more pictures (files with extension png, bmp, jpg, or gif).
-4. Run (double-click) **DesktopPic.hta**.
-5. At the UAC prompt, *uncheck* **Always ask before opening this file** and then click **Run**.
+[![image](https://github.com/user-attachments/assets/75e62417-c8ee-43b1-a8a8-a217ce130c91)Download the installer](https://github.com/LesFerch/DesktopPic/releases/download/2.0.0/DesktopPic-Setup.exe)
+
+[![image](https://github.com/LesFerch/WinSetView/assets/79026235/0188480f-ca53-45d5-b9ff-daafff32869e)Download the zip file](https://github.com/LesFerch/DesktopPic/releases/download/2.0.0/DesktopPic.zip)
 
 **Note**: Some antivirus software may falsely detect the download as a virus. This can happen any time you download a new executable and may require extra steps to whitelist the file.
+
+### Install Using Setup Program
+
+The DesktopPic installer requires administrator access.
+
+1. Download the installer using the link above.
+2. Double-click **DesktopPic-Setup.exe** to start the installation.
+4. In the SmartScreen window, click **More info** and then **Run anyway**.
+
+**Note**: The installer is only provided in English, but the program works with any language. If your language is not included, you can easily add another language. See the **Language** section below for more details.
+
+### Portable Use
+
+Using DesktopPic as a portable app does NOT require administrator access.
+
+1. Download the zip file using the link above.
+2. Extract the contents. You should see **DesktopPic.exe** and folders **AppParts** and **Language**.
+3. Move the contents to a permanent location of your choice. For example **C:\Tools\DesktopPic**.
+3. Right-click **DesktopPic.exe**, select Properties, check **Unblock**, and click **OK**.
+5. Double-click **DesktopPic.exe** to start the slideshow.
+6. If you skipped step 4, then, in the SmartScreen window, click **More info** and then **Run anyway**.
+7. Press **Esc** or double-click a slideshow image to bring up the DesktopPic interface.
 
 ## Summary
 
@@ -141,4 +157,5 @@ Click **X** to close DesktopPic.
 \
 \
 [![image](https://github.com/LesFerch/WinSetView/assets/79026235/63b7acbc-36ef-4578-b96a-d0b7ea0cba3a)](https://github.com/LesFerch/DesktopPic)
+
 
