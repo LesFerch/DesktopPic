@@ -1,8 +1,4 @@
 # DesktopPic
-<!--
-To view this document formatted (instead of as raw text) just click the Help button in DesktopPic.hta.
-You can also manually navigate your browser to: https://lesferch.github.io/DesktopPic.
--->
 
 [![image](https://github.com/LesFerch/WinSetView/assets/79026235/0188480f-ca53-45d5-b9ff-daafff32869e)Download the zip file](https://github.com/LesFerch/DesktopPic/archive/refs/heads/main.zip)
 
@@ -141,4 +137,5 @@ Click **X** to close DesktopPic.
 \
 \
 [![image](https://github.com/LesFerch/WinSetView/assets/79026235/63b7acbc-36ef-4578-b96a-d0b7ea0cba3a)](https://github.com/LesFerch/DesktopPic)
+
 
