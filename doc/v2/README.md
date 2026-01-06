@@ -1,20 +1,20 @@
 # DesktopPic
 
-Display or stamp images on your Windows desktop wallpaper.
+Display or stamp images on your Windows desktop wallpaper with full support for multiple monitors.
 
-Current version: 2.0.0
+## Latest version: 2.0.0
 
-Compatible with Windows 10 and 11 and multiple monitors.
+DesktopPic 2.x requires Windows 10 or 11.
+
+DesktopPic 1.x can be used with Windows 7 and 8. Click [here](../v1/ReadMe.md) for 1.x Readme.
 
 ## How to Download and Install
-
-[![image](https://github.com/user-attachments/assets/75e62417-c8ee-43b1-a8a8-a217ce130c91)Download the installer](https://github.com/LesFerch/DesktopPic/releases/download/2.0.0/DesktopPic-Setup.exe)
-
-[![image](https://github.com/LesFerch/WinSetView/assets/79026235/0188480f-ca53-45d5-b9ff-daafff32869e)Download the zip file](https://github.com/LesFerch/DesktopPic/releases/download/2.0.0/DesktopPic.zip)
 
 **Note**: Some antivirus software may falsely detect the download as a virus. This can happen any time you download a new executable and may require extra steps to whitelist the file.
 
 ### Install Using Setup Program
+
+[![image](https://github.com/user-attachments/assets/75e62417-c8ee-43b1-a8a8-a217ce130c91)Download the installer](https://github.com/LesFerch/DesktopPic/releases/download/2.0.0/DesktopPic-Setup.exe)
 
 The DesktopPic installer requires administrator access.
 
@@ -26,10 +26,12 @@ The DesktopPic installer requires administrator access.
 
 ### Portable Use
 
+[![image](https://github.com/LesFerch/WinSetView/assets/79026235/0188480f-ca53-45d5-b9ff-daafff32869e)Download the zip file](https://github.com/LesFerch/DesktopPic/releases/download/2.0.0/DesktopPic.zip)
+
 Using DesktopPic as a portable app does NOT require administrator access.
 
 1. Download the zip file using the link above.
-2. Extract the contents. You should see **DesktopPic.exe** and folders **AppParts** and **Language**.
+2. Extract the contents. You should see **DesktopPic.exe** and **AppParts** and **Language** folders.
 3. Move the contents to a permanent location of your choice. For example **C:\Tools\DesktopPic**.
 3. Right-click **DesktopPic.exe**, select Properties, check **Unblock**, and click **OK**.
 5. Double-click **DesktopPic.exe** to start the slideshow.
@@ -42,22 +44,23 @@ DesktopPic provides two convenient methods to display one or more pictures on yo
 
 **Method 1: Slideshow**
 
-Displays one or more pictures in a movable, resizable window that has no borders or captions, so all you see is the picture. This will give the illusion of the picture being part of your wallpaper, but it's really just another window. Any desktop icons in the same region as the picture will be covered. Bitmap image formats, such as PNG (recommended), JPG, BMP, and animated GIFs are supported.
+Displays one or more pictures in a window that has no borders or captions, so all you see is the picture. The image window may be positioned manually or set to appear in the center or any corner of any monitor. This will give the illusion of the picture being part of your wallpaper, but it's really just another window. Any desktop icons in the same region as the picture will be covered. Bitmap image formats, such as PNG (recommended), JPG, BMP, WebP (photos), and animated GIFs are supported.
+
+Transparent background PNG and GIF images are also supported. WebP images may be used directly if they are not animated and do not have a transparent background. Otherwise, they should be converted to PNG format.
 
 ![SlideshowExample](https://user-images.githubusercontent.com/79026235/161466468-306353b4-1b48-464d-8a33-3280cba01116.gif)
 
 **Method 2: Stamp Image to Wallpaper**
 
-One or more images can be stamped to the wallpaper in any size or position. This makes the picture part of the wallpaper, so it will never be on top of anything else and will require nothing to be left running. Images can only be stamped to the primary display, but it's easy to temporarily change the primary display using ⊞-P so that images can be stamped on the wallpaper for any monitor. Images with a transparent background are supported.
+One or more images can be stamped to the wallpaper in any size or position. This makes the picture part of the wallpaper, so it will never be on top of anything else and will require nothing to be left running. Images can be stamped on any monitor. Images with a transparent background are supported.
 
 ![image](https://user-images.githubusercontent.com/79026235/159195677-6c06cab5-9ccb-4db3-8460-50bdd30caa4b.png)
 
 **Notes**:
-- You can run multiple copies of DesktopPic to have more than one slideshow on your desktop (on any monitor).
-- DesktopPic always maintains the original picture's raw pixel aspect ratio. It does not read rotation metadata. If an image displays with incorrect rotation, simply load it into an image editor, such as MSPaint, and resave it.
-- DesktopPic does not do a full screen slideshow (that capability is already built into Windows 7 and above).
-- The Stamp feature provides the same result as if you edited your wallpaper using an image editing program. It just makes the process easier and more fun.
-- The Stamp feature is multi-monitor aware on Windows 8 and above.
+- You can run multiple copies of DesktopPic (use portable option) to have more than one slideshow on your desktop (on any monitor).
+- DesktopPic always maintains the original picture's raw pixel aspect ratio. It does not read rotation metadata. If an image displays with incorrect rotation, simply load it into an image editor, such as MSPaint or Paint.Net, and resave it.
+- DesktopPic does not do a wallpaper slideshow (that capability is already built into Windows 7 and above).
+- The Stamp feature provides the same result as if you edited your wallpaper using an image editing program. It just makes the process easier and more fun (and easier to undo).
 
 ## How to Use (Slideshow)
 
@@ -157,5 +160,6 @@ Click **X** to close DesktopPic.
 \
 \
 [![image](https://github.com/LesFerch/WinSetView/assets/79026235/63b7acbc-36ef-4578-b96a-d0b7ea0cba3a)](https://github.com/LesFerch/DesktopPic)
+
 
 
