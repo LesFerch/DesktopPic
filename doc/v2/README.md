@@ -6,7 +6,7 @@ Display or stamp images on your Windows desktop wallpaper with full support for 
 
 DesktopPic 2.x requires Windows 10 or 11.
 
-DesktopPic 1.x can be used with Windows 7 and 8. Click [here](../v1/README.md) for 1.x Readme.
+DesktopPic 1.x can be used with Windows 7 and 8. Click [here](../v1/README.md) for the 1.x documentation.
 
 ## How to Download and Install
 
@@ -20,9 +20,9 @@ The DesktopPic installer requires administrator access.
 
 1. Download the installer using the link above.
 2. Double-click **DesktopPic-Setup.exe** to start the installation.
-4. In the SmartScreen window, click **More info** and then **Run anyway**.
+3. In the SmartScreen window, click **More info** and then **Run anyway**.
 
-**Note**: The installer is only provided in English, but the program works with any language. If your language is not included, you can easily add another language. See the **Language** section below for more details.
+**Note**: The installer is only provided in English, but the program works with any language.
 
 ### Portable Use
 
@@ -31,12 +31,10 @@ The DesktopPic installer requires administrator access.
 Using DesktopPic as a portable app does NOT require administrator access.
 
 1. Download the zip file using the link above.
-2. Extract the contents. You should see **DesktopPic.exe** and **AppParts** and **Language** folders.
+2. Extract the contents. You should see **DesktopPic.exe** and **AppParts** and **Examples** folders.
 3. Move the contents to a permanent location of your choice. For example **C:\Tools\DesktopPic**.
-3. Right-click **DesktopPic.exe**, select Properties, check **Unblock**, and click **OK**.
-5. Double-click **DesktopPic.exe** to start the slideshow.
-6. If you skipped step 4, then, in the SmartScreen window, click **More info** and then **Run anyway**.
-7. Press **Esc** or double-click a slideshow image to bring up the DesktopPic interface.
+4. Double-click **DesktopPic.exe** to start the slideshow.
+5. In the SmartScreen window, click **More info** and then **Run anyway**.
 
 ## Summary
 
@@ -45,8 +43,6 @@ DesktopPic provides two convenient methods to display one or more pictures on yo
 **Method 1: Slideshow**
 
 Displays one or more pictures in a window that has no borders or captions, so all you see is the picture. The image window may be positioned manually or set to appear in the center or any corner of any monitor. This will give the illusion of the picture being part of your wallpaper, but it's really just another window. Any desktop icons in the same region as the picture will be covered. Bitmap image formats, such as PNG (recommended), JPG, BMP, WebP (photos), and animated GIFs are supported.
-
-Transparent background PNG and GIF images are also supported. WebP images may be used directly if they are not animated and do not have a transparent background. Otherwise, they should be converted to PNG format.
 
 ![SlideshowExample](https://user-images.githubusercontent.com/79026235/161466468-306353b4-1b48-464d-8a33-3280cba01116.gif)
 
@@ -64,61 +60,97 @@ One or more images can be stamped to the wallpaper in any size or position. This
 
 ## How to Use (Slideshow)
 
-**Notes**:
+### Step 1: Start the program
 
-- If only one image file is in the same folder as DesktopPic, it will show that one image as long as DesktopPic is running. If more than one image is in the folder, DesktopPic will cycle through the images, showing each one for the number of seconds that has been set (5 seconds is the default).
+Double-click **DesktopPic.exe** to start the program.
 
-- The slideshow can be paused by pressing any one of **left arrow**, **right arrow**, **spacebar**, or **backspace**.
+### Step 2: Show the interface
 
-- You can manually cycle *forward* through the images by pressing **right arrow** or **spacebar** and *backward* by pressing **left arrow** or **backspace**.
-
-- Pressing **Enter** resumes the slideshow.
-
-### Step 1: Show the Interface
-
-**Double-click** anywhere on the displayed image or press **Esc** to show the DesktopPic interface.
+**Double-click** anywhere on the displayed image to show the DesktopPic interface. The **Esc** key may also be used if the slideshow program has focus.
 
 ![image](https://user-images.githubusercontent.com/79026235/165211902-10156f45-22e3-4e7c-a8dc-76834e6dbf7e.png)
 
-**Note**: If **Esc** doesn't activate the interface, DesktoPic probably doesn't have focus. In which case, you can click once on the displayed image and then press **Esc** or just **double-click** on the displayed image.
+### Step 3: Select an image folder
 
-### Step 2: Select Interface Language
+Click the **Folder** icon to select a folder of images to be displayed. By default, one of the example folders will be selected. Even though you are only selecting a folder, a file dialog is presented so that you can see what files are in each folder. Double-click *any* file in the desired folder to pick that folder.
 
-If Windows is set to a language that DesktopPic supports, that language should get selected automatically. The desired language can also be selected from the language dropdown menu.
+### Step 4: Click the Settings icon
 
-### Step 3: Move and Resize
+This will display all of the slideshow options.
 
-Once the interface is displayed, you can drag and resize the DesktopPic window like any other window.
+### Step 5: Select interface language
 
-You can also select **Centered** from the **Window Position** dropdown menu to have the slideshow centered.
+If Windows is set to a language that DesktopPic supports, that language should get selected automatically. The desired language can also be selected from the language menu. The language menu is dynamically generated from the **AppParts\Language** folder. New languages may be added by following the existing examples.
 
-Coordinates may also be entered in the **Window Position** input box to position the window. For example, **0,0** will position the DesktopPic window at the upper-left corner of the primary display. These numbers change automatically when you drag move the window.
+### Step 6: Adjust slideshow options
 
-The DesktopPic window size can also be changed by directly entering a value for **Max percent of screen area**. This number represents the maximum amount of your screen area that will be used by the DesktopPic window. This number changes automatically when you drag resize the window.
+Change the **Pic delay in seconds** to the number of seconds to wait before loading the next image.
 
-**Notes**:
-- Any entered values take effect when you **Tab** to another field, any time you click on the currently displayed image, and when you click the **Continue** button (or press **Enter**).
-- Clicking on the currently displayed image also automatically readjusts the DesktopPic window size to match the aspect ratio of the currently displayed picture. 
+Change **Max percent of screen area** to the desired value. This number represents the maximum percent of your screen area that will be used by the DesktopPic window. Note that the image will not be stretched larger than its native resolution unless `Stretch smaller images` is checked. Also note that the aspect ratio of each image will be maintained and the image will never overlap onto another monitor. Therefore, you may not see as much of the screen covered as expected, based on the percent value entered, unless the image is the same aspect ratio as the available display area (i.e. screen size minus taskbar).
 
-### Step 4: Adjust the Slideshow Delay
+From the **Display** menu, select the desired monitor where you want the slideshow displayed.
 
-Change the value for **Pic delay in seconds** to the number of seconds you want each picture to be dislpayed.
+From the **Window position** menu, select the desired position for the slideshow. If you select **Custom**, drag the window to the monitor and location where you want the slideshow to appear.
 
-### Step 5: Adjust Remaining Preferences
+Adjust the **Padding** value if you are using one of the corner positions, such as `Lower Right`, and don't want the image tight to the screen edge.
 
-- Check **Run on startup** if you want DesktopPic to run when you login. This feature is supported for multiple copies of DesktopPic *without* any need to rename the **DesktopPic.hta** file.
+From the **Viewer** menu keep the viewer set to **EXE** if you are displaying images with a transparent background or want to use the crossfade feature. The **HTA** viewer will display transparent images on a solid background (the same as the interface), does not support crossfade, and can't display some image formats such as WebP and HEIC. However, it uses far less memory, so it's a great choice for displaying PNG or JPG photos.
 
-- Check **Bring to front on start** if you want DesktoPic to come to the front of all other windows when it's launched. This setting does not *keep* DesktopPic in front. It just affects how it starts.
+### Step 7: Optionally adjust additional options
 
-- Check **Stretch smaller pictures** if you want images, that are smaller than the current DesktopPic window, to be stretched to the size of DesktopPic window.
+Check **Run on startup** if you want DesktopPic to run when you login. If you are setting up multiple slideshows (using multiple portable copies of the DesktopPic folder) you will need to open `shell:startup` in Explorer and rename the `DesktopPic` shortcut to a unique name for each **Run on startup** instance. 
 
-- Check **Display file names** if you want the image file name displayed.
+Check **Bring to front on start** if you want DesktoPic to come to the front of all other windows when it's launched. This setting does not *keep* DesktopPic in front. It just affects how it starts.
 
-### Step 6: Continue the Slideshow
+Check **Stretch smaller images** if you want images to be stretched (with aspect ratio maintained) to the size of the DesktopPic window. Leave this item unchecked if you always want images to be displayed at their native resolution (or smaller) in order to maintain the best quality.
 
-Press the **Continue** button or press **Enter** to hide the interface and continue the slideshow. All setting changes are automatically saved to a **DesktopPic.ini** file.
+Check **Display file names** if you want the image file name displayed.
 
-**Note**: All setting changes are also saved whenever you click on the currently displayed image while the DesktopPic interface is displayed.
+Leave **Average background color** checked in most cases. This option only applies to the background seen behind transparent images when the DesktopPic interface is open or when using the `HTA` viewer (see below). When checked, that background color is an average of the current screen's wallpaper color. When unchecked, the color is picked from one pixel from the upper left corner of the wallpaper.
+
+Check **Keep interface centered on primary screen** if you want the DesktopPic interface to always be in the center of the primary screen regardless of the slideshow position. This option is automatically unchecked when the `Custom` position option is selected.
+
+### Step 7: Continue the slideshow
+
+Press the **Play** button or press **Enter** to hide the interface and continue the slideshow. All setting changes are automatically saved to a **DesktopPic.ini** file.
+
+## Slideshow controls
+
+If only one image file is in the selected folder, that image will be displayed as long as DesktopPic is running. If more than one image is in the folder, DesktopPic will cycle through the images, showing each one for the number of seconds that has been set (5 seconds is the default).
+
+The slideshow can be paused by pressing any one of **left arrow**, **right arrow**, **spacebar**, or **backspace**.
+
+You can manually cycle *forward* through the images by pressing **right arrow** or **spacebar** and *backward* by pressing **left arrow** or **backspace**.
+
+Pressing **Enter** resumes the slideshow.
+
+
+## Other interface features
+
+Double-clicking the image while the interface is open will:
+- reset the window size (based on the current settings)
+- reset the background color from the current display's wallpaper image.
+- save all settings to the `DesktopPic.ini` file.
+
+All settings are automatically saved when you click the `Play` button or exit the program.
+
+The `Help` button opens this document. Click it whenever you want to see if a newer version is available. DesktopPic does not automaically check for new versions or collect any data. It is truly a free program.
+
+## Supported and recommended image file formats
+
+For photos, JPG (or JPEG) and PNG images are recommended and work with either the EXE or HTA viewer. The old BMP format also works with both viewers.
+
+The EXE viewer also displays WebP, HEIC, HEIF, TIF (or TIFF) photos.
+
+Transparent background PNG and GIF images can be displayed by both viewers, but only the EXE viewer supports transparency to the desktop wallpaper. The HTA viewer will show a solid color background with transparent images, which will give the illusion of full transparency when the display's background is set to a solid color (and there are no icons in the area covered by the slideshow image).
+
+Animated GIFs are also supported, but note that the crossfade feature does not apply to animated GIFs.
+
+Only photo type WebP images are supported (and only with the EXE viewer). WebP images that have a transparent background should be converted to PNG format. Animated WebP files should be converted to GIF format.
+
+Please note that the amount of memory used by the viewer is mostly a function of the size of the images. Large image files (e.g. 4K image files) will take much more memory to display than smaller images, even if they are being displayed at the same size. Therfore, it's recommended to use an image editing program, such as MSPaint or Paint.Net, to reduce the size of your slideshow images to the maximum size you wish to have them displayed.
+
+Also note that using the HTA viewer will use less memory than the EXE viewer and may not display large images (e.g. 4K images) correctly, which is another reason to reduce the size of your slideshow images. 
 
 ## How to Use (Stamp Image)
 
@@ -160,6 +192,7 @@ Click **X** to close DesktopPic.
 \
 \
 [![image](https://github.com/LesFerch/WinSetView/assets/79026235/63b7acbc-36ef-4578-b96a-d0b7ea0cba3a)](https://github.com/LesFerch/DesktopPic)
+
 
 
 
