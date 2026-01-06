@@ -138,19 +138,21 @@ The `Help` button opens this document. Click it whenever you want to see if a ne
 
 ## Supported and recommended image file formats
 
-For photos, JPG (or JPEG) and PNG images are recommended and work with either the EXE or HTA viewer. The old BMP format also works with both viewers.
+For photos, JPG/JPEG and PNG images are recommended and work with either the EXE or HTA viewer.
 
-The EXE viewer also displays WebP, HEIC, HEIF, TIF (or TIFF) photos.
+BMP and TIF/TIFF formats also work with both viewers.
+
+The EXE viewer also displays WebP and HEIC/HEIF photos, but note that these formats will show as a blank page while the interface is open.
 
 Transparent background PNG and GIF images can be displayed by both viewers, but only the EXE viewer supports transparency to the desktop wallpaper. The HTA viewer will show a solid color background with transparent images, which will give the illusion of full transparency when the display's background is set to a solid color (and there are no icons in the area covered by the slideshow image).
 
 Animated GIFs are also supported, but note that the crossfade feature does not apply to animated GIFs.
 
-Only photo type WebP images are supported (and only with the EXE viewer). WebP images that have a transparent background should be converted to PNG format. Animated WebP files should be converted to GIF format.
+For WebP files, only regular photo type images are supported (and only with the EXE viewer). WebP images that have a transparent background should be converted to PNG format. Animated WebP files should be converted to GIF format.
 
-Please note that the amount of memory used by the viewer is mostly a function of the size of the images. Large image files (e.g. 4K image files) will take much more memory to display than smaller images, even if they are being displayed at the same size. Therfore, it's recommended to use an image editing program, such as MSPaint or Paint.Net, to reduce the size of your slideshow images to the maximum size you wish to have them displayed.
+Please note that the amount of memory used by the viewer is mostly a function of the size of the images. Large image files (e.g. 4K image files) will take much more memory to display than smaller images, even if they are displayed at the same size. Therfore, it's recommended to use an image editing program, such as MSPaint or Paint.Net, to reduce the size of your slideshow images to the maximum size you wish to have them displayed.
 
-Also note that using the HTA viewer will use less memory than the EXE viewer and may not display large images (e.g. 4K images) correctly, which is another reason to reduce the size of your slideshow images. 
+Also note that using the HTA viewer will use less memory than the EXE viewer and may not display large images (e.g. 4K images) correctly, which is another reason to reduce the size of your slideshow images.
 
 ## How to Use (Stamp Image)
 
@@ -162,7 +164,9 @@ If the interface isn't currently displayed, **double-click** the image or press 
 
 ![image](https://user-images.githubusercontent.com/79026235/165212129-0421228f-6112-4111-bdfd-92f77943385a.png)
 
-**Note**: While the interface is displayed, **F3** will open File Explorer to the current DesktopPic folder (location of slideshow images) and **F4** will open File Explorer to the DesktopPic local AppData folder (location of stamped wallpaper images).
+**Note**: While the interface is displayed, **F3** will open File Explorer to the current DesktopPic folder (location of slideshow images) and **F4** will open File Explorer to the DesktopPic AppData folder (location of stamped wallpaper images).
+
+**Note**: The AppData folder will be within the DesktopPic folder when run from writable location (e.g. `C:\Tools\DesktopPic`), but will be in the user's Local AppData folder (`%LocalAppData%`) when run from a protected location such as C:\Program Files (x86). This is the key difference between the "portable" and "installer" options described at the beginning of this document.
 
 ### Step 2: Select the Desired Picture to Stamp
 
@@ -192,6 +196,7 @@ Click **X** to close DesktopPic.
 \
 \
 [![image](https://github.com/LesFerch/WinSetView/assets/79026235/63b7acbc-36ef-4578-b96a-d0b7ea0cba3a)](https://github.com/LesFerch/DesktopPic)
+
 
 
 
