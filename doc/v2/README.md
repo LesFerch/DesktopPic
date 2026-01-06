@@ -164,10 +164,6 @@ If the interface isn't currently displayed, **double-click** the image or press 
 
 ![image](https://user-images.githubusercontent.com/79026235/165212129-0421228f-6112-4111-bdfd-92f77943385a.png)
 
-**Note**: While the interface is displayed, **F3** will open File Explorer to the current DesktopPic folder (location of slideshow images) and **F4** will open File Explorer to the DesktopPic AppData folder (location of stamped wallpaper images).
-
-**Note**: The AppData folder will be within the DesktopPic folder when run from writable location (e.g. `C:\Tools\DesktopPic`), but will be in the user's Local AppData folder (`%LocalAppData%`) when run from a protected location such as C:\Program Files (x86). This is the key difference between the "portable" and "installer" options described at the beginning of this document.
-
 ### Step 2: Select the Desired Picture to Stamp
 
 Use your keyboard **left** and **right** arrows (or **spacebar** and **backspace**) to select a picture to stamp.
@@ -187,15 +183,21 @@ If desired, repeat steps 2-4 to stamp more images.
 **Notes**:
 - Click the **Restore** button to restore the *unstamped* wallpaper.
 - If you click **Restore** by accident, just **right-click** your desktop wallpaper, select **Personalize**, and reselect your stamped wallpaper.
-- To stamp an image on the wallpaper for another monitor, press ⊞-P to change the primary monitor, stamp as desired, and then use ⊞-P again to switch back to an extended desktop.
 
 ### Step 5: Exit DesktopPic
 
-Click **X** to close DesktopPic. 
+Click **X** to close DesktopPic.
+
+## F3 and F4 function keys
+
+While the interface is displayed, **F3** will open File Explorer to the current DesktopPic folder (location of slideshow images) and **F4** will open File Explorer to the DesktopPic AppData folder (location of stamped wallpaper images).
+
+The `AppData` folder will be within the `DesktopPic` folder when run from writable location (e.g. `C:\Tools\DesktopPic`), but will be in the user's Local AppData folder (`%LocalAppData%`) when run from a protected location such as `C:\Program Files (x86)`. This is the key difference between the "portable" and "installer" options described at the beginning of this document.
 
 \
 \
 [![image](https://github.com/LesFerch/WinSetView/assets/79026235/63b7acbc-36ef-4578-b96a-d0b7ea0cba3a)](https://github.com/LesFerch/DesktopPic)
+
 
 
 
