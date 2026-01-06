@@ -6,7 +6,7 @@ Display or stamp images on your Windows desktop wallpaper with full support for 
 
 DesktopPic 2.x requires Windows 10 or 11.
 
-DesktopPic 1.x can be used with Windows 7 and 8. Click [here](../v1/ReadMe.md) for 1.x Readme.
+DesktopPic 1.x can be used with Windows 7 and 8. Click [here](./v1/ReadMe.md) for 1.x Readme.
 
 ## How to Download and Install
 
@@ -160,6 +160,7 @@ Click **X** to close DesktopPic.
 \
 \
 [![image](https://github.com/LesFerch/WinSetView/assets/79026235/63b7acbc-36ef-4578-b96a-d0b7ea0cba3a)](https://github.com/LesFerch/DesktopPic)
+
 
 
 
