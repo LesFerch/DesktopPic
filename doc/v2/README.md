@@ -124,10 +124,9 @@ You can manually cycle *forward* through the images by pressing **right arrow** 
 
 Pressing **Enter** resumes the slideshow.
 
-
 ## Other interface features
 
-Double-clicking the image while the interface is open will:
+A single click on the image in the GUI (double-click when the Settings are displayed) will:
 - reset the window size (based on the current settings)
 - reset the background color from the current display's wallpaper image.
 - save all settings to the `DesktopPic.ini` file.
@@ -135,6 +134,12 @@ Double-clicking the image while the interface is open will:
 All settings are automatically saved when you click the `Play` button or exit the program.
 
 The `Help` button opens this document. Click it whenever you want to see if a newer version is available. DesktopPic does not automaically check for new versions or collect any data. It is truly a free program.
+
+While the interface is displayed, **F3** will open File Explorer to the current DesktopPic folder (location of slideshow images) and **F4** will open File Explorer to the DesktopPic wallpaper backup folder (location of stamped wallpaper images).
+
+## AppData Location
+
+The `AppData` folder for the `DesktopPic.ini` file will be within the `DesktopPic` folder when run from a writable location (e.g. `C:\Tools\DesktopPic\AppData`), but will be in the user's Local AppData folder (`%LocalAppData%\DesktopPic`) when run from a protected location such as `C:\Program Files (x86)`. This is the primary difference between the "portable" and "installer" options described at the beginning of this document.
 
 ## Supported and recommended image file formats
 
@@ -156,29 +161,33 @@ Also note that using the HTA viewer will use less memory than the EXE viewer and
 
 ## How to Use (Stamp Image)
 
-These instructions assume you have reviewed the **Slideshow** instructions above and already have an understanding of the interface.
+### Step 1: Start the program
 
-### Step 1: Show the Interface
+If not already running, double-click **DesktopPic.exe** to start the program.
+
+### Step 2: Show the Interface
 
 If the interface isn't currently displayed, **double-click** the image or press **Esc**.
 
 ![image](https://user-images.githubusercontent.com/79026235/165212129-0421228f-6112-4111-bdfd-92f77943385a.png)
 
-### Step 2: Select the Desired Picture to Stamp
+### Step 3: Select the Desired Picture to Stamp
 
 Use your keyboard **left** and **right** arrows (or **spacebar** and **backspace**) to select a picture to stamp.
 
 **Note**: HEIC/HEIF and WEBP images are not supported for the stamp feature. PNG images are recommended, but other bitmap formats, such as JPG, may also be used.
 
-### Step 3: Move and Resize
+### Step 4: Move and Resize
 
 - Drag the DesktopPic window to where you want to stamp the image.
 - Resize the DesktopPic window to the image size you wish to stamp.
 - Click once on the image to snap the DesktopPic window size to the image's aspect ratio.
 
-### Step 4: Stamp the Image
+### Step 5: Stamp the Image
 
 Click the **Stamp** button to stamp the image to the current desktop wallpaper.
+
+Hold down any modifer key (**Alt**, **Ctrl**, or **Shift**) when clicking the **Stamp** button to shift the stamped image up the amount of the DesktopPic title bar. This allows stamped images to be placed at the top edge of any display. 
 
 Repeat steps 2-4 to stamp more images.
 
@@ -186,29 +195,10 @@ Repeat steps 2-4 to stamp more images.
 - Click the **Restore** button to restore the *unstamped* wallpaper.
 - If you click **Restore** by accident, just **right-click** your desktop wallpaper, select **Personalize**, and reselect your stamped wallpaper.
 
-### Step 5: Exit DesktopPic
+### Step 6: Exit DesktopPic
 
 Click **X** to close DesktopPic.
-
-## Special keys
-
-While the interface is displayed, **F3** will open File Explorer to the current DesktopPic folder (location of slideshow images) and **F4** will open File Explorer to the DesktopPic wallpaper backup folder (location of stamped wallpaper images).
-
-A single click on the image in the GUI (double-click when the Settings are displayed) will reset the app's window size and background color.
-
-## AppData Location
-
-The `AppData` folder for the `DesktopPic.ini` file will be within the `DesktopPic` folder when run from a writable location (e.g. `C:\Tools\DesktopPic\AppData`), but will be in the user's Local AppData folder (`%LocalAppData%\DesktopPic`) when run from a protected location such as `C:\Program Files (x86)`. This is the key difference between the "portable" and "installer" options described at the beginning of this document.
 
 \
 \
 [![image](https://github.com/LesFerch/WinSetView/assets/79026235/63b7acbc-36ef-4578-b96a-d0b7ea0cba3a)](https://github.com/LesFerch/DesktopPic)
-
-
-
-
-
-
-
-
-
