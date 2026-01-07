@@ -168,17 +168,19 @@ If the interface isn't currently displayed, **double-click** the image or press 
 
 Use your keyboard **left** and **right** arrows (or **spacebar** and **backspace**) to select a picture to stamp.
 
+**Note**: HEIC/HEIF and WEBP images are not supported for the stamp feature. PNG images are recommended, but other bitmap formats, such as JPG, may also be used.
+
 ### Step 3: Move and Resize
 
 - Drag the DesktopPic window to where you want to stamp the image.
 - Resize the DesktopPic window to the image size you wish to stamp.
-- Click once on the image to correct the DesktopPic window size to the image's aspect ratio.
+- Click once on the image to snap the DesktopPic window size to the image's aspect ratio.
 
 ### Step 4: Stamp the Image
 
 Click the **Stamp** button to stamp the image to the current desktop wallpaper.
 
-If desired, repeat steps 2-4 to stamp more images.
+Repeat steps 2-4 to stamp more images.
 
 **Notes**:
 - Click the **Restore** button to restore the *unstamped* wallpaper.
@@ -188,15 +190,20 @@ If desired, repeat steps 2-4 to stamp more images.
 
 Click **X** to close DesktopPic.
 
-## F3 and F4 function keys
+## Special keys
 
-While the interface is displayed, **F3** will open File Explorer to the current DesktopPic folder (location of slideshow images) and **F4** will open File Explorer to the DesktopPic AppData folder (location of stamped wallpaper images).
+While the interface is displayed, **F3** will open File Explorer to the current DesktopPic folder (location of slideshow images) and **F4** will open File Explorer to the DesktopPic wallpaper backup folder (location of stamped wallpaper images).
 
-The `AppData` folder will be within the `DesktopPic` folder when run from writable location (e.g. `C:\Tools\DesktopPic`), but will be in the user's Local AppData folder (`%LocalAppData%`) when run from a protected location such as `C:\Program Files (x86)`. This is the key difference between the "portable" and "installer" options described at the beginning of this document.
+A single click on the image in the GUI (double-click when the Settings are displayed) will reset the app's window size and background color.
+
+## AppData Location
+
+The `AppData` folder for the `DesktopPic.ini` file will be within the `DesktopPic` folder when run from a writable location (e.g. `C:\Tools\DesktopPic\AppData`), but will be in the user's Local AppData folder (`%LocalAppData%\DesktopPic`) when run from a protected location such as `C:\Program Files (x86)`. This is the key difference between the "portable" and "installer" options described at the beginning of this document.
 
 \
 \
 [![image](https://github.com/LesFerch/WinSetView/assets/79026235/63b7acbc-36ef-4578-b96a-d0b7ea0cba3a)](https://github.com/LesFerch/DesktopPic)
+
 
 
 
