@@ -96,6 +96,10 @@ Adjust the **Padding** value if you are using one of the corner positions, such 
 
 From the **Viewer** menu keep the viewer set to **EXE** if you are displaying images with a transparent background or want to use the crossfade feature. The **HTA** viewer will display transparent images on a solid background (the same as the interface), does not support crossfade, and can't display some image formats such as WebP and HEIC. However, it uses far less memory, so it's a great choice for displaying PNG or JPG photos.
 
+Adjust **Crossfade in seconds** (available when `Viewer` is set to `EXE`) to the amount of time you want one image to fade into the other. Set the value for no fade effect. This option has no effect on animated GIFs.
+
+**Note**: For the fade effect to be smooth, the images must all be the same size. If they are different sizes, there will be a jerk as the image window is changed from one size to the other. Use an image editing program such as MSPaint or Paint.Net to make all your slideshow images the same size. For images with different aspect ratios, or images with a transparent background, you may want to change the "canvas size" to be the same for all images. Paint.Net makes changing canvas size very easy.
+
 ### Step 7: Optionally adjust additional options
 
 Check **Run on startup** if you want DesktopPic to run when you login. If you are setting up multiple slideshows (using multiple portable copies of the DesktopPic folder) you will need to open `shell:startup` in Explorer and rename the `DesktopPic` shortcut to a unique name for each **Run on startup** instance. 
@@ -202,3 +206,4 @@ Click **X** to close DesktopPic.
 \
 \
 [![image](https://github.com/LesFerch/WinSetView/assets/79026235/63b7acbc-36ef-4578-b96a-d0b7ea0cba3a)](https://github.com/LesFerch/DesktopPic)
+
