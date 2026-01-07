@@ -44,6 +44,10 @@ DesktopPic provides two convenient methods to display one or more pictures on yo
 
 Displays one or more pictures in a window that has no borders or captions, so all you see is the picture. The image window may be positioned manually or set to appear in the center or any corner of any monitor. This will give the illusion of the picture being part of your wallpaper, but it's really just another window. Any desktop icons in the same region as the picture will be covered. Bitmap image formats, such as PNG (recommended), JPG, BMP, WebP (photos), and animated GIFs are supported.
 
+![SlideshowExample1](https://github.com/user-attachments/assets/2cb72cd4-97e2-4d52-b01f-40dbbed0c8e0)
+\
+\
+<!-- ![SlideshowExample2](https://github.com/user-attachments/assets/981e7aa8-fe12-409e-b363-565f634bc1aa) -->
 ![SlideshowExample](https://user-images.githubusercontent.com/79026235/161466468-306353b4-1b48-464d-8a33-3280cba01116.gif)
 
 **Method 2: Stamp Image to Wallpaper**
@@ -68,7 +72,7 @@ Double-click **DesktopPic.exe** to start the program.
 
 **Double-click** anywhere on the displayed image to show the DesktopPic interface. The **Esc** key may also be used if the slideshow program has focus.
 
-![image](https://user-images.githubusercontent.com/79026235/165211902-10156f45-22e3-4e7c-a8dc-76834e6dbf7e.png)
+<img width="414" height="550" alt="image" src="https://github.com/user-attachments/assets/8f46555c-03db-4b33-a05f-9cbb6ea039b1" />
 
 ### Step 3: Select an image folder
 
@@ -77,6 +81,8 @@ Click the **Folder** icon to select a folder of images to be displayed. By defau
 ### Step 4: Click the Settings icon
 
 This will display all of the slideshow options.
+
+<img width="398" height="541" alt="image" src="https://github.com/user-attachments/assets/729cc027-a235-4d48-8e7a-4c51dfe2dcb3" />
 
 ### Step 5: Select interface language
 
@@ -209,5 +215,6 @@ Click **X** to close DesktopPic.
 \
 \
 [![image](https://github.com/LesFerch/WinSetView/assets/79026235/63b7acbc-36ef-4578-b96a-d0b7ea0cba3a)](https://github.com/LesFerch/DesktopPic)
+
 
 
