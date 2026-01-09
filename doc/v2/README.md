@@ -1,8 +1,8 @@
 # DesktopPic
 
-Display or stamp images on your Windows desktop wallpaper with full support for multiple monitors.
+### Version 2.0.0
 
-## Latest version: 2.0.0
+Display or stamp images on your Windows desktop wallpaper with full support for multiple monitors.
 
 DesktopPic 2.x requires Windows 10 or 11.
 
@@ -38,7 +38,10 @@ Using DesktopPic as a portable app does NOT require administrator access.
 
 ## Summary
 
-DesktopPic provides two convenient methods to display one or more pictures on your Windows desktop...
+DesktopPic provides two convenient methods to display one or more pictures on your Windows desktop. You can create a slideshow that overlays an area of your desktop or stamp images directly to your wallpaper.
+
+**Note**:
+- DesktopPic always maintains the original picture's raw pixel aspect ratio. It does not read rotation metadata. If an image displays with incorrect rotation, simply load it into an image editor, such as MSPaint or [Paint.Net](https://www.getpaint.net/), and resave it.
 
 **Method 1: Slideshow**
 
@@ -49,16 +52,17 @@ Displays one or more pictures in a window that has no borders or captions, so al
 \
 ![SlideshowExample2](https://github.com/user-attachments/assets/140d6b0b-c434-4ef5-bcd6-cf5793553d56)
 
+**Notes**:
+- You can run multiple copies of DesktopPic (use portable option) to have more than one slideshow on your desktop (on any monitor).
+- DesktopPic does not do a wallpaper slideshow (that capability is built into Windows under "Personalize").
+
 **Method 2: Stamp Image to Wallpaper**
 
 One or more images can be stamped to the wallpaper in any size or position. This makes the picture part of the wallpaper, so it will never be on top of anything else and will require nothing to be left running. Images can be stamped on any monitor. Images with a transparent background are supported.
 
 ![image](https://user-images.githubusercontent.com/79026235/159195677-6c06cab5-9ccb-4db3-8460-50bdd30caa4b.png)
 
-**Notes**:
-- You can run multiple copies of DesktopPic (use portable option) to have more than one slideshow on your desktop (on any monitor).
-- DesktopPic always maintains the original picture's raw pixel aspect ratio. It does not read rotation metadata. If an image displays with incorrect rotation, simply load it into an image editor, such as MSPaint or Paint.Net, and resave it.
-- DesktopPic does not do a wallpaper slideshow (that capability is already built into Windows 7 and above).
+**Note**:
 - The Stamp feature provides the same result as if you edited your wallpaper using an image editing program. It just makes the process easier and more fun (and easier to undo).
 
 ## How to Use (Slideshow)
@@ -99,11 +103,11 @@ From the **Window position** menu, select the desired position for the slideshow
 
 Adjust the **Padding** value if you are using one of the corner positions, such as `Lower Right`, and don't want the image tight to the screen edge.
 
-From the **Viewer** menu keep the viewer set to **EXE** if you are displaying images with a transparent background or want to use the crossfade feature. The **HTA** viewer will display transparent images on a solid background (the same as the interface), does not support crossfade, and can't display some image formats such as WebP and HEIC. However, it uses far less memory, so it's a great choice for displaying PNG or JPG photos.
+From the **Viewer** menu, keep the viewer set to **EXE** if you are displaying images with a transparent background or want to use the crossfade feature. The **HTA** viewer will display transparent images on a solid background (the same as the interface), does not support crossfade, and can't display some image formats such as WebP and HEIC. However, the **HTA** viewer uses far less memory, so it's a great choice for displaying PNG or JPG photos.
 
-Adjust **Crossfade in seconds** (available when `Viewer` is set to `EXE`) to the amount of time you want one image to fade into the other. Set the value for no fade effect. This option has no effect on animated GIFs.
+Adjust **Crossfade in seconds** (available when `Viewer` is set to `EXE`) to the amount of time you want one image to fade into the other. Set the value to `0` for no fade effect. This option has no effect on animated GIFs.
 
-**Note**: For the fade effect to be smooth, the images must all be the same size. If they are different sizes, there will be a jerk as the image window is changed from one size to the other. Use an image editing program such as MSPaint or Paint.Net to make all your slideshow images the same size. For images with different aspect ratios, or images with a transparent background, you may want to change the "canvas size" to be the same for all images. Paint.Net makes changing canvas size very easy.
+**Note**: For the fade effect to be smooth, the images must all be the same size. If they are different sizes, there will be a jerk as the image window is changed from one size to the other. Use an image editing program such as MSPaint or [Paint.Net](https://www.getpaint.net/) to make all your slideshow images the same size. For images with different aspect ratios, or images with a transparent background, you may want to change the "canvas size" to be the same for all images. [Paint.Net](https://www.getpaint.net/) makes changing canvas size very easy.
 
 ### Step 7: Adjust additional options
 
@@ -115,7 +119,7 @@ Check **Stretch smaller images** if you want images to be stretched (with aspect
 
 Check **Display file names** if you want the image file name displayed.
 
-Leave **Average background color** checked in most cases. This option only applies to the background seen behind transparent images when the DesktopPic interface is open or when using the `HTA` viewer (see below). When checked, that background color is an average of the current screen's wallpaper color. When unchecked, the color is picked from one pixel from the upper left corner of the wallpaper.
+Leave **Average background color** checked in most cases. This option only applies to the background seen behind transparent images when the DesktopPic interface is open or when using the `HTA` viewer (see below). When checked, the color is an average of the current screen's wallpaper color. When unchecked, the color is picked from one pixel from the upper left corner of the wallpaper.
 
 Check **Keep interface centered on primary screen** if you want the DesktopPic interface to always be in the center of the primary screen regardless of the slideshow position. This option is automatically unchecked when the `Custom` position option is selected.
 
@@ -169,7 +173,7 @@ Animated GIFs are also supported, but note that the crossfade feature does not a
 
 For WebP files, only regular photo type images are supported (and only with the EXE viewer). WebP images that have a transparent background should be converted to PNG format. Animated WebP files should be converted to GIF format.
 
-Please note that the amount of memory used by the viewer is mostly a function of the size of the images. Large image files (e.g. 4K image files) will take much more memory to display than smaller images, even if they are displayed at the same size. Therfore, it's recommended to use an image editing program, such as MSPaint or Paint.Net, to reduce the size of your slideshow images to the maximum size you wish to have them displayed.
+Please note that the amount of memory used by the viewer is mostly a function of the size of the images. Large image files (e.g. 4K image files) will take much more memory to display than smaller images, even if they are displayed at the same size. Therfore, it's recommended to use an image editing program, such as MSPaint or [Paint.Net](https://www.getpaint.net/), to reduce the size of your slideshow images to the maximum size you wish to have them displayed.
 
 Also note that using the HTA viewer will use less memory than the EXE viewer and may not display large images (e.g. 4K images) correctly, which is another reason to reduce the size of your slideshow images.
 
