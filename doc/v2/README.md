@@ -72,7 +72,7 @@ Double-click **DesktopPic.exe** to start the program.
 
 **Double-click** anywhere on the displayed image to show the DesktopPic interface. The **Esc** key may also be used if the slideshow program has focus.
 
-<img width="414" height="550" alt="image" src="https://github.com/user-attachments/assets/8f46555c-03db-4b33-a05f-9cbb6ea039b1" />
+<img width="433" height="560" alt="image" src="https://github.com/user-attachments/assets/94bb4454-34ca-4faa-9827-e2e4c2ca9edc" />
 
 ### Step 3: Select an image folder
 
@@ -82,7 +82,7 @@ Click the **Folder** icon to select a folder of images to be displayed. By defau
 
 This will display all of the slideshow options.
 
-<img width="398" height="541" alt="image" src="https://github.com/user-attachments/assets/729cc027-a235-4d48-8e7a-4c51dfe2dcb3" />
+<img width="431" height="558" alt="image" src="https://github.com/user-attachments/assets/f8ce6705-9f75-4313-a039-1118f28e6673" />
 
 ### Step 5: Select interface language
 
@@ -106,7 +106,7 @@ Adjust **Crossfade in seconds** (available when `Viewer` is set to `EXE`) to the
 
 **Note**: For the fade effect to be smooth, the images must all be the same size. If they are different sizes, there will be a jerk as the image window is changed from one size to the other. Use an image editing program such as MSPaint or Paint.Net to make all your slideshow images the same size. For images with different aspect ratios, or images with a transparent background, you may want to change the "canvas size" to be the same for all images. Paint.Net makes changing canvas size very easy.
 
-### Step 7: Optionally adjust additional options
+### Step 7: Adjust additional options
 
 Check **Run on startup** if you want DesktopPic to run when you login. If you are setting up multiple slideshows (using multiple portable copies of the DesktopPic folder) you will need to open `shell:startup` in Explorer and rename the `DesktopPic` shortcut to a unique name for each **Run on startup** instance. 
 
@@ -136,9 +136,14 @@ Pressing **Enter** resumes the slideshow.
 
 ## Other interface features
 
-A single click on the image in the GUI (double-click when the Settings are displayed) will:
-- reset the window size (based on the current settings)
-- reset the background color from the current display's wallpaper image.
+A single click on the image (when the Settings are NOT displayed) will:
+- Adjust the current window size (if necessary) to match the image's aspect ratio.
+- reset the app's background color from the current display's wallpaper image.
+- save all settings to the `DesktopPic.ini` file.
+
+A double click on the image (when the Settings are displayed) will:
+- reset the window size (based on the current settings).
+- reset the app's background color from the current display's wallpaper image.
 - save all settings to the `DesktopPic.ini` file.
 
 All settings are automatically saved when you click the `Play` button or exit the program.
@@ -215,6 +220,7 @@ Click **X** to close DesktopPic.
 \
 \
 [![image](https://github.com/LesFerch/WinSetView/assets/79026235/63b7acbc-36ef-4578-b96a-d0b7ea0cba3a)](https://github.com/LesFerch/DesktopPic)
+
 
 
 
