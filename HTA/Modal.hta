@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>DesktopPic</title>
+<meta charset="UTF-8" http-equiv="X-UA-Compatible" content="IE=9">
+
+<script>
+var oWSH = new ActiveXObject("Wscript.Shell");
+var Args = window.dialogArguments.split(";")
+window.returnValue = "0";
+
+window.onload = function () {
+  document.body.style.backgroundColor = Args[0]
+  Msg.innerText = Args[1];
+  B01.value = Args[2];
+  var y = document.body.scrollHeight;
+  window.dialogHeight = y + 16 + "px";
+}
+
+function Done() {
+  window.returnValue = "1";
+  self.close();
+  window.close();
+}
+</script>
+
+
+<style>
+body {font-family:Sans-serif; font-size:11pt; background-size:cover; background-attachment:fixed; background-repeat:no-repeat}
+input[type="button"] {font-family:sans-serif; font-size:11pt}
+br {font-size: 16pt}
+.cc {
+  font-family: sans-serif;
+  font-weight: normal;
+  font-size: 11pt;
+  color: white;
+  padding: 8pt;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#66000000', endColorstr='#66000000');
+  zoom: 1;
+  display: inline-block;
+  margin-top:1em; margin-bottom:1em; margin-left:1em; margin-right:1em;
+}
+.b01 {width:4em}
+</style>
+</head>
+<body>
+<center>
+<span id=Msg class=cc></span><br>
+<input id=B01 class=b01 type=button value=OK onclick=Done()>
+</center>
+</body>
+</html>

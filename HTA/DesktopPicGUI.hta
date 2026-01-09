@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<!--
+DesktopPic (Display picture or slideshow on desktop and/or stamp picture to wallpaper)
+Les Ferch, lesferch@gmail.com, 2022 - 2026
+-->
+<html>
+<head>
+<title>DesktopPic 2.0.0</title>
+<meta charset="UTF-8" http-equiv="X-UA-Compatible" content="IE=9">
+<hta:application
+  id=oHTA
+  icon=DesktopPic.ico
+  maximizebutton=no
+  minimizebutton=no
+  showintaskbar=yes
+  contextmenu=no
+  border=thick
+  caption=yes
+  scroll=no
+  selection=no
+>
+<script>
+
+function Quit(){
+  self.close();
+  window.close();
+}
+
+function MsgBox(prompt, buttons) {
+  var result = oWSH.Popup(prompt, 0, "DesktopPic", buttons);
+  return(result);
+}
+
+function Message(Msg, Button) {
+  var DialogOptions = "scroll:No; dialogWidth:20em; dialogHeight:10em";
+  var DialogContent = BGcolor + ";" + Msg + ";" + Button
+  var RetVal = window.showModalDialog(ModalHTA,DialogContent,DialogOptions);
+  return(RetVal);
+}
+
+function Trim(str) {
+  return str.replace(/^\s+|\s+$/g, '');
+}
+
+function Replace(str, search, replacement) {
+  var escapedSearch = search.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+  var regex = new RegExp(escapedSearch, "g");
+  return str.replace(regex, replacement);
+}
+
+function LCase(str) {
+  return str.toLowerCase();
+}
+
+function IsNumeric(value) {
+    return value !== null && value !== "" && !isNaN(value);
+}
+
+// Begin Main
+
+window.resizeTo(0, 0);
+var HideMe = 999999999;
+window.moveTo(HideMe, HideMe);
+
+var MyVerNum = "2.0.0";
+var ForReading = 1;
+var ForWriting = 2;
+var Unicode = -1;
+var Ansi = 0;
+var wiaFormatPNG = "{B96B3CAF-0728-11D3-9D7B-0000F81EF32E}";
+var wiaFormatBMP = "{B96B3CAB-0728-11D3-9D7B-0000F81EF32E}";
+
+var oWSH = new ActiveXObject("Wscript.Shell");
+var oFSO = new ActiveXObject("Scripting.FileSystemObject");
+var oImg = new ActiveXObject("WIA.ImageFile");
+var oSettings = new ActiveXObject("Scripting.Dictionary");
+var DigitsOnly = new RegExp("[^0-9]", "g");
+var DigitsComma = new RegExp("[^0-9,]", "g");
+
+var PicTimer = 0, w = 0, h = 0, iw = 0, ih = 0, x = 0, y = 0;
+var ArrPic = [], ArrScreen = [], aImage = [], ArrScreens = [], ArrStamp = [], Msg = [], Label = [];
+var UpdatePos = "", hTpp = 0, wTpp = 0;
+var Z = "\r\n";
+var Q = '"';
+var ShowFileName = false;
+var BringToFront = true;
+var Stretch = false;
+var PicDelay = 5;
+var MaxScrPct = 25;
+var Coordinates = "";
+var Forward = true;
+var BadImage = false;
+var PicIndex = -1;
+var RunOnStartup = false;
+var DoingInput = false;
+var LangIdx = 0;
+var LocIdx = 0;
+var MonitorIndex = 0;
+var MonitorsConnected = 1;
+var KeepOnPrimary = true;
+var FadeEffect = 2;
+var Padding = 0;
+var LangCount = 0;
+var Stamping = false;
+var PicExt = ".png";
+var PicFormat = wiaFormatPNG;
+var MyPath = document.URL.substring(7);
+var MyFolder = oFSO.GetParentFolderName(MyPath);
+var WallPExe = MyFolder + "\\WallP.exe";
+var GetScreenInfoExe = MyFolder + "\\GetScreenInfo.exe";
+var FileDialogExe = MyFolder + "\\FileDialog.exe";
+var GetMonitorExe = MyFolder + "\\GetMonitor.exe";
+var ModalHTA = MyFolder + "\\Modal.hta";
+var LangDir = MyFolder + "\\Language\\";
+
+var NTVer = oWSH.RegRead("HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\CurrentVersion");
+if (NTVer < "6.3") {
+  MsgBox("Windows 10 or higher required",  0);
+  Quit();
+}
+
+// Set AppData to current folder if we have write access
+// Otherwise set AppData to user profile LocalAppData
+
+TestFileName = Replace(Replace(Replace(new Date().toString(), "/", ""), ":", ""), " ", "") + ".txt";
+oWSH.CurrentDirectory = MyFolder
+TestFile = ".\\" + TestFileName;
+try {
+  f = oFSO.OpenTextFile(TestFile, ForWriting, true, Ansi);
+  f.Write("");
+  f.Close();
+} catch (e) {}
+
+var LocalAppData = oWSH.ExpandEnvironmentStrings("%LOCALAPPDATA%")
+var INIappData = oFSO.GetAbsolutePathName(MyFolder + "\\..\\AppData") + "\\";
+var WallPBackup = LocalAppData + "\\DesktopPic\\";
+
+var VirtualStore = LocalAppData + "\\VirtualStore" + MyFolder.substr(2) + "\\";
+if (oFSO.FileExists(VirtualStore + TestFileName)) oFSO.DeleteFile(TestFile);
+if (!oFSO.FileExists(TestFile)) INIappData = WallPBackup;
+if (oFSO.FileExists(TestFile)) oFSO.DeleteFile(TestFile);
+
+if (!oFSO.FolderExists(INIappData)) oFSO.CreateFolder(INIappData);
+if (!oFSO.FolderExists(WallPBackup)) oFSO.CreateFolder(WallPBackup);
+
+var CmdLine = Replace(oHTA.commandLine, Q + "  " + Q, "|");
+CmdLine = Replace(CmdLine, Q + " " + Q, "|");
+CmdLine = Replace(CmdLine, Q, "");
+var aParam = CmdLine.split("|");
+
+if (aParam.length > 1) {
+  PicIndex = parseInt(aParam[1]) - 1;
+  PicPath = aParam[2];
+  CallerPath = aParam[3];
+} else {
+  Quit();
+}
+
+if (NTVer >= "6.3") oWSH.Run(Q + GetScreenInfoExe + Q, 0, true);
+var Screens = oWSH.RegRead("HKCU\\Software\\DesktopPic\\Screens");
+ArrScreens = Screens.split(";");
+MonitorsConnected = ArrScreens.length;
+
+var INIFile = INIappData + "DesktopPic.ini";
+var PicListFile = INIappData + "PicList.txt";
+
+try {
+  var Language = oWSH.RegRead("HKCU\\Control Panel\\International\\LocaleName");
+  Language = oWSH.RegRead("HKCU\\Control Panel\\Desktop\\PreferredUILanguages")(0);
+} catch (e) { Language = "en-US"; }
+
+Ini2Dict();
+
+var INIPicPath = "";
+var GetAvgColor = true;
+
+if (oSettings.Exists("[Options]Language")) Language = oSettings.Item("[Options]Language");
+if (oSettings.Exists("[Options]RunOnStartup")) RunOnStartup = (LCase(oSettings.Item("[Options]RunOnStartup")) == "true");
+if (oSettings.Exists("[Options]BringToFront")) BringToFront = (LCase(oSettings.Item("[Options]BringToFront")) !== "false");
+if (oSettings.Exists("[Options]Stretch")) Stretch = (LCase(oSettings.Item("[Options]Stretch")) === "true");
+if (oSettings.Exists("[Options]ShowFileName")) ShowFileName = (LCase(oSettings.Item("[Options]ShowFileName")) === "true");
+if (oSettings.Exists("[Options]KeepOnPrimary")) KeepOnPrimary = (LCase(oSettings.Item("[Options]KeepOnPrimary")) === "true");
+if (oSettings.Exists("[Options]PicDelay")) PicDelay = oSettings.Item("[Options]PicDelay");
+if (oSettings.Exists("[Options]MaxScrPct")) MaxScrPct = oSettings.Item("[Options]MaxScrPct");
+if (oSettings.Exists("[Options]Coordinates")) Coordinates = oSettings.Item("[Options]Coordinates");
+if (oSettings.Exists("[Options]MonitorIndex")) MonitorIndex = oSettings.Item("[Options]MonitorIndex");
+if (oSettings.Exists("[Options]LocIdx")) LocIdx = oSettings.Item("[Options]LocIdx");
+if (oSettings.Exists("[Options]PicPath")) INIPicPath = oSettings.Item("[Options]PicPath");
+if (oSettings.Exists("[Options]FadeEffect")) FadeEffect = oSettings.Item("[Options]FadeEffect");
+if (oSettings.Exists("[Options]Padding")) Padding = oSettings.Item("[Options]Padding");
+if (!IsNumeric(PicDelay)) PicDelay = 5; else PicDelay = parseInt(PicDelay);
+if (!IsNumeric(MaxScrPct)) MaxScrPct = 25; else MaxScrPct = parseInt(MaxScrPct);
+if (!IsNumeric(MonitorIndex)) MonitorIndex = 0; else MonitorIndex = parseInt(MonitorIndex);
+if (!IsNumeric(LocIdx)) LocIdx = 0; else LocIdx = parseInt(LocIdx);
+if (!IsNumeric(FadeEffect)) FadeEffect = 2; else FadeEffect = parseInt(FadeEffect);
+if (!IsNumeric(Padding)) Padding = 0; else Padding = parseInt(Padding);
+if (oSettings.Exists("[Options]GetAvgColor")) GetAvgColor = (LCase(oSettings.Item("[Options]GetAvgColor")) !== "false");
+
+if (MonitorIndex >= MonitorsConnected || MonitorIndex < 0) MonitorIndex = 0;
+
+ArrScreen = ArrScreens[0].split(",");
+var Scale = ArrScreen[0];
+
+var CaptionHeight = parseInt (30 * Scale);
+var BorderSize = parseInt (Scale * 100 / 25 + 4);
+
+var wGUI = 340 * Scale;
+var hGUI = 480 * Scale;
+
+var currentMonitor = MonitorIndex;
+if (KeepOnPrimary) currentMonitor = 0;
+
+if (INIPicPath !== "" && oFSO.FolderExists(INIPicPath)) PicPath = INIPicPath;
+
+if (!oFSO.FolderExists(PicPath)) {
+  PicPath = MyFolder;
+  if (!oFSO.FileExists(MyFolder + "\\DesktopPic.png")) {
+    MsgBox(Msg(2), 0);
+    Quit();
+  }
+}
+
+var PrevPicPath = PicPath;
+oWSH.CurrentDirectory = PicPath;
+
+var UseLight = "";
+try {
+  UseLight = oWSH.RegRead("HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize\\AppsUseLightTheme");
+} catch (e) {
+  UseLight = "";
+}
+
+var DarkMode = true;
+if (UseLight === "" || UseLight == 1) DarkMode = false;
+
+GetPics();
+
+var ModKey = false;
+var wBak = 0;
+var hBak = 0;
+
+// End Main
+
+function getCurrentMonitor() {
+  oWSH.Run(Q + GetMonitorExe + Q, 0, true);
+  var Stamp = oWSH.RegRead("HKCU\\Software\\DesktopPic\\Stamp");
+  ArrStamp = Stamp.split(",");
+  currentMonitor = ArrStamp[0]
+}
+
+function setBGcolor() {
+  oWSH.Run(Q + GetScreenInfoExe + Q, 0, true);
+  var Screens = oWSH.RegRead("HKCU\\Software\\DesktopPic\\Screens");
+  ArrScreens = Screens.split(";");
+  ArrScreen = ArrScreens[currentMonitor].split(",");
+  BGcolor = ArrScreen[5];
+
+  if (GetAvgColor) {
+    oWSH.Run(Q + WallPExe + Q + " " + currentMonitor + " /c", 0, true);
+    var Monitor = oWSH.RegRead("HKCU\\Software\\WallP\\Monitor");
+    BGcolor = oWSH.RegRead("HKCU\\Software\\WallP\\" + Monitor + "\\AvgColor");
+  }
+  document.body.style.backgroundColor = BGcolor;
+}
+
+function GetPics() {
+  oWSH.Run("Cmd /c dir /b *.bmp *.gif *.jpg *.jpeg *.heic *.heif *.png *.tif *.webp>" + Q + PicListFile + Q, 0, true);
+  var FileContents = "";
+  try {
+    var oFile = oFSO.OpenTextFile(PicListFile, ForReading);
+    FileContents = oFile.ReadAll();
+    oFile.Close();
+  } catch (e) {
+    FileContents = "";
+  }
+  if (FileContents === "") {
+    PicPath = MyFolder;
+    oWSH.CurrentDirectory = PicPath;
+    GetPics();
+  } else {
+    PrevPicPath = PicPath;
+    ArrPic = FileContents.split(Z);
+  }
+}
+
+function Ini2Dict() {
+  if (oFSO.FileExists(INIFile)) {
+    var oFile = oFSO.OpenTextFile(INIFile, ForReading);
+    while (!oFile.AtEndOfStream) {
+      var Line = Trim(oFile.ReadLine());
+      if (Line !== "" && Line.charAt(0) !== ";") {
+        if (Line.charAt(0) === "[") {
+          var Section = Line;
+        } else {
+          var ArrLine = Line.split("=");
+          if (ArrLine.length === 2 && ArrLine[1] !== "") oSettings.Add(Section + ArrLine[0], ArrLine[1]);
+        }
+      }
+    }
+    oFile.Close();
+  }
+}
+
+window.onload = function () {
+
+  setBGcolor();
+  CreateLangMenu();
+  SetLangIdx();
+  GetLangStrings();
+
+  for (i = 1; i <= MonitorsConnected; i++) {
+    oOption = document.createElement("Option");
+    oOption.text = i;
+    oOption.value = i;
+    Dsp.add(oOption);
+  }
+  Dsp.selectedIndex = MonitorIndex;
+
+  document.body.style.backgroundColor = BGcolor;
+  Mpp.selectedIndex = LocIdx;
+  PrepOptions();
+  LoadPic();
+  if (LocIdx == 5) RepositionWindow();
+  ToggleShortcut();
+
+  UpdatePos = window.setInterval(UpdatePosition, 100);
+  
+  if (LCase(oFSO.GetExtensionName(CallerPath)) == "hta") Mvm.selectedIndex = 1;
+  OnChangeMvm();
+  OnChangeTpd();
+}
+
+function CreateLangMenu() {
+  if (oFSO.FolderExists(LangDir)) {
+    oFolder = oFSO.GetFolder(LangDir);
+    oFolder = new Enumerator(oFolder.SubFolders);
+    for (; !oFolder.atEnd(); oFolder.moveNext()) {
+      Folder = oFSO.GetBaseName(oFolder.item());
+      LangCount++;
+      oOption = document.createElement("Option");
+      oOption.text = Folder;
+      oOption.value = Folder;
+      Mln.add(oOption);
+    }
+  }  
+}
+
+function SetLangIdx() {
+  if (LangCount > 0) {
+    LangIdx = 0;
+    for (i = 0; i < LangCount; i++) {
+      if (LCase(Language) == LCase(Mln.options[i].value)) {
+        LangIdx = i;
+        break;
+      } else {
+        // default to english when no match found
+        if (LCase(Mln.options[i].value) == "en-gb") LangIdx = i;
+        if (LCase(Mln.options[i].value) == "en-us") LangIdx = i;
+      }
+    }
+    Mln.selectedIndex = LangIdx;
+  }
+}
+
+function GetLangStrings() {
+  
+  // Set defaults
+  Msg[0] = "";
+  Msg[1] = "OK";
+  Msg[2] = "DesktopPic.png file missing";
+  Msg[3] = "Wallpaper style must be set to Fill to use this option";
+  Msg[4] = "Change wallpaper style to Fill?";
+  Msg[5] = "Background type must be set to Picture to use this option";
+  Msg[6] = "Change background type to picture?";
+  Msg[7] = "Wallpaper file missing:";
+  Msg[8] = "Double-click a file to set the folder";
+  
+  // Get message strings from file
+  var file = LangDir + Language + "\\Messages.txt";
+  var aMsg= [];
+  if (oFSO.FileExists(file)) {
+    f = oFSO.OpenTextFile(file, ForReading, false, Unicode);
+    // Make first array element a blank line so that text editor line numbers match array indices
+    aMsg = (Z + f.ReadAll()).split(Z);
+    f.Close();
+  }
+  
+  // Overwrite default messages
+  for (i = 1; i < Math.min(Msg.length, aMsg.length); i++) {
+    if (aMsg[i] !== "") Msg[i] = aMsg[i];
+  }
+  
+  // Get label strings from file
+  file = LangDir + Language + "\\Labels.txt";
+  if (oFSO.FileExists(file)) {
+    f = oFSO.OpenTextFile(file, ForReading, false, Unicode);
+    // Make first array element a blank line so that text editor line numbers match array indices
+    Label = (Z + f.ReadAll()).split(Z);
+    f.Close();
+  }
+
+  // Replace default labels in DOM
+  for (i = 1; i <= Math.min(25, Label.length); i++) {
+    document.getElementById("L" + i).innerText =  Label[i];
+  }
+}
+
+function OnChangeMln() {
+  LangIdx = Mln.selectedIndex;
+  Language = Mln.options[LangIdx].value;
+  GetLangStrings();
+  HideOptions();
+  ShowOptions();
+}
+
+function UpdateXY() {
+  var aCoords = Coordinates.split(",");
+  try { x = parseInt(aCoords[0]); } catch (e) { x = 0; }
+  try { y = parseInt(aCoords[1]); } catch (e) { y = 0; }
+  Coordinates = x + "," + y;
+}
+
+function RepositionWindow() {
+  UpdateXY();
+  window.moveTo(x - BorderSize, y);
+}
+
+function ToggleShortcut() {
+  Crs.blur();
+  RunOnStartup = Crs.checked;
+  var ShortCutFolder = oWSH.SpecialFolders("Startup");
+  var ShortCutPath = ShortCutFolder + "\\" + "DesktopPic.lnk";
+  var ShortcutExists = oFSO.FileExists(ShortCutPath);
+  if (RunOnStartup && !ShortcutExists) {
+    var link = oWSH.CreateShortcut(ShortCutPath);
+    link.TargetPath = oFSO.GetAbsolutePathName(MyFolder + "\\..\\DesktopPic.exe");
+    link.Save();
+  }
+  if (!RunOnStartup && ShortcutExists) {oFSO.DeleteFile(ShortCutPath);}
+}
+
+function UpdatePosition() {
+  Tsp.value = (parseInt(window.screenX) + parseInt(BorderSize)) + "," + window.screenY;
+  Coordinates = Tsp.value;
+  UpdateXY();
+  SetNewSize();
+}
+
+function SetNewSize() {
+  if (Opt.style.display == "block") return;
+  if (w == window.outerWidth && h == window.outerHeight) return;
+  w = window.outerWidth - (BorderSize * 2);
+  h = window.outerHeight - CaptionHeight - BorderSize;
+  var NewSize = parseInt((w * h) / (sw * sh) * 100)
+  if (NewSize > 100) NewSize = 100;
+  if (NewSize <= 0) NewSize = 1;
+  Tpp.value = NewSize;
+  MaxScrPct = Tpp.value;
+}
+
+function LoadPic() {
+  if (Forward) PicIndex++; else PicIndex--;
+  if (PicIndex >= ArrPic.length - 1) PicIndex = 0;
+  if (PicIndex < 0) PicIndex = ArrPic.length - 2;
+  aImage = ArrPic[PicIndex].split("|");
+  if (aImage.length == 1) {
+    try {
+      oImg.LoadFile(aImage[0]);
+      iw = oImg.Width;
+      ih = oImg.Height;
+      ArrPic[PicIndex] = aImage[0] + "|" + iw + "|" + ih;
+    } catch (e) {
+      ArrPic[PicIndex] = aImage[0] + "|0|0";
+    }
+    aImage = ArrPic[PicIndex].split("|");
+  }
+  iw = aImage[1];
+  ih = aImage[2];
+  Nam.innerHTML = aImage[0];
+  if (iw > 0 && ih > 0) {
+    BadImage = false;
+    if (ShowFileName) {
+      Nam.style.display = "";
+    } else {
+      Nam.style.display = "none";
+    }
+    ResizePic();
+    if (!Stamping) WinMoveTo();
+    ResizeWindow();
+    document.body.background = PicPath + "\\" + aImage[0];
+  } else {
+    BadImage = true;
+    Nam.style.display = "";
+    iw = 9;
+    ih = 6;
+    ResizePic();
+    WinMoveTo();
+    ResizeWindow();
+    document.body.background = "";
+  }
+}
+
+function ResizePic() {
+  if (Opt.style.display == "block") return;
+  getScreenSize();
+  var MaxArea = sw * sh * (MaxScrPct / 100);
+  var ImgArea = iw * ih;
+  w = parseInt(iw);
+  h = parseInt(ih);
+  if (ImgArea>MaxArea || Stretch || BadImage) {
+    var ResizeFactor = Math.sqrt(MaxArea / ImgArea);
+    w = iw * ResizeFactor;
+    h = ih * ResizeFactor;
+    w = parseInt(w);
+    h = parseInt(h);
+  }
+  w = w + (BorderSize * 2);
+  h = h + CaptionHeight + BorderSize;
+  if ((w + Padding) > sw) h = (sw - Padding) / w * h, w = sw - Padding;
+  if ((h + Padding) > sh) w = (sh - Padding) / h * w, h = sh - Padding;
+  w = parseInt(w);
+  h = parseInt(h);
+}
+
+function ResizeWindow() {
+  window.resizeTo(w, h);
+}
+
+function PrepOptions() {
+  var oElements = document.getElementsByTagName("input");
+  for (var i = 0; i < oElements.length; i++) {
+    var oElement = oElements[i];
+    if (oElement.type == "checkbox" || oElement.type == "radio") {
+      oElement.style.zoom = 1.2 * Scale;
+    }
+  }
+  Crs.checked = RunOnStartup;
+  Cbf.checked = BringToFront;
+  Csp.checked = Stretch;
+  Cfn.checked = ShowFileName;
+  Cbc.checked = GetAvgColor;
+  Ckp.checked = KeepOnPrimary;
+  Tpd.value = PicDelay;
+  Tfe.value = FadeEffect;
+  Tpa.value = Padding;
+  Tpp.value = MaxScrPct;
+  Tsp.value = Coordinates;
+  if (Mpp.selectedIndex == 5) Tsp.style.display = "";
+  Mln.selectedIndex = LangIdx;
+}
+
+document.ondblclick = function() {
+  if (Opt.style.display != "block") return;
+  ResizeWindow();
+  getCurrentMonitor();
+  setBGcolor();
+  Var2Ini();
+}
+
+document.onclick = function() {
+  if (Opt.style.display == "block") return;
+  SetNewSize();
+  ResizePic();
+  ResizeWindow();
+  getCurrentMonitor();
+  setBGcolor();
+  Var2Ini();
+}
+
+function ManualAdvance(Flag, KeyCode) {
+  if (!DoingInput) {
+    window.event.keyCode = 0;
+    clearInterval(PicTimer);
+    Forward = Flag;
+    if (KeyCode != 32) PicTimer = 0;
+    if (PicTimer == 0) LoadPic();
+    PicTimer = 0;
+  }
+}
+
+document.onkeydown = function() {
+  if (window.event.ctrlKey && window.event.keyCode == 116) {
+    window.event.keyCode = 0;
+    return;
+  }
+  if (window.event.ctrlKey || window.event.altKey || window.event.shiftKey) {
+    ModKey = true;
+    return;
+  }
+  
+  switch (window.event.keyCode) {
+    case 32: // Spacebar
+    case 39: // Right arrow
+      ManualAdvance(true, window.event.keyCode);
+      break;
+    case 8: // Backspace
+    case 37: // Left arrow
+      ManualAdvance(false, window.event.keyCode);
+      break;
+    case 13: // Enter
+      ContinueShow();
+      break;
+    case 116: // F5
+      Dsp.selectedIndex = 0;
+      WinMoveTo();
+      window.event.keyCode = 0;
+      break;
+    case 114: // F3
+      window.event.keyCode = 0;
+      oWSH.Run("Explorer.exe \"" + PicPath + "\"", 1, false);
+      break;
+    case 115: // F4
+      window.event.keyCode = 0;
+      oWSH.Run("Explorer.exe \"" + WallPBackup + "\"", 1, false);
+      break;
+  }
+}
+
+function ContinueShow() {
+  var Ext = Mvm.options[Mvm.selectedIndex].value;
+  var Pfx = "";
+  if (Ext == "HTA") Pfx = oWSH.ExpandEnvironmentStrings("%SystemRoot%") + "\\System32\\mshta.exe ";
+  var RunPath = oFSO.GetParentFolderName(CallerPath) + "\\" + oFSO.GetBaseName(CallerPath) + "." + Ext;
+  oWSH.Run(Pfx + Q + RunPath + Q + " " + Q + PicIndex + Q, 1, false);
+  Quit();
+}
+
+function Settings() {
+  if (Opt.style.display != "block") {
+    ShowOptions();
+  }
+  else {
+    HideOptions();
+  }
+}
+
+function HideOptions() {
+  Opt.style.display = "none";
+  Bsw.style.display = "inline";
+  w = wBak;
+  h = hBak;
+  ResizePic();
+  WinMoveTo();
+  ResizeWindow();
+}
+
+function ShowOptions() {
+  Opt.style.display = "block";
+  Bsw.style.display = "none";
+  wBak = w;
+  hBak = h;
+  if (w < wGUI ) {
+    wGUI = Math.max(document.body.scrollWidth + (40 * Scale), wGUI);
+    w = wGUI;
+  }
+  if (h < hGUI ) h = hGUI;
+  WinMoveTo();
+  ResizeWindow();
+}
+
+function Help() {
+  Bhp.blur();
+  oWSH.Run("https://lesferch.github.io/DesktopPic/doc/v2");
+}
+
+function OnFocusInput() {
+  DoingInput = true;
+  clearInterval(UpdatePos);
+}
+
+function OnBlurInput() {
+  DoingInput = false;
+  UpdatePos = window.setInterval(UpdatePosition, 500);
+}
+
+function OnInputDigits(id) {
+  document.getElementById(id).value = document.getElementById(id).value.replace(DigitsOnly, "");
+}
+
+function OnInputDigitsComma(id) {
+  document.getElementById(id).value = document.getElementById(id).value.replace(DigitsComma, "").replace(/,,/g, ",");
+}
+
+function OnChangeTpd() {
+  if (Tpd.value < 1) Tpd.value = 1;
+  AdjustPicDelay();
+}
+
+function OnChangeMvm() {
+  if (Mvm.selectedIndex == 0) Sfe.style.display = "";
+  if (Mvm.selectedIndex == 1) Sfe.style.display = "none";
+  AdjustPicDelay()
+}
+
+function AdjustPicDelay() {
+  if (Mvm.selectedIndex == 0 && parseInt(Tpd.value) <= parseInt(Tfe.value)) Tpd.value = parseInt(Tfe.value) + 1;
+}
+
+function OnChangeDsp() {
+  Stamping = false;
+  WinMoveTo();
+  currentMonitor = MonitorIndex;
+  if (KeepOnPrimary) currentMonitor = 0;
+  setBGcolor();
+}
+
+function OnChangeMpp() {
+  if (Ckp.checked) {
+    WinMoveToPrep();
+  }
+  else {
+    WinMoveTo();
+  }
+}
+
+function OnChangeTpa() {
+  if (Ckp.checked) {
+    WinMoveToPrep();
+  }
+  else {
+    WinMoveTo();
+  }
+}
+function OnChangeTpp() {
+  Stamping = false;
+  if (Tpp.value < 1 || Tpp.value > 100) {
+    Tpp.value = MaxScrPct;
+  } else {
+    MaxScrPct = Tpp.value;
+  }
+  ResizePic();
+}
+
+function WinMoveToPrep() {
+  MonitorIndex = Dsp.selectedIndex;
+  if (MonitorIndex < 0) MonitorIndex = 0;
+  Position = Mpp.selectedIndex;
+  if (Position === 5) {
+    Ckp.checked = false;
+    KeepOnPrimary = false;
+    Skp.style.display = "none";
+    Ssp.style.display = "none";
+  }
+  else {
+    Skp.style.display = "";
+    Ssp.style.display = "";
+  }
+
+  if (Position === 5) Tsp.style.display = ""; else Tsp.style.display = "none";
+  
+  if (Position === 5 || Position === 0) {
+    Spa.style.display = "none";
+  }
+  else {
+    Spa.style.display = "";
+  }
+  
+  Padding = parseInt(Tpa.value);
+  
+  if (KeepOnPrimary) {
+    MonitorIndex = 0;
+    Position = 0;
+  }
+  ArrScreen = ArrScreens[MonitorIndex].split(",");
+
+  Mpp.blur();
+}
+
+function WinMoveTo() {
+  WinMoveToPrep();
+  switch (Position) {
+    case 0:
+      WinCn();
+      break;
+    case 1:
+      WinUL();
+      break;
+    case 2:
+      WinUR();
+      break;
+    case 3:
+      WinLL();
+      break;
+    case 4:
+      WinLR();
+      break;
+    case 5:
+      break;
+  }
+}
+
+function WinCn() {
+  var centerX = parseInt(ArrScreen[1]) + (parseInt(ArrScreen[3]) - parseInt(ArrScreen[1])) / 2;
+  var centerY = parseInt(ArrScreen[2]) + (parseInt(ArrScreen[4]) - parseInt(ArrScreen[2])) / 2;
+  window.moveTo(centerX - (w / 2), centerY - (h / 2));
+}
+
+function WinUL() {
+  window.moveTo(parseInt(ArrScreen[1]) + Padding - BorderSize, parseInt(ArrScreen[2]) + Padding);
+}
+
+function WinUR() {
+  window.moveTo(parseInt(ArrScreen[3]) - w - Padding + BorderSize, parseInt(ArrScreen[2]) + Padding);
+}
+
+function WinLL() {
+  window.moveTo(parseInt(ArrScreen[1]) + Padding - BorderSize, parseInt(ArrScreen[4]) - h - Padding + BorderSize);
+}
+
+function WinLR() {
+  window.moveTo(parseInt(ArrScreen[3]) - w - Padding + BorderSize, parseInt(ArrScreen[4]) - h - Padding + BorderSize);
+}
+
+function getScreenSize() {
+  MonitorIndex = Dsp.selectedIndex;
+  if (MonitorIndex < 0) MonitorIndex = 0;
+  ArrScreen = ArrScreens[MonitorIndex].split(",");
+  sw = Math.abs(Math.abs(parseInt(ArrScreen[3])) - Math.abs(parseInt(ArrScreen[1])))
+  sh = Math.abs(Math.abs(parseInt(ArrScreen[4])) - Math.abs(parseInt(ArrScreen[2])))
+}
+
+function OnChangeTsp() {
+  Stamping = false;
+  if (Tsp.value != "") {
+    Coordinates = Tsp.value;
+    RepositionWindow();
+  }
+}
+
+function OnClickCfn() {
+  Cfn.blur();
+  if (Cfn.checked) {
+    Nam.style.display = "";
+    ShowFileName = true;
+  } else {
+    Nam.style.display = "none";
+    ShowFileName = false;
+  }
+}
+
+function OnClickCbc() {
+  GetAvgColor = Cbc.checked;
+  getCurrentMonitor();
+  setBGcolor();
+}
+
+function OnClickCsp() {
+  Csp.blur();
+  Stretch = Csp.checked;
+}
+
+function OnClickCkp() {
+  Stamping = false;
+  Ckp.blur();
+  if (Ckp.checked) {
+    KeepOnPrimary = true;
+  } else {
+    KeepOnPrimary = false;
+  }
+  WinMoveTo();
+  currentMonitor = MonitorIndex;
+  if (KeepOnPrimary) currentMonitor = 0;
+  setBGcolor();
+}
+
+window.onunload = function () {
+  Var2Ini();
+}
+
+function Var2Ini() {
+  var oFile = oFSO.OpenTextFile(INIFile, ForWriting, true);
+  oFile.Write("[Options]" + Z);
+  oFile.Write("Language=" + Language + Z);
+  oFile.Write("RunOnStartup=" + Crs.checked + Z);
+  oFile.Write("BringToFront=" + Cbf.checked + Z);
+  oFile.Write("Stretch=" + Csp.checked + Z);
+  oFile.Write("ShowFileName=" + Cfn.checked + Z);
+  oFile.Write("GetAvgColor=" + Cbc.checked + Z);
+  oFile.Write("KeepOnPrimary=" + Ckp.checked + Z);
+  oFile.Write("PicDelay=" + Tpd.value + Z);
+  oFile.Write("MaxScrPct=" + Tpp.value + Z);
+  oFile.Write("Coordinates=" + Tsp.value + Z);
+  oFile.Write("MonitorIndex=" + Dsp.selectedIndex + Z);
+  oFile.Write("LocIdx=" + Mpp.selectedIndex + Z);
+  oFile.Write("PicPath=" + PicPath + Z);
+  oFile.Write("Viewer=" + Mvm.options[Mvm.selectedIndex].value + Z);
+  oFile.Write("FadeEffect=" + Tfe.value + Z);
+  oFile.Write("Padding=" + Tpa.value + Z);
+  oFile.Close();
+}
+
+function ChangeFolder() {
+  BrowseFolder();
+  if (PicPath == PrevPicPath) return;
+  PicIndex = -1;
+  LoadPic();
+}
+
+function BrowseFolder() {
+  var userExpandSetting;
+  try {
+    var keyVal = "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\\NavPaneExpandToCurrentFolder"
+    userExpandSetting = oWSH.RegRead(keyVal)
+  } catch (e) { userExpandSetting = 0; }
+  
+  oWSH.RegWrite(keyVal, 1, "REG_DWORD")
+
+  oWSH.Run(Q + FileDialogExe + Q + ' open ~"' + Msg[8] + '" ' + Q + PicPath + Q, 1, true)
+
+  oWSH.RegWrite(keyVal, userExpandSetting, "REG_DWORD")
+
+  var RetVal = oWSH.RegRead("HKCU\\Software\\FileDialog\\");
+  
+  if (RetVal!=="") {
+    PicPath = oFSO.GetParentFolderName(RetVal);
+    oWSH.CurrentDirectory = PicPath;
+    GetPics();
+    PicIndex = -1;
+    LoadPic();
+  }
+}
+
+function RestoreWallpaper() {
+  Brw.blur();
+
+  oWSH.Run(Q + GetMonitorExe + Q, 0, true);
+  var Stamp = oWSH.RegRead("HKCU\\Software\\DesktopPic\\Stamp");
+  ArrStamp = Stamp.split(",");
+  currentMonitor = ArrStamp[0]
+
+  oWSH.Run(Q + WallPExe + Q + " " + currentMonitor, 0, true);
+  var Monitor = oWSH.RegRead("HKCU\\Software\\WallP\\Monitor");
+  var WPpath = oWSH.RegRead("HKCU\\Software\\WallP\\" + Monitor + "\\WPpath");
+
+  if (LCase(WPpath).indexOf(LCase(WallPBackup + "DesktopPic")) === -1 && !ModKey) {
+    ModKey = false;
+    return;
+  }
+  ModKey = false;
+
+  try {
+    var WPbackup = oWSH.RegRead("HKCU\\Software\\WallP\\" + Monitor + "\\WPbackup");
+  } catch (e) { }
+
+  if (oFSO.FileExists(WPbackup)) {
+    oWSH.Run(Q + WallPExe + Q + " " + currentMonitor + " " + Q + WPbackup + Q, 0, true);
+  } else {
+    try {
+      WPbackup = oWSH.RegRead("HKCU\\Software\\WallP\\All\\WPbackup");
+    } catch (e) { }
+    if (oFSO.FileExists(WPbackup)) {
+      oWSH.Run(Q + WallPExe + Q + " " + currentMonitor + " " + Q + WPbackup + Q, 0, true);
+    }
+  }
+
+  if (oFSO.FileExists(WPpath)) {
+    if (LCase(WPpath).indexOf(LCase(WallPBackup + "DesktopPic")) === -1) {
+      oWSH.RegWrite("HKCU\\Software\\WallP\\" + Monitor + "\\WPbackup", WPpath);
+      oWSH.RegWrite("HKCU\\Software\\WallP\\All\\WPbackup", WPpath);
+    }
+  }
+}
+
+function StampWallpaper() {
+  Stamping = true;
+  Bsw.blur();
+
+  // Check for Fill style
+  var WallpaperStyle = oWSH.RegRead("HKCU\\Control Panel\\Desktop\\WallpaperStyle");
+  if (WallpaperStyle != "10") {
+    var Answer = Message(Msg[3] + Z + Z + Msg[4], Msg[1]);
+    if (Answer == 0) return;
+  }
+
+  // Detect if slideshow is enabled
+  var BackgroundType = 0;
+  
+  try {
+    BackgroundType = oWSH.RegRead("HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Wallpapers\\BackgroundType");
+  } catch (e) { }
+  if (BackgroundType == 2 || BackgroundType == 3) {
+    var Answer = Message(Msg[5] + Z + Z + Msg[6], Msg[1]);
+    if (Answer == 0) return;
+  }
+
+  var Fsw = screen.width;
+  var Fsh = screen.height;
+
+  oWSH.Run(Q + GetMonitorExe + Q, 0, true);
+  var Stamp = oWSH.RegRead("HKCU\\Software\\DesktopPic\\Stamp");
+  ArrStamp = Stamp.split(",");
+  currentMonitor = ArrStamp[0]
+  
+  var winX = window.screenX;
+  var winY = window.screenY;
+  
+  if (currentMonitor !== "0") {
+    ArrScreen = ArrScreens[currentMonitor].split(",");
+    Fsw = parseInt(ArrStamp[1]);
+    Fsh = parseInt(ArrStamp[2]);
+    winX = window.screenX - parseInt(ArrScreen[1]);
+    winY = window.screenY - parseInt(ArrScreen[2]);
+  }
+ 
+  if (!ModKey) winY = winY + CaptionHeight + BorderSize;
+  ModKey = false;
+
+  var StampImg = PicPath + "\\" + aImage[0];
+  oWSH.Run(Q + WallPExe + Q + " " + currentMonitor, 0, true);
+  var Monitor = oWSH.RegRead("HKCU\\Software\\WallP\\Monitor");
+  var WPpath = oWSH.RegRead("HKCU\\Software\\WallP\\" + Monitor + "\\WPpath");
+  var StampedFile = WallPBackup + "DesktopPic" + Monitor + PicExt;
+  
+  // Create Solid Color Backgrounds
+  if (BackgroundType == 1) {
+    var Colors = oWSH.RegRead("HKCU\\Control Panel\\Colors\\Background").split(" ");
+    var c = 0xFF000000 | ((Colors[0] & 0xFF) << 16) | ((Colors[1] & 0xFF) << 8)  | (Colors[2] & 0xFF);
+    var Pad = parseInt(0.1 * Math.max(Fsw, Fsh));
+    var v = new ActiveXObject("WIA.Vector");
+    for (var i = 1; i <= 400; i++) {
+      v.Add(c);
+    }
+    var Img = v.ImageFile(20, 20);
+    var IP = new ActiveXObject("WIA.ImageProcess");
+    IP.Filters.Add(IP.FilterInfos("Scale").FilterID);
+    IP.Filters(1).Properties("MaximumWidth") = Fsw + Pad;
+    IP.Filters(1).Properties("MaximumHeight") = Fsh + Pad;
+    IP.Filters(1).Properties("PreserveAspectRatio") = true;
+    IP.Filters.Add(IP.FilterInfos("Crop").FilterID);
+    IP.Filters(2).Properties("Right") = Pad;
+    IP.Filters(2).Properties("Bottom") = Pad;
+    IP.Filters.Add(IP.FilterInfos("Convert").FilterID);
+    IP.Filters(3).Properties("FormatID").Value = PicFormat;
+    Img = IP.Apply(Img);
+
+    var SolidColorImage = WallPBackup + "SolidColorImage" + PicExt;
+
+    if (oFSO.FileExists(SolidColorImage)) oFSO.DeleteFile(SolidColorImage);
+    Img.SaveFile(SolidColorImage);
+    Img = null;
+    IP = null;
+
+    oWSH.Run(Q + WallPExe + Q + " 0", 0, true);
+    var MonitorCount = oWSH.RegRead("HKCU\\Software\\WallP\\MonitorCount");
+
+    for (var i = 0; i < MonitorCount; i++) {
+      oWSH.Run(Q + WallPExe + Q + " " + i, 0, true);
+      var Monitor = oWSH.RegRead("HKCU\\Software\\WallP\\Monitor");
+      oWSH.RegWrite("HKCU\\Software\\WallP\\" + Monitor + "\\WPbackup", SolidColorImage);
+      oWSH.Run(Q + WallPExe + Q + " " + i + " Fill " + Q + SolidColorImage + Q, 0, true);
+    }
+
+    WPpath = SolidColorImage;
+  }
+  
+  if (oFSO.FileExists(WPpath)) {
+    if (LCase(WPpath).indexOf(LCase(WallPBackup + "DesktopPic")) === -1) {
+      oWSH.RegWrite("HKCU\\Software\\WallP\\" + Monitor + "\\WPbackup", WPpath);
+      oWSH.RegWrite("HKCU\\Software\\WallP\\All\\WPbackup", WPpath);
+    }
+  } else {
+    Message(Msg[7] + Z + Z + WPpath, Msg[1]);
+    return;
+  }
+
+  var Img = new ActiveXObject("WIA.ImageFile");
+  Img.LoadFile(StampImg);
+  var IP = new ActiveXObject("WIA.ImageProcess");
+  IP.Filters.Add(IP.FilterInfos("Scale").FilterID);
+  IP.Filters(1).Properties("MaximumWidth") = w - (BorderSize * 2);
+  IP.Filters(1).Properties("MaximumHeight") = h - CaptionHeight - BorderSize;
+  Img = IP.Apply(Img);
+  IP = null;
+
+  var Wall = new ActiveXObject("WIA.ImageFile");
+  Wall.LoadFile(WPpath);
+
+  var NewWidth = Fsw;
+  var NewHeight = Fsh;
+
+  if (!(Wall.Width == Fsw && Wall.Height == Fsh)) {
+    var wFactor = Fsw / Wall.Width;
+    var hFactor = Fsh / Wall.Height;
+
+    if (wFactor > hFactor) {
+      NewHeight = parseInt(wFactor * Wall.Height);
+    }
+    if (hFactor > wFactor) {
+      NewWidth = parseInt(hFactor * Wall.Width);
+    }
+    
+    var IP = new ActiveXObject("WIA.ImageProcess");
+    IP.Filters.Add(IP.FilterInfos("Scale").FilterID);
+    IP.Filters(1).Properties("MaximumWidth") = NewWidth;
+    IP.Filters(1).Properties("MaximumHeight") = NewHeight;
+    IP.Filters(1).Properties("PreserveAspectRatio") = false;
+    Wall = IP.Apply(Wall);
+    IP = null;
+    
+    NewWidth = Wall.Width;
+    NewHeight = Wall.Height;
+
+    if (NewWidth > Fsw || NewHeight > Fsh) {
+      var LeftCrop = 0;
+      var RightCrop = 0;
+      var TopCrop = 0;
+      var BotCrop = 0;
+      if (NewWidth > Fsw) {
+        LeftCrop = parseInt((NewWidth - Fsw) / 2);
+        RightCrop = NewWidth - Fsw - LeftCrop;
+      }
+      if (NewHeight > Fsh) {
+        TopCrop = parseInt((NewHeight - Fsh) / 2);
+        TopCrop = parseInt(TopCrop * 2 / 3);
+        BotCrop = NewHeight - Fsh - TopCrop;
+      }
+
+      var IP = new ActiveXObject("WIA.ImageProcess");
+      IP.Filters.Add(IP.FilterInfos("Crop").FilterID);
+      IP.Filters(1).Properties("Left") = LeftCrop;
+      IP.Filters(1).Properties("Right") = RightCrop;
+      IP.Filters(1).Properties("Top") = TopCrop;
+      IP.Filters(1).Properties("Bottom") = BotCrop;
+      Wall = IP.Apply(Wall);
+      IP = null;
+    }
+  }
+
+  var IP = new ActiveXObject("WIA.ImageProcess");
+  IP.Filters.Add(IP.FilterInfos("Stamp").FilterID);
+  IP.Filters(1).Properties("ImageFile") = Img;
+  IP.Filters(1).Properties("Left") = winX + BorderSize;
+  IP.Filters(1).Properties("Top") = winY - BorderSize;
+  IP.Filters.Add(IP.FilterInfos("Convert").FilterID);
+  IP.Filters(2).Properties("FormatID").Value = PicFormat;
+  Wall = IP.Apply(Wall);
+  if (oFSO.FileExists(StampedFile)) oFSO.DeleteFile(StampedFile);
+  Wall.SaveFile(StampedFile);
+  Wall = null;
+  Img = null;
+  IP = null;
+
+  oWSH.Run(Q + WallPExe + Q + " " + currentMonitor + " Fill " + Q + StampedFile + Q, 0, true);
+}
+
+</script>
+<style>
+body {font-family:Sans-serif; font-size:11pt; background-size:cover; background-attachment:fixed; background-repeat:no-repeat}
+input[type="button"] {font-family:sans-serif; font-size:11pt}
+select {min-width:5em}
+br {font-size: 16pt}
+#Opt {display:none; white-space:nowrap}
+.cc {
+  font-family: sans-serif;
+  font-weight: normal;
+  font-size: 11pt;
+  color: white;
+  background: rgba(0,0,0,.4);
+  padding: 1pt;
+  border-radius: 2pt;
+}
+.gap {margin-top:0.5em}
+.scaled {vertical-align:bottom}
+.btn-img {width:3em; height:3em; cursor:pointer; user-select:none}
+.btn-img:hover {opacity:0.8}
+.btn-img:active {opacity:0.4}
+.tooltip {position:relative; display:inline-block}
+.tip {display:inline; font-weight:normal; color:Black; margin-right:1em}
+.tip:hover .tiptext {visibility:visible}
+.tiptext {
+  visibility:hidden;
+  position:absolute;
+  z-index:1;
+  white-space:nowrap;
+  background-color:Azure;
+  text-align:center;
+  padding:0.3em 0.3em 0.3em 0.3em;
+  border:1px solid black;
+  margin-top:2.7em;
+  margin-left:-1.5em
+}
+</style>
+</head>
+<body>
+
+<div id=Bsw class=tip>
+  <img src="Icons\Stamp.png" class=btn-img onclick=StampWallpaper() alt=Button>
+  <span id=L1 class=tiptext>Stamp</span>
+</div>
+
+<div id=Brw class=tip>
+  <img src="Icons\Restore.png" class=btn-img onclick=RestoreWallpaper() alt=Button>
+  <span id=L2 class=tiptext>Restore</span>
+</div>
+
+<div id=Bgo class=tip>
+  <img src="Icons\Settings.png" class=btn-img onclick=Settings() alt=Button>
+  <span id=L3 class=tiptext>Settings</span>
+</div>
+
+<div id=Bcn class=tip>
+  <img src="Icons\Continue.png" class=btn-img onclick=ContinueShow() alt=Button>
+  <span id=L4 class=tiptext>Play</span>
+</div>
+
+<div id=Bcf class=tip>
+  <img src="Icons\Folder.png" class=btn-img onclick=ChangeFolder() alt=Button>
+  <span id=L5 class=tiptext>Folder</span>
+</div>
+
+<div id=Bhp class=tip>
+  <img src="Icons\Help.png" class=btn-img onclick=Help() alt=Button>
+  <span id=L6 class=tiptext>Help</span>
+</div>
+<br>
+
+<div id=Opt>
+<select id=Mln  OnChange=OnChangeMln()>
+</select><br>
+<input type=checkbox class=scaled id=Crs OnClick=ToggleShortcut()>
+<label for=Crs id=L7 class=cc>Run on startup</label><br>
+<input type=checkbox class=scaled id=Cbf OnClick=Cbf.blur()>
+<label for=Cbf id=L8 class=cc>Bring to front on start</label><br>
+<input type=checkbox class=scaled id=Csp OnClick=OnClickCsp()>
+<label for=Csp id=L9 class=cc>Stretch smaller pictures</label><br>
+<input type=checkbox class=scaled id=Cfn OnClick=OnClickCfn()>
+<label for=Cfn id=L10 class=cc>Display file names</label><br>
+<input type=checkbox class=scaled id=Cbc OnClick=OnClickCbc()>
+<label for=Cbc id=L11 class=cc>Average background color</label><br>
+<span id=Skp>
+<input type=checkbox class=scaled id=Ckp OnClick=OnClickCkp()>
+<label for=Ckp id=L12 class=cc>Keep interface centered on primary screen</label><br>
+</span>
+<input type=text size=5 id=Tpd MaxLength=5 OnFocus=OnFocusInput() OnBlur=OnBlurInput() OnInput=OnInputDigits("Tpd") OnChange=OnChangeTpd()>
+<label for=Tpd id=L13 class=cc>Pic delay in seconds</label><br>
+<input type=text size=5 id=Tpp MaxLength=3 OnFocus=OnFocusInput() OnBlur=OnBlurInput() OnInput=OnInputDigits("Tpp") OnChange=OnChangeTpp()>
+<label for=Tpp id=L14 class=cc>Max percent of screen area</label><br>
+<span id=Ssp>
+<select id=Dsp OnChange=OnChangeDsp()>
+</select>
+<label for=Dsp id=L15 class=cc>Display</label>
+<br>
+</span>
+<select id=Mpp OnChange=OnChangeMpp()>
+<option id=L17>Centered</option>
+<option id=L18>Upper Left</option>
+<option id=L19>Upper Right</option>
+<option id=L20>Lower Left</option>
+<option id=L21>Lower Right</option>
+<option id=L22>Custom</option>
+</select>
+<label for=Mpp id=L16 class=cc>Window position</label>
+<input type=text size=11 id=Tsp MaxLength=11 OnFocus=OnFocusInput() OnBlur=OnBlurInput() OnInput=OnInputDigitsComma("Tsp") OnChange=OnChangeTsp()>
+<br>
+<span id=Spa>
+<input type=text size=5 id=Tpa MaxLength=2 OnFocus=OnFocusInput() OnBlur=OnBlurInput() OnInput=OnInputDigits("Tpa")>
+<label for=Tpa id=L23 class=cc>Padding in pixels</label><br>
+</span>
+<select id=Mvm OnChange=OnChangeMvm()>
+<option>EXE</option>
+<option>HTA</option>
+</select>
+<label for=Mvm id=L24 class=cc>Viewer</label>
+<br>
+<span id=Sfe>
+<input type=text size=5 id=Tfe MaxLength=2 OnFocus=OnFocusInput() OnBlur=OnBlurInput() OnInput=OnInputDigits("Tfe") OnChange=OnChangeTpd()>
+<label for=Tfe id=L25 class=cc>Crossfade in seconds</label><br>
+</span>
+</div>
+<div class=gap></div>
+<span id=Nam class=cc></span>
+</body>
+</html>

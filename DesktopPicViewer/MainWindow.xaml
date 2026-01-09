@@ -1,0 +1,30 @@
+﻿<Window x:Class="DesktopPicViewer.MainWindow"
+        ShowInTaskbar="False"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="100" Width="100"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        Loaded="Window_Loaded"
+        PreviewKeyDown="MainWindow_PreviewKeyDown"
+        MouseDoubleClick="MainWindow_MouseDoubleClick"
+        MouseLeftButtonDown="ImageClicked">
+    <Grid>
+        <Image x:Name="SlideshowImage" Stretch="Uniform" />
+        <Image x:Name="SlideshowImageNext" Stretch="Uniform"/>
+        <Border x:Name="FileNameBorder"
+            Margin="8"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Left"
+            Background="#66000000"
+            CornerRadius="3"
+            Padding="0">
+            <TextBlock x:Name="FileNameText"
+                   Padding="2,2"
+                   Foreground="White"
+                   FontWeight="Normal"
+                   FontFamily="Microsoft Sans Serif"
+                   FontSize="14"
+                   Visibility="Collapsed"/>
+        </Border>
+    </Grid>
+</Window>

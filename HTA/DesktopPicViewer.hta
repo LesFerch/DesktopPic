@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<!--
+DesktopPic (Display picture or slideshow on desktop and/or stamp picture to wallpaper)
+Les Ferch, lesferch@gmail.com, 2022 - 2026
+-->
+<html>
+<head>
+<title>DesktopPic</title>
+<meta charset="UTF-8" http-equiv="X-UA-Compatible" content="IE=9">
+<hta:application
+  id=oHTA
+  icon=DesktopPic.ico
+  showintaskbar=no
+  contextmenu=no
+  border=none
+  caption=no
+  scroll=no
+>
+<script>
+
+function MsgBox(prompt, buttons) {
+  var result = oWSH.Popup(prompt, 0, "DesktopPic", buttons);
+  return(result);
+}
+
+function Trim(str) {
+  return str.replace(/^\s+|\s+$/g, '');
+}
+
+function Replace(str, search, replacement) {
+  var escapedSearch = search.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+  var regex = new RegExp(escapedSearch, "g");
+  return str.replace(regex, replacement);
+}
+
+function LCase(str) {
+  return str.toLowerCase();
+}
+
+function IsNumeric(value) {
+    return value !== null && value !== "" && !isNaN(value);
+}
+
+// Begin Main
+
+window.resizeTo(0, 0);
+var HideMe = 999999999;
+window.moveTo(HideMe, HideMe);
+
+var MyVerNum = "2.0.0";
+var ForReading = 1;
+var ForWriting = 2;
+var Unicode = -1;
+var Ansi = 0;
+
+var oWSH = new ActiveXObject("Wscript.Shell");
+var oFSO = new ActiveXObject("Scripting.FileSystemObject");
+var oImg = new ActiveXObject("WIA.ImageFile");
+var oSettings = new ActiveXObject("Scripting.Dictionary");
+
+var PicTimer = 0, w = 0, h = 0, iw = 0, ih = 0, x = 0, y = 0;
+var ArrPic = [], ArrScreen = [], aImage = [];
+var Z = "\r\n";
+var Q = '"';
+var ShowFileName = false;
+var BringToFront = true;
+var Stretch = false;
+var PicDelay = 5;
+var MaxScrPct = 25;
+var Coordinates = "";
+var Forward = true;
+var BadImage = false;
+var PicIndex = -1;
+var CaptionHeight = 0;
+var LocIdx = 0;
+var MonitorIndex = 0;
+var Padding = 0;
+
+var NTVer = oWSH.RegRead("HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\CurrentVersion");
+if (NTVer < "6.3") {
+  MsgBox("Windows 10 or higher required",  0);
+  self.close();
+  window.close();
+}
+
+var MyPath = document.URL.substring(7);
+var MyFolder = oFSO.GetParentFolderName(MyPath);
+var WallPExe = MyFolder + "\\WallP.exe";
+var GetScreenInfoExe = MyFolder + "\\GetScreenInfo.exe";
+var GetMonitorExe = MyFolder + "\\GetMonitor.exe";
+
+var ExamplesPath = oFSO.GetAbsolutePathName(MyFolder + "\\..\\Examples")
+var PicPath = ExamplesPath + "\\Transparent";
+
+if (!oFSO.FolderExists(PicPath)) PicPath = ExamplesPath + "\\Landscape";
+if (!oFSO.FolderExists(PicPath)) PicPath = ExamplesPath + "\\Portrait";
+if (!oFSO.FolderExists(PicPath)) PicPath = ExamplesPath + "\\Animated";
+
+// Set AppData to current folder if we have write access
+// Otherwise set AppData to user profile LocalAppData
+
+TestFileName = Replace(Replace(Replace(new Date().toString(), "/", ""), ":", ""), " ", "") + ".txt";
+oWSH.CurrentDirectory = MyFolder
+TestFile = ".\\" + TestFileName;
+try {
+  f = oFSO.OpenTextFile(TestFile, ForWriting, true, Ansi);
+  f.Write("");
+  f.Close();
+} catch (e) {}
+
+var LocalAppData = oWSH.ExpandEnvironmentStrings("%LOCALAPPDATA%")
+var INIappData = oFSO.GetAbsolutePathName(MyFolder + "\\..\\AppData") + "\\";
+
+var VirtualStore = LocalAppData + "\\VirtualStore" + MyFolder.substr(2) + "\\";
+if (oFSO.FileExists(VirtualStore + TestFileName)) oFSO.DeleteFile(TestFile);
+if (!oFSO.FileExists(TestFile)) INIappData = LocalAppData + "\\DesktopPic\\";
+if (oFSO.FileExists(TestFile)) oFSO.DeleteFile(TestFile);
+if (!oFSO.FolderExists(INIappData)) oFSO.CreateFolder(INIappData);
+
+var DesktopPicGUI = MyFolder + "\\DesktopPicGUI.hta";
+
+var CmdLine = Replace(oHTA.commandLine, Q + "  " + Q, "|");
+CmdLine = Replace(CmdLine, Q + " " + Q, "|");
+CmdLine = Replace(CmdLine, Q, "");
+var aParam = CmdLine.split("|");
+
+if (aParam.length > 1) PicIndex = parseInt(aParam[1]) - 1;
+
+oWSH.Run(Q + WallPExe + Q + " 0", 0, true);
+oWSH.Run(Q + GetScreenInfoExe + Q, 0, true);
+var Screens = oWSH.RegRead("HKCU\\Software\\DesktopPic\\Screens");
+ArrScreens = Screens.split(";");
+MonitorsConnected = ArrScreens.length;
+
+var INIFile = INIappData + "DesktopPic.ini";
+var PicListFile = INIappData + "PicList.txt";
+
+Ini2Dict();
+
+var INIPicPath = "";
+var GetAvgColor = true;
+
+if (oSettings.Exists("[Options]BringToFront")) BringToFront = (LCase(oSettings.Item("[Options]BringToFront")) !== "false");
+if (oSettings.Exists("[Options]Stretch")) Stretch = (LCase(oSettings.Item("[Options]Stretch")) === "true");
+if (oSettings.Exists("[Options]ShowFileName")) ShowFileName = (LCase(oSettings.Item("[Options]ShowFileName")) === "true");
+if (oSettings.Exists("[Options]PicDelay")) PicDelay = oSettings.Item("[Options]PicDelay");
+if (oSettings.Exists("[Options]MaxScrPct")) MaxScrPct = oSettings.Item("[Options]MaxScrPct");
+if (oSettings.Exists("[Options]Coordinates")) Coordinates = oSettings.Item("[Options]Coordinates");
+if (oSettings.Exists("[Options]MonitorIndex")) MonitorIndex = oSettings.Item("[Options]MonitorIndex");
+if (oSettings.Exists("[Options]LocIdx")) LocIdx = oSettings.Item("[Options]LocIdx");
+if (oSettings.Exists("[Options]PicPath")) INIPicPath = oSettings.Item("[Options]PicPath");
+if (oSettings.Exists("[Options]Padding")) Padding = oSettings.Item("[Options]Padding");
+if (!IsNumeric(PicDelay)) PicDelay = 5; else PicDelay = parseInt(PicDelay);
+if (!IsNumeric(MaxScrPct)) MaxScrPct = 25; else MaxScrPct = parseInt(MaxScrPct);
+if (!IsNumeric(MonitorIndex)) MonitorIndex = 0; else MonitorIndex = parseInt(MonitorIndex);
+if (!IsNumeric(LocIdx)) LocIdx = 0; else LocIdx = parseInt(LocIdx);
+if (!IsNumeric(Padding)) Padding = 0; else Padding = parseInt(Padding);
+if (oSettings.Exists("[Options]GetAvgColor")) GetAvgColor = (LCase(oSettings.Item("[Options]GetAvgColor")) !== "false");
+
+if (MonitorIndex >= MonitorsConnected || MonitorIndex < 0) MonitorIndex = 0;
+
+ArrScreen = ArrScreens[MonitorIndex].split(",");
+var Scale = ArrScreen[0];
+BGcolor = ArrScreen[5];
+
+if (GetAvgColor) {
+  oWSH.Run(Q + WallPExe + Q + " " + MonitorIndex + " /c", 0, true);
+  var Monitor = oWSH.RegRead("HKCU\\Software\\WallP\\Monitor");
+  BGcolor = oWSH.RegRead("HKCU\\Software\\WallP\\" + Monitor + "\\AvgColor");
+}
+
+if (INIPicPath !== "" && oFSO.FolderExists(INIPicPath)) PicPath = INIPicPath;
+
+if (!oFSO.FolderExists(PicPath)) LaunchDesktopPicGUI();
+
+oWSH.CurrentDirectory = PicPath;
+
+var UseLight = "";
+try {
+  UseLight = oWSH.RegRead("HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize\\AppsUseLightTheme");
+} catch (e) {
+  UseLight = "";
+}
+
+var DarkMode = true;
+if (UseLight === "" || UseLight == 1) DarkMode = false;
+
+GetPics();
+
+// End Main
+
+function GetPics() {
+  oWSH.Run("Cmd /c dir /b *.bmp *.gif *.jpg *.jpeg *.png *.tif>" + Q + PicListFile + Q, 0, true);
+  var FileContents = "";
+  try {
+    var oFile = oFSO.OpenTextFile(PicListFile, ForReading);
+    FileContents = oFile.ReadAll();
+    oFile.Close();
+  } catch (e) {
+    FileContents = "";
+  }
+  if (FileContents === "") LaunchDesktopPicGUI(); else ArrPic = FileContents.split(Z);
+}
+
+function Ini2Dict() {
+  if (oFSO.FileExists(INIFile)) {
+    var oFile = oFSO.OpenTextFile(INIFile, ForReading);
+    while (!oFile.AtEndOfStream) {
+      var Line = Trim(oFile.ReadLine());
+      if (Line !== "" && Line.charAt(0) !== ";") {
+        if (Line.charAt(0) === "[") {
+          var Section = Line;
+        } else {
+          var ArrLine = Line.split("=");
+          if (ArrLine.length === 2 && ArrLine[1] !== "") oSettings.Add(Section + ArrLine[0], ArrLine[1]);
+        }
+      }
+    }
+    oFile.Close();
+  }
+}
+
+window.onload = function () {
+
+  document.body.style.fontSize = (9 * Scale) + "pt"; 
+   
+  document.body.style.backgroundColor = BGcolor;
+  document.body.style.backgroundPosition = "0px -" + CaptionHeight + "px";
+  if (!BringToFront) window.blur();
+  LoadPic();
+  if (LocIdx == 5) RepositionWindow();
+  if (ArrPic.length > 1) PicTimer = window.setInterval(LoadPic, PicDelay * 1000);
+}
+
+function UpdateXY() {
+  var aCoords = Coordinates.split(",");
+  try { x = parseInt(aCoords[0]); } catch (e) { x = 0; }
+  try { y = parseInt(aCoords[1]); } catch (e) { y = 0; }
+  Coordinates = x + "," + y;
+}
+
+function RepositionWindow() {
+  UpdateXY();
+  window.moveTo(x, y);
+}
+
+function LoadPic() {
+  if (Forward) PicIndex++; else PicIndex--;
+  if (PicIndex >= ArrPic.length - 1) PicIndex = 0;
+  if (PicIndex < 0) PicIndex = ArrPic.length - 2;
+  aImage = ArrPic[PicIndex].split("|");
+  if (aImage.length == 1) {
+    try {
+      oImg.LoadFile(aImage[0]);
+      iw = oImg.Width;
+      ih = oImg.Height;
+      ArrPic[PicIndex] = aImage[0] + "|" + iw + "|" + ih;
+    } catch (e) {
+      ArrPic[PicIndex] = aImage[0] + "|0|0";
+    }
+    aImage = ArrPic[PicIndex].split("|");
+  }
+  iw = aImage[1];
+  ih = aImage[2];
+  Nam.innerHTML = aImage[0];
+  if (iw > 0 && ih > 0) {
+    BadImage = false;
+    if (ShowFileName) {
+      Nam.style.display = "";
+    } else {
+      Nam.style.display = "none";
+    }
+    ResizePic();
+    WinMoveTo();
+    ResizeWindow();
+    document.body.background = PicPath + "\\" + aImage[0];
+  } else {
+    BadImage = true;
+    Nam.style.display = "";
+    iw = 9;
+    ih = 6;
+    ResizePic();
+    WinMoveTo();
+    ResizeWindow();
+    document.body.background = "";
+  }
+}
+
+function ResizePic() {
+  getScreenSize();
+  var MaxArea = sw * sh * (MaxScrPct / 100);
+  var ImgArea = iw * ih;
+  w = parseInt(iw);
+  h = parseInt(ih);
+  if (ImgArea>MaxArea || Stretch || BadImage) {
+    var ResizeFactor = Math.sqrt(MaxArea / ImgArea);
+    w = iw * ResizeFactor;
+    h = ih * ResizeFactor;
+    w = parseInt(w);
+    h = parseInt(h);
+  }
+  if ((w + Padding) > sw) h = (sw - Padding) / w * h, w = sw - Padding;
+  if ((h + Padding) > sh) w = (sh - Padding) / h * w, h = sh - Padding;
+  w = parseInt(w);
+  h = parseInt(h);
+}
+
+function ResizeWindow() {
+  window.resizeTo(w, h);
+}
+
+document.ondblclick = function() {
+  LaunchDesktopPicGUI();
+}
+
+function ManualAdvance(Flag, KeyCode) {
+  window.event.keyCode = 0;
+  clearInterval(PicTimer);
+  Forward = Flag;
+  if (KeyCode != 32) PicTimer = 0;
+  if (PicTimer == 0) LoadPic();
+  PicTimer = 0;
+}
+
+document.onkeydown = function() {
+  if (window.event.ctrlKey && window.event.keyCode == 116) {
+    window.event.keyCode = 0;
+    return;
+  }
+  if (window.event.ctrlKey || window.event.altKey || window.event.shiftKey) return;
+  switch (window.event.keyCode) {
+    case 32: // Spacebar
+    case 39: // Right arrow
+      ManualAdvance(true, window.event.keyCode);
+      break;
+    case 8: // Backspace
+    case 37: // Left arrow
+      ManualAdvance(false, window.event.keyCode);
+      break;
+    case 13: // Enter
+      ContinueShow();
+      break;
+    case 27: // Esc
+      LaunchDesktopPicGUI();
+      break;
+    case 116: // F5
+      MonitorIndex = 0;
+      LocIdx = 0;
+      WinMoveTo();
+      window.event.keyCode = 0;
+      break;
+  }
+}
+
+function ContinueShow() {
+  Forward = true;
+  clearInterval(PicTimer);
+  PicTimer = window.setInterval(LoadPic, PicDelay * 1000);
+}
+
+function WinMoveTo() {
+  ArrScreen = ArrScreens[MonitorIndex].split(",");
+
+ switch (parseInt(LocIdx)) {
+    case 0:
+      WinCn();
+      break;
+    case 1:
+      WinUL();
+      break;
+    case 2:
+      WinUR();
+      break;
+    case 3:
+      WinLL();
+      break;
+    case 4:
+      WinLR();
+      break;
+    case 5:
+      break;
+  }
+}
+
+function WinCn() {
+  var centerX = parseInt(ArrScreen[1]) + (parseInt(ArrScreen[3]) - parseInt(ArrScreen[1])) / 2;
+  var centerY = parseInt(ArrScreen[2]) + (parseInt(ArrScreen[4]) - parseInt(ArrScreen[2])) / 2;
+  window.moveTo(centerX - (w / 2), centerY - (h / 2));
+}
+
+function WinUL() {
+  window.moveTo(parseInt(ArrScreen[1]) + Padding, parseInt(ArrScreen[2]) + Padding);
+}
+
+function WinUR() {
+  window.moveTo(parseInt(ArrScreen[3]) - w - Padding, parseInt(ArrScreen[2]) + Padding);
+}
+
+function WinLL() {
+  window.moveTo(parseInt(ArrScreen[1]) + Padding, parseInt(ArrScreen[4]) - h - Padding);
+}
+
+function WinLR() {
+  window.moveTo(parseInt(ArrScreen[3]) - w - Padding, parseInt(ArrScreen[4]) - h - Padding);
+}
+
+function getScreenSize() {
+  ArrScreen = ArrScreens[MonitorIndex].split(",");
+  sw = Math.abs(Math.abs(parseInt(ArrScreen[3])) - Math.abs(parseInt(ArrScreen[1])))
+  sh = Math.abs(Math.abs(parseInt(ArrScreen[4])) - Math.abs(parseInt(ArrScreen[2])))
+}
+function LaunchDesktopPicGUI() {
+  clearInterval(PicTimer);
+  var Pfx = oWSH.ExpandEnvironmentStrings("%SystemRoot%") + "\\System32\\mshta.exe ";
+  oWSH.Run(Pfx + Q + DesktopPicGUI + Q + " " + Q + PicIndex + Q + " " + Q + PicPath + Q + " " + Q + MyPath + Q, 1, false);
+  self.close();
+}
+
+</script>
+<style>
+body {background-size:cover; background-attachment:fixed; background-repeat:no-repeat; font-size: 11pt}
+br {font-size: 16pt}
+.cc {
+font-family: sans-serif;
+font-weight: normal;
+color: white;
+background: rgba(0,0,0,.4);
+padding: 1pt;
+border-radius: 2pt;
+}
+</style>
+</head>
+<body>
+<span id=Nam class=cc></span>
+</body>
+</html>
