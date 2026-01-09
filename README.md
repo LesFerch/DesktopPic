@@ -119,7 +119,7 @@ Check **Stretch smaller images** if you want images to be stretched (with aspect
 
 Check **Display file names** if you want the image file name displayed.
 
-Leave **Average background color** checked in most cases. This option only applies to the background seen behind transparent images when the DesktopPic interface is open or when using the `HTA` viewer (see below). When checked, the color is an average of the current screen's wallpaper color. When unchecked, the color is picked from one pixel from the upper left corner of the wallpaper.
+Leave **Average background color** checked in most cases. This option only applies to the background seen behind transparent images when the DesktopPic interface is open or when using the `HTA` viewer. When checked, the color is an average of the current screen's wallpaper color. When unchecked, the color is picked from one pixel from the upper left corner of the wallpaper.
 
 Check **Keep interface centered on primary screen** if you want the DesktopPic interface to always be in the center of the primary screen regardless of the slideshow position. This option is automatically unchecked when the `Custom` position option is selected.
 
@@ -222,6 +222,7 @@ Click **X** to close DesktopPic.
 \
 \
 [![image](https://github.com/LesFerch/WinSetView/assets/79026235/63b7acbc-36ef-4578-b96a-d0b7ea0cba3a)](https://github.com/LesFerch/DesktopPic)
+
 
 
 
