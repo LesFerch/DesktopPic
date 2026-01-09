@@ -47,10 +47,10 @@ DesktopPic provides two convenient methods to display one or more pictures on yo
 
 Displays one or more pictures in a window that has no borders or captions, so all you see is the picture. The image window may be positioned manually or set to appear in the center or any corner of any monitor. This will give the illusion of the picture being part of your wallpaper, but it's really just another window. Any desktop icons in the same region as the picture will be covered. Bitmap image formats, such as PNG (recommended), JPG, BMP, WebP (photos), and animated GIFs are supported.
 
-![SlideshowExample1](https://github.com/user-attachments/assets/2cb72cd4-97e2-4d52-b01f-40dbbed0c8e0)
+![image](https://github.com/user-attachments/assets/2cb72cd4-97e2-4d52-b01f-40dbbed0c8e0)
 \
 \
-![SlideshowExample2](https://github.com/user-attachments/assets/140d6b0b-c434-4ef5-bcd6-cf5793553d56)
+![image](https://github.com/user-attachments/assets/140d6b0b-c434-4ef5-bcd6-cf5793553d56)
 
 **Notes**:
 - You can run multiple copies of DesktopPic (use portable option) to have more than one slideshow on your desktop (on any monitor).
@@ -75,7 +75,7 @@ Double-click **DesktopPic.exe** to start the program.
 
 **Double-click** anywhere on the displayed image to show the DesktopPic interface. The **Esc** key may also be used if the slideshow program has focus.
 
-<img width="433" height="560" alt="image" src="https://github.com/user-attachments/assets/94bb4454-34ca-4faa-9827-e2e4c2ca9edc" />
+![image](https://github.com/user-attachments/assets/94bb4454-34ca-4faa-9827-e2e4c2ca9edc)
 
 ### Step 3: Select an image folder
 
@@ -85,7 +85,7 @@ Click the **Folder** icon to select a folder of images to be displayed. By defau
 
 This will display all of the slideshow options.
 
-<img width="431" height="558" alt="image" src="https://github.com/user-attachments/assets/f8ce6705-9f75-4313-a039-1118f28e6673" />
+![image](https://github.com/user-attachments/assets/f8ce6705-9f75-4313-a039-1118f28e6673)
 
 ### Step 5: Select interface language
 
@@ -222,6 +222,7 @@ Click **X** to close DesktopPic.
 \
 \
 [![image](https://github.com/LesFerch/WinSetView/assets/79026235/63b7acbc-36ef-4578-b96a-d0b7ea0cba3a)](https://github.com/LesFerch/DesktopPic)
+
 
 
 
