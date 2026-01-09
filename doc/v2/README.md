@@ -47,8 +47,7 @@ Displays one or more pictures in a window that has no borders or captions, so al
 ![SlideshowExample1](https://github.com/user-attachments/assets/2cb72cd4-97e2-4d52-b01f-40dbbed0c8e0)
 \
 \
-<!-- ![SlideshowExample2](https://github.com/user-attachments/assets/981e7aa8-fe12-409e-b363-565f634bc1aa) -->
-![SlideshowExample](https://user-images.githubusercontent.com/79026235/161466468-306353b4-1b48-464d-8a33-3280cba01116.gif)
+![SlideshowExample2](https://github.com/user-attachments/assets/140d6b0b-c434-4ef5-bcd6-cf5793553d56)
 
 **Method 2: Stamp Image to Wallpaper**
 
@@ -220,6 +219,7 @@ Click **X** to close DesktopPic.
 \
 \
 [![image](https://github.com/LesFerch/WinSetView/assets/79026235/63b7acbc-36ef-4578-b96a-d0b7ea0cba3a)](https://github.com/LesFerch/DesktopPic)
+
 
 
 
