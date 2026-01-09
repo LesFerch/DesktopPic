@@ -187,7 +187,7 @@ If not already running, double-click **DesktopPic.exe** to start the program.
 
 If the interface isn't currently displayed, **double-click** the image or press **Esc**.
 
-<img width="434" height="559" alt="image" src="https://github.com/user-attachments/assets/7754099e-04d4-4627-9f39-a7dd2ecd2513" />
+![image](https://github.com/user-attachments/assets/7754099e-04d4-4627-9f39-a7dd2ecd2513)
 
 **Note**: The `Stamp` button is not available when the program settings are displayed.
 
@@ -222,6 +222,7 @@ Click **X** to close DesktopPic.
 \
 \
 [![image](https://github.com/LesFerch/WinSetView/assets/79026235/63b7acbc-36ef-4578-b96a-d0b7ea0cba3a)](https://github.com/LesFerch/DesktopPic)
+
 
 
 
