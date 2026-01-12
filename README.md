@@ -41,7 +41,7 @@ Using DesktopPic as a portable app does NOT require administrator access.
 DesktopPic provides two convenient methods to display one or more pictures on your Windows desktop. You can create a slideshow that overlays an area of your desktop or stamp images directly to your wallpaper.
 
 **Note**:
-- DesktopPic always maintains the original picture's raw pixel aspect ratio. It does not read rotation metadata. If an image displays with incorrect rotation, simply load it into an image editor, such as MSPaint or [Paint.Net](https://www.getpaint.net/), and resave it.
+- DesktopPic always maintains the original picture's raw pixel aspect ratio. It does not read rotation metadata. If an image displays with incorrect rotation, simply load it into an image editor and resave it. See the **Resources** section below for recommended programs.
 
 **Method 1: Slideshow**
 
@@ -107,8 +107,8 @@ From the **Viewer** menu, keep the viewer set to **EXE** if you are displaying i
 
 Adjust **Crossfade in seconds** (available when `Viewer` is set to `EXE`) to the amount of time you want one image to fade into the other. Set the value to `0` for no fade effect. This option has no effect on animated GIFs.
 
-**Note**: For the fade effect to be smooth, the images must all be the same size. If they are different sizes, there will be a jerk as the image window is changed from one size to the other. Use an image editing program such as MSPaint or [Paint.Net](https://www.getpaint.net/) to make all your slideshow images the same size. For images with different aspect ratios, or images with a transparent background, you may want to change the "canvas size" to be the same for all images. [Paint.Net](https://www.getpaint.net/) makes changing canvas size very easy.
-
+**Note**: For the fade effect to be smooth, the images must all be the same size. If they are different sizes, there will be a jerk as the image window is changed from one size to the other. To fix that issue, make all the images in one slideshow the same size. For images with different aspect ratios, or images with a transparent background, you may want to change the "canvas" size to be the same for all images. See the **Resources** section below for recommended programs.
+ 
 ### Step 7: Adjust additional options
 
 Check **Run on startup** if you want DesktopPic to run when you login. If you are setting up multiple slideshows (using multiple portable copies of the DesktopPic folder) you will need to open `shell:startup` in Explorer and rename the `DesktopPic` shortcut to a unique name for each **Run on startup** instance. 
@@ -173,7 +173,7 @@ Animated GIFs are also supported, but note that the crossfade feature does not a
 
 For WebP files, only regular photo type images are supported (and only with the EXE viewer). WebP images that have a transparent background should be converted to PNG format. Animated WebP files should be converted to GIF format.
 
-Please note that the amount of memory used by the viewer is mostly a function of the size of the images. Large image files (e.g. 4K image files) will take much more memory to display than smaller images, even if they are displayed at the same size. Therfore, it's recommended to use an image editing program, such as MSPaint or [Paint.Net](https://www.getpaint.net/), to reduce the size of your slideshow images to the maximum size you wish to have them displayed.
+Please note that the amount of memory used by the viewer is mostly a function of the size of the images. Large image files (e.g. 4K image files) will take much more memory to display than smaller images, even if they are displayed at the same size. Therfore, it's recommended to use an image editing program to reduce the size of your slideshow images to the maximum size you wish to have them displayed. See the **Resources** section below for recommended programs.
 
 Also note that using the HTA viewer will use less memory than the EXE viewer and may not display large images (e.g. 4K images) correctly, which is another reason to reduce the size of your slideshow images.
 
@@ -219,9 +219,27 @@ Repeat steps 2-4 to stamp more images.
 
 Click **X** to close DesktopPic.
 
+## Resources
+
+### Edit images (size, canvas size, orientation)
+
+https://www.getpaint.net/
+https://www.xnview.com/en/xnconvert/
+
+**Note**: MSPaint works fine for changing an image's size or orientation. However, it does not have a canvas resize option and may loose transparency (depending on version).
+
+### Convert WebP to GIF
+
+https://www.rw-designer.com/webp2gif
+
+### Transparent background images
+
+https://www.hiclipart.com/
+
 \
 \
 [![image](https://github.com/LesFerch/WinSetView/assets/79026235/63b7acbc-36ef-4578-b96a-d0b7ea0cba3a)](https://github.com/LesFerch/DesktopPic)
+
 
 
 
