@@ -107,7 +107,7 @@ From the **Viewer** menu, keep the viewer set to **EXE** if you are displaying i
 
 Adjust **Crossfade in seconds** (available when `Viewer` is set to `EXE`) to the amount of time you want one image to fade into the other. Set the value to `0` for no fade effect. This option has no effect on animated GIFs.
 
-**Note**: For the fade effect to be smooth, the images must all be the same size. If they are different sizes, there will be a jerk as the image window is changed from one size to the other. To fix that issue, make all the images in one slideshow the same size. For images with different aspect ratios, or images with a transparent background, you may want to change the "canvas" size to be the same for all images. See the **Resources** section below for recommended programs.
+**Note**: For the fade effect to be smooth, the images must all be the same size. If they are different sizes, there will be a jerk as the image window is changed from one size to the other. To fix that issue, make all the images in one slideshow the same size. For images with different aspect ratios, or images with a transparent background, you may want to change the "canvas" size to be the same for all images. See the [Resources](#Resources) section below for recommended programs.
  
 ### Step 7: Adjust additional options
 
@@ -173,7 +173,7 @@ Animated GIFs are also supported, but note that the crossfade feature does not a
 
 For WebP files, only regular photo type images are supported (and only with the EXE viewer). WebP images that have a transparent background should be converted to PNG format. Animated WebP files should be converted to GIF format.
 
-Please note that the amount of memory used by the viewer is mostly a function of the size of the images. Large image files (e.g. 4K image files) will take much more memory to display than smaller images, even if they are displayed at the same size. Therfore, it's recommended to use an image editing program to reduce the size of your slideshow images to the maximum size you wish to have them displayed. See the **Resources** section below for recommended programs.
+Please note that the amount of memory used by the viewer is mostly a function of the size of the images. Large image files (e.g. 4K image files) will take much more memory to display than smaller images, even if they are displayed at the same size. Therfore, it's recommended to use an image editing program to reduce the size of your slideshow images to the maximum size you wish to have them displayed. See the [Resources](#Resources) section below for recommended programs.
 
 Also note that using the HTA viewer will use less memory than the EXE viewer and may not display large images (e.g. 4K images) correctly, which is another reason to reduce the size of your slideshow images.
 
@@ -239,6 +239,7 @@ https://www.hiclipart.com/
 \
 \
 [![image](https://github.com/LesFerch/WinSetView/assets/79026235/63b7acbc-36ef-4578-b96a-d0b7ea0cba3a)](https://github.com/LesFerch/DesktopPic)
+
 
 
 
