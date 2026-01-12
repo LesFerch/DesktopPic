@@ -41,7 +41,7 @@ Using DesktopPic as a portable app does NOT require administrator access.
 DesktopPic provides two convenient methods to display one or more pictures on your Windows desktop. You can create a slideshow that overlays an area of your desktop or stamp images directly to your wallpaper.
 
 **Note**:
-- DesktopPic always maintains the original picture's raw pixel aspect ratio. It does not read rotation metadata. If an image displays with incorrect rotation, simply load it into an image editor and resave it. See the **Resources** section below for recommended programs.
+- DesktopPic always maintains the original picture's raw pixel aspect ratio. It does not read rotation metadata. If an image displays with incorrect rotation, simply load it into an image editor and resave it. See the [Resources](#Resources) section below for recommended programs.
 
 **Method 1: Slideshow**
 
@@ -239,6 +239,7 @@ https://www.hiclipart.com/
 \
 \
 [![image](https://github.com/LesFerch/WinSetView/assets/79026235/63b7acbc-36ef-4578-b96a-d0b7ea0cba3a)](https://github.com/LesFerch/DesktopPic)
+
 
 
 
