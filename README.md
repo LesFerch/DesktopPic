@@ -223,8 +223,9 @@ Click **X** to close DesktopPic.
 
 ### Edit images (size, canvas size, orientation)
 
-https://www.getpaint.net/
-https://www.xnview.com/en/xnconvert/
+https://www.getpaint.net/  (single)
+\
+https://www.xnview.com/en/xnconvert/  (bulk)
 
 **Note**: MSPaint works fine for changing an image's size or orientation. However, it does not have a canvas resize option and may loose transparency (depending on version).
 
@@ -239,6 +240,7 @@ https://www.hiclipart.com/
 \
 \
 [![image](https://github.com/LesFerch/WinSetView/assets/79026235/63b7acbc-36ef-4578-b96a-d0b7ea0cba3a)](https://github.com/LesFerch/DesktopPic)
+
 
 
 
