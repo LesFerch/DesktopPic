@@ -446,20 +446,6 @@ namespace DesktopPicViewer
             RunGUIandExit();
         }
 
-        private void ImageClicked(object sender, MouseButtonEventArgs e)
-        {
-            // Logic for handling image click
-
-            if (_isPaused)
-            {
-                ResumeSlideshow();
-            }
-            else
-            {
-                PauseSlideshow();
-            }
-        }
-
         private void ShowNextImage()
         {
             _currentImageIndex = (_currentImageIndex + 1) % _imageFiles.Length;

@@ -6,8 +6,7 @@
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         Loaded="Window_Loaded"
         PreviewKeyDown="MainWindow_PreviewKeyDown"
-        MouseDoubleClick="MainWindow_MouseDoubleClick"
-        MouseLeftButtonDown="ImageClicked">
+        MouseDoubleClick="MainWindow_MouseDoubleClick">
     <Grid>
         <Image x:Name="SlideshowImage" Stretch="Uniform" />
         <Image x:Name="SlideshowImageNext" Stretch="Uniform"/>
