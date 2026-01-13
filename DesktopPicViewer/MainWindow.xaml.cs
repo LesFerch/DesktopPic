@@ -116,6 +116,12 @@ namespace DesktopPicViewer
 
         public MainWindow()
         {
+            AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+            {
+                string logPath = Path.Combine(Path.GetDirectoryName(myIniFile), "error.log");
+                File.AppendAllText(logPath, $"Unhandled: {e.ExceptionObject}\n");
+            };
+
             string NTkey = @"HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion";
             int buildNumber = int.Parse(Registry.GetValue(NTkey, "CurrentBuild", "").ToString());
 
@@ -286,68 +292,82 @@ namespace DesktopPicViewer
 
         private CancellationTokenSource _fadeCancellationTokenSource;
 
+        private bool _isUpdatingImage = false;
+
         private async void UpdateImage()
         {
-            ImageBehavior.SetAnimatedSource(SlideshowImage, null);
-            ImageBehavior.SetAnimatedSource(SlideshowImageNext, null);
+            if (_isUpdatingImage)
+                return;
 
-            _imageUpdateTcs = new TaskCompletionSource<bool>();
+            _isUpdatingImage = true;
+            var tcs = new TaskCompletionSource<bool>();
+            _imageUpdateTcs = tcs;
 
-            string currentImagePath = _imageFiles[_currentImageIndex];
-            string fileName = Path.GetFileName(currentImagePath);
-
-            BitmapImage bitmap = new BitmapImage();
-            bitmap.BeginInit();
-            bitmap.UriSource = new Uri(currentImagePath);
-            bitmap.EndInit();
-
-            // Set the window size based on the current image
-            SetWindowSizePosition(currentImagePath);
-
-            // Set filename overlay
-            FileNameText.Text = fileName;
-            FileNameText.Visibility = ShowFileName ? Visibility.Visible : Visibility.Collapsed;
-
-            bool gif = currentImagePath.EndsWith(".gif", StringComparison.OrdinalIgnoreCase);
-
-            if (FadeEffect > 0 && !gif)
+            try
             {
-                SlideshowImageNext.Source = bitmap;
+                ImageBehavior.SetAnimatedSource(SlideshowImage, null);
+                ImageBehavior.SetAnimatedSource(SlideshowImageNext, null);
 
-                // Start crossfade animation
-                var fadeOut = new DoubleAnimation(1, 0, TimeSpan.FromSeconds(FadeEffect));
-                var fadeIn = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(FadeEffect));
+                string currentImagePath = _imageFiles[_currentImageIndex];
+                string fileName = Path.GetFileName(currentImagePath);
 
-                SlideshowImage.BeginAnimation(UIElement.OpacityProperty, fadeOut);
-                SlideshowImageNext.BeginAnimation(UIElement.OpacityProperty, fadeIn);
+                BitmapImage bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.UriSource = new Uri(currentImagePath);
+                bitmap.EndInit();
 
-                _fadeCancellationTokenSource = new CancellationTokenSource();
-                try
+                // Set the window size based on the current image
+                SetWindowSizePosition(currentImagePath);
+
+                // Set filename overlay
+                FileNameText.Text = fileName;
+                FileNameText.Visibility = ShowFileName ? Visibility.Visible : Visibility.Collapsed;
+
+                bool gif = currentImagePath.EndsWith(".gif", StringComparison.OrdinalIgnoreCase);
+
+                if (FadeEffect > 0 && !gif)
                 {
-                    await Task.Delay(FadeEffect * 1000, _fadeCancellationTokenSource.Token);
+                    SlideshowImageNext.Source = bitmap;
+
+                    // Start crossfade animation
+                    var fadeOut = new DoubleAnimation(1, 0, TimeSpan.FromSeconds(FadeEffect));
+                    var fadeIn = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(FadeEffect));
+
+                    SlideshowImage.BeginAnimation(UIElement.OpacityProperty, fadeOut);
+                    SlideshowImageNext.BeginAnimation(UIElement.OpacityProperty, fadeIn);
+
+                    _fadeCancellationTokenSource = new CancellationTokenSource();
+                    try
+                    {
+                        await Task.Delay(FadeEffect * 1000, _fadeCancellationTokenSource.Token);
+                    }
+                    catch (TaskCanceledException)
+                    {
+                        // Fade was interrupted
+                    }
+                    finally
+                    {
+                        _fadeCancellationTokenSource = null;
+                    }
+
+                    SlideshowImage.Source = bitmap;
                 }
-                catch (TaskCanceledException)
+                else
                 {
-                    // Fade was interrupted
-                }
-                finally
-                {
-                    _fadeCancellationTokenSource = null;
+                    // No fade, just set image
+                    if (gif) ImageBehavior.SetAnimatedSource(SlideshowImage, bitmap); else SlideshowImage.Source = bitmap;
+                    if (gif) ImageBehavior.SetAnimatedSource(SlideshowImageNext, bitmap); else SlideshowImageNext.Source = bitmap;
                 }
 
-                SlideshowImage.Source = bitmap;
+                this.Focus();
+                Keyboard.Focus(this);
             }
-            else
+            finally
             {
-                // No fade, just set image
-                if (gif) ImageBehavior.SetAnimatedSource(SlideshowImage, bitmap); else SlideshowImage.Source = bitmap;
-                if (gif) ImageBehavior.SetAnimatedSource(SlideshowImageNext, bitmap); else SlideshowImageNext.Source = bitmap;
+                if (!tcs.Task.IsCompleted)
+                    tcs.SetResult(true);
+                _isUpdatingImage = false;
             }
-
-            this.Focus();
-            Keyboard.Focus(this);
-
-            _imageUpdateTcs.SetResult(true);
         }
 
         [DllImport("user32.dll")]
