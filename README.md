@@ -223,19 +223,21 @@ Click **X** to close DesktopPic.
 
 ### Edit images (size, canvas size, orientation)
 
-https://www.getpaint.net/  (single)
+[Paint.Net](https://www.getpaint.net/)
 \
-https://www.xnview.com/en/xnconvert/  (bulk)
+[xnconvert](https://www.xnview.com/en/xnconvert/)
 
-**Note**: MSPaint works fine for changing an image's size or orientation. However, it does not have a canvas resize option and may loose transparency (depending on version).
+**Note**: Paint.Net is a full featured image editor with excellent resizing options, but requires changing one image at time. Xnconvert can change the image size or canvas size for multiple images.
+
+**Note**: MSPaint works fine for changing an image's size or orientation. However, it does not have a canvas resize option and may loose transparency (depending on version). 
 
 ### Convert WebP to GIF
 
-https://www.rw-designer.com/webp2gif
+[webp2gif](https://www.rw-designer.com/webp2gif)
 
 ### Transparent background images
 
-https://www.hiclipart.com/
+[hiclipart](https://www.hiclipart.com/)
 
 \
 \
