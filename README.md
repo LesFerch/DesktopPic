@@ -225,9 +225,9 @@ Click **X** to close DesktopPic.
 
 [Paint.Net](https://www.getpaint.net/)
 \
-[xnconvert](https://www.xnview.com/en/xnconvert/)
+[XnConvert](https://www.xnview.com/en/xnconvert/)
 
-**Note**: Paint.Net is a full featured image editor with excellent resizing options, but requires changing one image at time. Xnconvert can change the image size or canvas size for multiple images.
+**Note**: Paint.Net is a full featured image editor with excellent resizing options, but requires changing one image at time. XnConvert can change the image size or canvas size for multiple images.
 
 **Note**: MSPaint works fine for changing an image's size or orientation. However, it does not have a canvas resize option and may loose transparency (depending on version). 
 
