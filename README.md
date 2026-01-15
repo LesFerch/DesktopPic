@@ -237,7 +237,7 @@ Click **X** to close DesktopPic.
 
 ### Transparent background images
 
-[hiclipart](https://www.hiclipart.com/)
+[HiClipart](https://www.hiclipart.com/)
 
 \
 \
