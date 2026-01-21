@@ -95,7 +95,7 @@ If Windows is set to a language that DesktopPic supports, that language should g
 
 Change the **Pic delay in seconds** to the number of seconds to wait before loading the next image.
 
-Change **Max percent of screen area** to the desired value. This number represents the maximum percent of your screen area that will be used by the DesktopPic window. Note that the image will not be stretched larger than its native resolution unless `Stretch smaller images` is checked. Also note that the aspect ratio of each image will be maintained and the image will never overlap onto another monitor. Therefore, you may not see as much of the screen covered as expected, based on the percent value entered, unless the image is the same aspect ratio as the available display area (i.e. screen size minus taskbar).
+Change **Max percent of screen area** to the desired value. This number represents the maximum percent of your screen area that will be used by the DesktopPic window. Note that the image will not be stretched larger than its native resolution unless `Stretch smaller images` is checked. Also note that the aspect ratio of each image will be maintained and the image will never overlap onto another monitor (unless manually positioned). Therefore, you may not see as much of the screen covered as expected, based on the percent value entered, unless the image is the same aspect ratio as the available display area (i.e. screen size minus taskbar).
 
 From the **Display** menu, select the desired monitor where you want the slideshow displayed.
 
@@ -242,6 +242,7 @@ Click **X** to close DesktopPic.
 \
 \
 [![image](https://github.com/LesFerch/WinSetView/assets/79026235/63b7acbc-36ef-4578-b96a-d0b7ea0cba3a)](https://github.com/LesFerch/DesktopPic)
+
 
 
 
