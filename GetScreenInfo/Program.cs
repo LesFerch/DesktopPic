@@ -21,7 +21,7 @@ namespace GetScreenInfo
                     var rect = GetActualWorkingArea(screen, index + 1);
                     float scale = GetScalingFactor(index + 1);
                     string color = GetFirstPixelColor(index + 1);
-                    return $"{scale},{rect.Left},{rect.Top},{rect.Right},{rect.Bottom},{color}";
+                    return $"{scale.ToString(System.Globalization.CultureInfo.InvariantCulture)},{rect.Left},{rect.Top},{rect.Right},{rect.Bottom},{color}";
                 }));
 
                 RegKey.SetValue("Screens", screensInfo);
