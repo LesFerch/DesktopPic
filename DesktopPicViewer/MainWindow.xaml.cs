@@ -140,7 +140,7 @@ namespace DesktopPicViewer
             FadeEffect = int.Parse(ReadString(myIniFile, "Options", "FadeEffect", "2"));
             PicPadding = int.Parse(ReadString(myIniFile, "Options", "Padding", "0"));
             PicDelay = int.Parse(ReadString(myIniFile, "Options", "PicDelay", "5"));
-            MaxScrPct = double.Parse(ReadString(myIniFile, "Options", "MaxScrPct", "25"));
+            MaxScrPct = double.Parse(ReadString(myIniFile, "Options", "MaxScrPct", "25"), System.Globalization.CultureInfo.InvariantCulture);
             MonitorIndex = int.Parse(ReadString(myIniFile, "Options", "MonitorIndex", "0"));
             LocIdx = int.Parse(ReadString(myIniFile, "Options", "LocIdx", "0"));
             Coordinates = ReadString(myIniFile, "Options", "Coordinates", "");
