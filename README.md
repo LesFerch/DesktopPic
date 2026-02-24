@@ -1,6 +1,6 @@
 # DesktopPic
 
-### Version 2.0.2
+### Version 2.0.3
 
 Display or stamp images on your Windows desktop wallpaper with full support for multiple monitors.
 
@@ -14,7 +14,7 @@ DesktopPic 1.x can be used with Windows 7 and 8. Click [here](./Version1xReadme.
 
 ### Install Using Setup Program
 
-[![image](https://github.com/user-attachments/assets/75e62417-c8ee-43b1-a8a8-a217ce130c91)Download the installer](https://github.com/LesFerch/DesktopPic/releases/download/2.0.2/DesktopPic-Setup.exe)
+[![image](https://github.com/user-attachments/assets/75e62417-c8ee-43b1-a8a8-a217ce130c91)Download the installer](https://github.com/LesFerch/DesktopPic/releases/download/2.0.3/DesktopPic-Setup.exe)
 
 The DesktopPic installer requires administrator access.
 
@@ -26,7 +26,7 @@ The DesktopPic installer requires administrator access.
 
 ### Portable Use
 
-[![image](https://github.com/LesFerch/WinSetView/assets/79026235/0188480f-ca53-45d5-b9ff-daafff32869e)Download the zip file](https://github.com/LesFerch/DesktopPic/releases/download/2.0.2/DesktopPic.zip)
+[![image](https://github.com/LesFerch/WinSetView/assets/79026235/0188480f-ca53-45d5-b9ff-daafff32869e)Download the zip file](https://github.com/LesFerch/DesktopPic/releases/download/2.0.3/DesktopPic.zip)
 
 Using DesktopPic as a portable app does NOT require administrator access.
 
@@ -242,6 +242,7 @@ Click **X** to close DesktopPic.
 \
 \
 [![image](https://github.com/LesFerch/WinSetView/assets/79026235/63b7acbc-36ef-4578-b96a-d0b7ea0cba3a)](https://github.com/LesFerch/DesktopPic)
+
 
 
 
