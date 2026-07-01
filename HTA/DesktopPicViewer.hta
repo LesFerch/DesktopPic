@@ -75,6 +75,8 @@ var CaptionHeight = 0;
 var LocIdx = 0;
 var MonitorIndex = 0;
 var Padding = 0;
+var Shuffle = false;
+var ReShuffle = false;
 
 var NTVer = oWSH.RegRead("HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\CurrentVersion");
 if (NTVer < "6.3") {
@@ -156,6 +158,8 @@ if (!IsNumeric(MonitorIndex)) MonitorIndex = 0; else MonitorIndex = parseInt(Mon
 if (!IsNumeric(LocIdx)) LocIdx = 0; else LocIdx = parseInt(LocIdx);
 if (!IsNumeric(Padding)) Padding = 0; else Padding = parseInt(Padding);
 if (oSettings.Exists("[Options]GetAvgColor")) GetAvgColor = (LCase(oSettings.Item("[Options]GetAvgColor")) !== "false");
+if (oSettings.Exists("[Options]Shuffle")) Shuffle = (LCase(oSettings.Item("[Options]Shuffle")) === "true");
+if (oSettings.Exists("[Options]ReShuffle")) ReShuffle = (LCase(oSettings.Item("[Options]ReShuffle")) === "true");
 
 if (MonitorIndex >= MonitorsConnected || MonitorIndex < 0) MonitorIndex = 0;
 
@@ -199,7 +203,24 @@ function GetPics() {
   } catch (e) {
     FileContents = "";
   }
-  if (FileContents === "") LaunchDesktopPicGUI(); else ArrPic = FileContents.split(Z);
+  if (FileContents === "") {
+    LaunchDesktopPicGUI();
+  }
+  else {
+    ArrPic = FileContents.split(Z);
+    if (ArrPic.length && ArrPic[ArrPic.length - 1] === "") ArrPic.length--;
+    if (Shuffle) ShuffleArray(ArrPic);
+  }
+}
+
+function ShuffleArray(arr) {
+    for (var i = arr.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+    return arr;
 }
 
 function Ini2Dict() {
@@ -229,7 +250,7 @@ window.onload = function () {
   if (!BringToFront) window.blur();
   LoadPic();
   if (LocIdx == 5) RepositionWindow();
-  if (ArrPic.length > 1) PicTimer = window.setInterval(LoadPic, PicDelay * 1000);
+  if (ArrPic.length > 0) PicTimer = window.setInterval(LoadPic, PicDelay * 1000);
 }
 
 function UpdateXY() {
@@ -246,8 +267,11 @@ function RepositionWindow() {
 
 function LoadPic() {
   if (Forward) PicIndex++; else PicIndex--;
-  if (PicIndex >= ArrPic.length - 1) PicIndex = 0;
-  if (PicIndex < 0) PicIndex = ArrPic.length - 2;
+  if (PicIndex >= ArrPic.length) {
+    PicIndex = 0;
+    if (ReShuffle && PicTimer !== 0) ShuffleArray(ArrPic);
+  }
+  if (PicIndex < 0) PicIndex = ArrPic.length - 1;
   aImage = ArrPic[PicIndex].split("|");
   if (aImage.length == 1) {
     try {

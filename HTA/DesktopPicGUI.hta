@@ -5,7 +5,7 @@ Les Ferch, lesferch@gmail.com, 2022 - 2026
 -->
 <html>
 <head>
-<title>DesktopPic 2.0.0</title>
+<title>DesktopPic 2.1.0</title>
 <meta charset="UTF-8" http-equiv="X-UA-Compatible" content="IE=9">
 <hta:application
   id=oHTA
@@ -112,6 +112,8 @@ var FileDialogExe = MyFolder + "\\FileDialog.exe";
 var GetMonitorExe = MyFolder + "\\GetMonitor.exe";
 var ModalHTA = MyFolder + "\\Modal.hta";
 var LangDir = MyFolder + "\\Language\\";
+var Shuffle = false;
+var ReShuffle = false;
 
 var NTVer = oWSH.RegRead("HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\CurrentVersion");
 if (NTVer < "6.3") {
@@ -195,6 +197,8 @@ if (!IsNumeric(LocIdx)) LocIdx = 0; else LocIdx = parseInt(LocIdx);
 if (!IsNumeric(FadeEffect)) FadeEffect = 2; else FadeEffect = parseInt(FadeEffect);
 if (!IsNumeric(Padding)) Padding = 0; else Padding = parseInt(Padding);
 if (oSettings.Exists("[Options]GetAvgColor")) GetAvgColor = (LCase(oSettings.Item("[Options]GetAvgColor")) !== "false");
+if (oSettings.Exists("[Options]Shuffle")) Shuffle = (LCase(oSettings.Item("[Options]Shuffle")) === "true");
+if (oSettings.Exists("[Options]ReShuffle")) ReShuffle = (LCase(oSettings.Item("[Options]ReShuffle")) === "true");
 
 if (MonitorIndex >= MonitorsConnected || MonitorIndex < 0) MonitorIndex = 0;
 
@@ -204,8 +208,8 @@ var Scale = ArrScreen[0];
 var CaptionHeight = parseInt (30 * Scale);
 var BorderSize = parseInt (Scale * 100 / 25 + 4);
 
-var wGUI = 340 * Scale;
-var hGUI = 480 * Scale;
+var wGUI = 350 * Scale;
+var hGUI = 520 * Scale;
 
 var currentMonitor = MonitorIndex;
 if (KeepOnPrimary) currentMonitor = 0;
@@ -400,7 +404,7 @@ function GetLangStrings() {
   }
 
   // Replace default labels in DOM
-  for (i = 1; i <= Math.min(25, Label.length); i++) {
+  for (i = 1; i <= Math.min(27, Label.length); i++) {
     document.getElementById("L" + i).innerText =  Label[i];
   }
 }
@@ -547,6 +551,8 @@ function PrepOptions() {
   Tsp.value = Coordinates;
   if (Mpp.selectedIndex == 5) Tsp.style.display = "";
   Mln.selectedIndex = LangIdx;
+  Css.checked = Shuffle;
+  Csr.checked = ReShuffle;
 }
 
 document.ondblclick = function() {
@@ -649,10 +655,8 @@ function ShowOptions() {
   Bsw.style.display = "none";
   wBak = w;
   hBak = h;
-  if (w < wGUI ) {
-    wGUI = Math.max(document.body.scrollWidth + (40 * Scale), wGUI);
-    w = wGUI;
-  }
+  var widthNeeded = parseInt(document.body.scrollWidth + (BorderSize * 2) + 14 + parseInt(Scale * 2));
+  w = Math.max(widthNeeded, wGUI);
   if (h < hGUI ) h = hGUI;
   WinMoveTo();
   ResizeWindow();
@@ -886,6 +890,8 @@ function Var2Ini() {
   oFile.Write("Viewer=" + Mvm.options[Mvm.selectedIndex].value + Z);
   oFile.Write("FadeEffect=" + Tfe.value + Z);
   oFile.Write("Padding=" + Tpa.value + Z);
+  oFile.Write("Shuffle=" + Css.checked + Z);
+  oFile.Write("ReShuffle=" + Csr.checked + Z);
   oFile.Close();
 }
 
@@ -1231,6 +1237,10 @@ br {font-size: 16pt}
 <input type=checkbox class=scaled id=Ckp OnClick=OnClickCkp()>
 <label for=Ckp id=L12 class=cc>Keep interface centered on primary screen</label><br>
 </span>
+<input type=checkbox class=scaled id=Css>
+<label for=Css id=L26 class=cc>Shuffle on start</label><br>
+<input type=checkbox class=scaled id=Csr>
+<label for=Csr id=L27 class=cc>Shuffle on repeat</label><br>
 <input type=text size=5 id=Tpd MaxLength=5 OnFocus=OnFocusInput() OnBlur=OnBlurInput() OnInput=OnInputDigits("Tpd") OnChange=OnChangeTpd()>
 <label for=Tpd id=L13 class=cc>Pic delay in seconds</label><br>
 <input type=text size=5 id=Tpp MaxLength=3 OnFocus=OnFocusInput() OnBlur=OnBlurInput() OnInput=OnInputDigits("Tpp") OnChange=OnChangeTpp()>
