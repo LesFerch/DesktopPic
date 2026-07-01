@@ -25,6 +25,7 @@ namespace DesktopPicViewer
         private int _currentImageIndex = 0; // Track the current image index
         private bool _isPaused = false; // Track the pause state
         private TaskCompletionSource<bool> _imageUpdateTcs; // TaskCompletionSource to track image update completion
+        private static readonly Random rng = new Random();
 
         static string SystemRoot = Environment.ExpandEnvironmentVariables("%SystemRoot%");
         static string myPath = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory);
@@ -100,6 +101,8 @@ namespace DesktopPicViewer
         static string Coordinates;
         static int x = 0;
         static int y = 0;
+        static bool Shuffle;
+        static bool ReShuffle;
 
         static float scale;
 
@@ -144,6 +147,8 @@ namespace DesktopPicViewer
             MonitorIndex = int.Parse(ReadString(myIniFile, "Options", "MonitorIndex", "0"));
             LocIdx = int.Parse(ReadString(myIniFile, "Options", "LocIdx", "0"));
             Coordinates = ReadString(myIniFile, "Options", "Coordinates", "");
+            Shuffle = ReadString(myIniFile, "Options", "Shuffle", "false") == "true";
+            ReShuffle = ReadString(myIniFile, "Options", "ReShuffle", "false") == "true";
 
             FadeEffectSetting = FadeEffect;
 
@@ -186,7 +191,18 @@ namespace DesktopPicViewer
 
             if (_imageFiles.Length == 0) RunGUIandExit();
 
+            if (Shuffle) ShuffleArray(_imageFiles);
+
             StartSlideshow();
+        }
+
+        private static void ShuffleArray<T>(T[] array)
+        {
+            for (int i = array.Length - 1; i > 0; i--)
+            {
+                int j = rng.Next(i + 1);
+                (array[i], array[j]) = (array[j], array[i]);
+            }
         }
 
         private void StartSlideshow()
@@ -202,6 +218,7 @@ namespace DesktopPicViewer
         {
             _currentImageIndex = (_currentImageIndex + 1) % _imageFiles.Length;
             UpdateImage();
+            if (ReShuffle && _currentImageIndex == 0) ShuffleArray(_imageFiles);
         }
 
         private void SetWindowSizePosition(string imagePath)
