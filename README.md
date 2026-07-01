@@ -1,6 +1,6 @@
 # DesktopPic
 
-### Version 2.0.3
+### Version 2.1.0
 
 Display or stamp images on your Windows desktop wallpaper with full support for multiple monitors.
 
@@ -14,7 +14,7 @@ DesktopPic 1.x can be used with Windows 7 and 8. Click [here](./Version1xReadme.
 
 ### Install Using Setup Program
 
-[![image](https://github.com/user-attachments/assets/75e62417-c8ee-43b1-a8a8-a217ce130c91)Download the installer](https://github.com/LesFerch/DesktopPic/releases/download/2.0.3/DesktopPic-Setup.exe)
+[![image](https://github.com/user-attachments/assets/75e62417-c8ee-43b1-a8a8-a217ce130c91)Download the installer](https://github.com/LesFerch/DesktopPic/releases/download/2.1.0/DesktopPic-Setup.exe)
 
 The DesktopPic installer requires administrator access.
 
@@ -26,7 +26,7 @@ The DesktopPic installer requires administrator access.
 
 ### Portable Use
 
-[![image](https://github.com/LesFerch/WinSetView/assets/79026235/0188480f-ca53-45d5-b9ff-daafff32869e)Download the zip file](https://github.com/LesFerch/DesktopPic/releases/download/2.0.3/DesktopPic.zip)
+[![image](https://github.com/LesFerch/WinSetView/assets/79026235/0188480f-ca53-45d5-b9ff-daafff32869e)Download the zip file](https://github.com/LesFerch/DesktopPic/releases/download/2.1.0/DesktopPic.zip)
 
 Using DesktopPic as a portable app does NOT require administrator access.
 
@@ -75,7 +75,8 @@ Double-click **DesktopPic.exe** to start the program.
 
 **Double-click** anywhere on the displayed image to show the DesktopPic interface. The **Esc** key may also be used if the slideshow program has focus.
 
-![image](https://github.com/user-attachments/assets/94bb4454-34ca-4faa-9827-e2e4c2ca9edc)
+<img width="510" height="641" alt="image" src="https://github.com/user-attachments/assets/f1ffa3c5-da44-4a95-94ef-baf84cada914" />
+
 
 ### Step 3: Select an image folder
 
@@ -85,7 +86,7 @@ Click the **Folder** icon to select a folder of images to be displayed. By defau
 
 This will display all of the slideshow options.
 
-![image](https://github.com/user-attachments/assets/f8ce6705-9f75-4313-a039-1118f28e6673)
+<img width="510" height="642" alt="image" src="https://github.com/user-attachments/assets/0bc15d52-a3d5-490e-8c15-70333b90873d" />
 
 ### Step 5: Select interface language
 
@@ -122,6 +123,10 @@ Check **Display file names** if you want the image file name displayed.
 Leave **Average background color** checked in most cases. This option only applies to the background seen behind transparent images when the DesktopPic interface is open or when using the `HTA` viewer. When checked, the color is an average of the current screen's wallpaper color. When unchecked, the color is picked from one pixel from the upper left corner of the wallpaper.
 
 Check **Keep interface centered on primary screen** if you want the DesktopPic interface to always be in the center of the primary screen regardless of the slideshow position. This option is automatically unchecked when the `Custom` position option is selected.
+
+Check **Shuffle on startup** if you want the image order shuffled on program start up.
+
+Check **Shuffle on repeat** if you want the image order shuffled every time the slideshow repeats.
 
 ### Step 7: Continue the slideshow
 
