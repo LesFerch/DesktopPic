@@ -75,7 +75,7 @@ Double-click **DesktopPic.exe** to start the program.
 
 **Double-click** anywhere on the displayed image to show the DesktopPic interface. The **Esc** key may also be used if the slideshow program has focus.
 
-<img width="510" height="641" alt="image" src="https://github.com/user-attachments/assets/f1ffa3c5-da44-4a95-94ef-baf84cada914" />
+![image](https://github.com/user-attachments/assets/f1ffa3c5-da44-4a95-94ef-baf84cada914)
 
 
 ### Step 3: Select an image folder
@@ -86,7 +86,7 @@ Click the **Folder** icon to select a folder of images to be displayed. By defau
 
 This will display all of the slideshow options.
 
-<img src="https://github.com/user-attachments/assets/0bc15d52-a3d5-490e-8c15-70333b90873d" />
+![image](https://github.com/user-attachments/assets/0bc15d52-a3d5-490e-8c15-70333b90873d)
 
 ### Step 5: Select interface language
 
