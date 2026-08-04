@@ -86,7 +86,7 @@ Click the **Folder** icon to select a folder of images to be displayed. By defau
 
 This will display all of the slideshow options.
 
-<img width="510" height="642" alt="image" src="https://github.com/user-attachments/assets/0bc15d52-a3d5-490e-8c15-70333b90873d" />
+<img src="https://github.com/user-attachments/assets/0bc15d52-a3d5-490e-8c15-70333b90873d" />
 
 ### Step 5: Select interface language
 
