@@ -31,6 +31,8 @@ SetupIconFile={#MyAppName}.ico
 UninstallDisplayIcon={app}\{#MyAppExeName}
 CloseApplications=force
 RestartApplications=no
+SignedUninstaller=yes
+SignTool=Certum
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
