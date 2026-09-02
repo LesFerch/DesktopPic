@@ -231,6 +231,8 @@ Click **X** to close DesktopPic.
 [Paint.Net](https://www.getpaint.net/)
 \
 [XnConvert](https://www.xnview.com/en/xnconvert/)
+\
+[JPEG Lossless Rotator](https://annystudio.com/software/jpeglosslessrotator/)
 
 **Note**: Paint.Net is a full featured image editor with excellent resizing options, but requires changing one image at time. XnConvert can change the image size or canvas size for multiple images.
 
